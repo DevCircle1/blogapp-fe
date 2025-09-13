@@ -4,6 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { login } from "../../../services/auth";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // 👈 add this
 
 export default function LoginForm() {
   const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ export default function LoginForm() {
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false); // 👈 add this
   const navigate = useNavigate();
   const { loginUser } = useAuth();
 
@@ -74,7 +76,7 @@ export default function LoginForm() {
 
   const getInputClassName = (field) => {
     const base =
-      "bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white";
+      "bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:text-white";
     const err = "border-red-500 focus:ring-red-500 focus:border-red-500";
     const normal =
       "border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500";
@@ -118,7 +120,7 @@ export default function LoginForm() {
                   <p className="mt-1 text-sm text-red-600">{errors.email}</p>
                 )}
               </div>
-              <div>
+              <div className="relative">
                 <label
                   htmlFor="password"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -126,7 +128,7 @@ export default function LoginForm() {
                   Password
                 </label>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"} 
                   name="password"
                   id="password"
                   value={formData.password}
@@ -135,6 +137,13 @@ export default function LoginForm() {
                   placeholder="••••••••"
                   disabled={loading}
                 />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-3 top-7 flex items-center text-gray-500 dark:text-gray-300"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
                 {errors.password && (
                   <p className="mt-1 text-sm text-red-600">{errors.password}</p>
                 )}
