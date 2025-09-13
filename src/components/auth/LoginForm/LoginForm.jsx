@@ -4,7 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { login } from "../../../services/auth";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
-import { FaEye, FaEyeSlash } from "react-icons/fa"; // 👈 add this
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function LoginForm() {
   const [formData, setFormData] = useState({
@@ -13,7 +13,7 @@ export default function LoginForm() {
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [showPassword, setShowPassword] = useState(false); // 👈 add this
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { loginUser } = useAuth();
 
@@ -155,6 +155,17 @@ export default function LoginForm() {
               >
                 {loading ? "Signing in..." : "Sign in"}
               </button>
+              
+              {/* Forgot Password Link */}
+              <div className="text-right text-sm font-light text-gray-500 dark:text-gray-400">
+                <Link
+                  to="/forget-password"
+                  className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+              
               <p className="text-sm font-light text-gray-500 dark:text-gray-400 text-right">
                 Don't have an account?{" "}
                 <Link

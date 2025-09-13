@@ -12,6 +12,7 @@ import { ToastContainer } from 'react-toastify'
 import WriteBlog from './components/blogs/WriteBlogs.jsx'
 import Blogs from './components/blogs/blogs.jsx'
 import BlogPostDetail from './components/blogs/BlogPostDetail.jsx'
+import TermsAndConditions from './components/common/Terms/Terms.jsx'
 import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
         <Route path="/write-blogs" element={<WriteBlog />} />
         <Route path="/check-ip" element={<IPAddressChecker />} />
         <Route path="/posts/:id" element={<BlogPostDetail />} />
+        <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
       </Routes>
 
       {shouldShowNavbar(location.pathname) && <Footer />}
