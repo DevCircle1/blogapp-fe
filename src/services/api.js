@@ -56,6 +56,7 @@ privateRequest.interceptors.response.use(
 
           const { access } = response.data;
           localStorage.setItem('accessToken', access);
+          
 
           // Retry the original request with new token
           originalRequest.headers.Authorization = `Bearer ${access}`;

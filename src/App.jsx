@@ -9,6 +9,7 @@ import { shouldShowNavbar } from './utils/navbarUtils.js'
 import Footer from './components/common/Footer/Footer.jsx'
 import IPAddressChecker from './components/tools/ip.jsx'
 import { ToastContainer } from 'react-toastify'
+import WriteBlog from './components/blogs/WriteBlogs.jsx'
 import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/update-password" element={<UpdatePassword />} />
         <Route path="/verify-otp" element={<VerifyOtp />} />
+        <Route path="/write-blogs" element={<WriteBlog />} />
         <Route path="/check-ip" element={<IPAddressChecker />} />
       </Routes>
 

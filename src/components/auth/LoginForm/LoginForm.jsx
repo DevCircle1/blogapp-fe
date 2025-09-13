@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { login } from '../../../services/auth';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../../../context/AuthContext';
 
 export default function LoginForm() {
   const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  const { loginUser } = useAuth(); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,17 +23,14 @@ export default function LoginForm() {
 
   const validateForm = () => {
     const newErrors = {};
-
     if (!formData.email) {
       newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = "Enter a valid email address";
     }
-
     if (!formData.password) {
       newErrors.password = "Password is required";
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -47,14 +46,13 @@ export default function LoginForm() {
 
     if (response.success) {
       toast.success('Login successful');
-      // Save tokens to localStorage
-      localStorage.setItem('accessToken', response.data.tokens.access);
-      localStorage.setItem('refreshToken', response.data.tokens.refresh);
-      
-      // navigate to dashboard or home
+
+      const tokens = response.data.tokens;
+      const userData = response.data.user || null;
+      loginUser(tokens, userData);
+
       navigate('/');
     } else {
-      // Handle backend validation errors
       if (response.details) {
         const newErrors = {};
         Object.keys(response.details).forEach((field) => {
@@ -66,7 +64,6 @@ export default function LoginForm() {
         });
         setErrors(newErrors);
       } else {
-        // If backend sends {"non_field_errors": ["Invalid credentials"]}
         const errorMsg = response.message || 'Login failed';
         toast.error(errorMsg);
       }
