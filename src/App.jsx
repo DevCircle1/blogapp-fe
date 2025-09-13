@@ -11,6 +11,7 @@ import IPAddressChecker from './components/tools/ip.jsx'
 import { ToastContainer } from 'react-toastify'
 import WriteBlog from './components/blogs/WriteBlogs.jsx'
 import Blogs from './components/blogs/blogs.jsx'
+import BlogPostDetail from './components/blogs/BlogPostDetail.jsx'
 import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/write-blogs" element={<WriteBlog />} />
         <Route path="/check-ip" element={<IPAddressChecker />} />
+        <Route path="/posts/:id" element={<BlogPostDetail />} />
       </Routes>
 
       {shouldShowNavbar(location.pathname) && <Footer />}

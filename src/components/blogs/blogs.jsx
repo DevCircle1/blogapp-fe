@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { privateRequest } from '../../services/api';
 
 const BlogPosts = () => {
@@ -8,12 +7,10 @@ const BlogPosts = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch blog posts from API
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         setIsLoading(true);
-        // Assuming you have authentication set up (e.g., token in headers)
         const response = await privateRequest.get('/posts/');
         setPosts(response.data);
       } catch (err) {
@@ -27,12 +24,10 @@ const BlogPosts = () => {
     fetchPosts();
   }, []);
 
-  // Function to open post detail
   const openPost = (post) => {
     setSelectedPost(post);
   };
 
-  // Function to close post detail
   const closePost = () => {
     setSelectedPost(null);
   };
@@ -64,21 +59,33 @@ const BlogPosts = () => {
           {posts.map((post) => (
             <div 
               key={post.id} 
-              className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transform transition duration-300 hover:scale-105"
+              className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-xl"
               onClick={() => openPost(post)}
             >
-              {post.image && (
-                <img 
-                  src={post.image} 
-                  alt={post.title} 
-                  className="w-full h-48 object-cover"
-                />
-              )}
-              <div className="p-4">
-                <h2 className="text-xl font-semibold mb-2 line-clamp-2">{post.title}</h2>
-                <p className="text-gray-500 text-sm">
-                  By {post.author?.name || 'Unknown'} • {new Date(post.created_at).toLocaleDateString()}
-                </p>
+              {/* Featured Image */}
+              <div className="h-48 overflow-hidden">
+                {post.featured_image ? (
+                  <img 
+                    src={post.featured_image} 
+                    alt={post.title} 
+                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-r from-blue-50 to-indigo-50 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                )}
+              </div>
+              
+              {/* Card Content */}
+              <div className="p-5">
+                <h2 className="text-xl font-bold mb-3 line-clamp-2 text-gray-800">{post.title}</h2>
+                <div className="flex items-center justify-between text-sm text-gray-500">
+                  <span>By {post.author?.name || 'Unknown'}</span>
+                  <span>{new Date(post.created_at).toLocaleDateString()}</span>
+                </div>
               </div>
             </div>
           ))}
@@ -87,13 +94,19 @@ const BlogPosts = () => {
 
       {/* Modal for full post view */}
       {selectedPost && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-screen overflow-y-auto">
-            <div className="sticky top-0 bg-white p-4 border-b flex justify-between items-center">
-              <h2 className="text-2xl font-bold">{selectedPost.title}</h2>
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+          onClick={closePost}
+        >
+          <div 
+            className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-screen overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="sticky top-0 bg-white p-5 border-b flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-gray-800">{selectedPost.title}</h2>
               <button 
                 onClick={closePost}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -101,23 +114,25 @@ const BlogPosts = () => {
               </button>
             </div>
             
-            {selectedPost.image && (
-              <img 
-                src={selectedPost.image} 
-                alt={selectedPost.title} 
-                className="w-full h-64 object-cover"
-              />
+            {/* Featured Image in Modal */}
+            {selectedPost.featured_image && (
+              <div className="h-64 overflow-hidden">
+                <img 
+                  src={selectedPost.featured_image} 
+                  alt={selectedPost.title} 
+                  className="w-full h-full object-cover"
+                />
+              </div>
             )}
             
             <div className="p-6">
               <div className="flex items-center text-gray-600 mb-4">
-                <span className="mr-4">By {selectedPost.author?.username || 'Unknown'}</span>
+                <span className="mr-4 font-medium">By {selectedPost.author?.name || selectedPost.author?.username || 'Unknown'}</span>
                 <span>{new Date(selectedPost.created_at).toLocaleDateString()}</span>
               </div>
               
-              <div className="prose max-w-none">
+              <div className="prose max-w-none text-gray-700">
                 <p>{selectedPost.content}</p>
-                {/* Add more post details as needed */}
               </div>
             </div>
           </div>
