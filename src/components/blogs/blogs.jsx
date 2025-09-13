@@ -1,0 +1,130 @@
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { privateRequest } from '../../services/api';
+
+const BlogPosts = () => {
+  const [posts, setPosts] = useState([]);
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch blog posts from API
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        setIsLoading(true);
+        // Assuming you have authentication set up (e.g., token in headers)
+        const response = await privateRequest.get('/posts/');
+        setPosts(response.data);
+      } catch (err) {
+        setError('Failed to fetch blog posts');
+        console.error('Error fetching posts:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  // Function to open post detail
+  const openPost = (post) => {
+    setSelectedPost(post);
+  };
+
+  // Function to close post detail
+  const closePost = () => {
+    setSelectedPost(null);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-red-500 text-lg">{error}</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold text-center mb-8">Blog Posts</h1>
+      
+      {posts.length === 0 ? (
+        <div className="text-center text-gray-500">No blog posts found.</div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {posts.map((post) => (
+            <div 
+              key={post.id} 
+              className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transform transition duration-300 hover:scale-105"
+              onClick={() => openPost(post)}
+            >
+              {post.image && (
+                <img 
+                  src={post.image} 
+                  alt={post.title} 
+                  className="w-full h-48 object-cover"
+                />
+              )}
+              <div className="p-4">
+                <h2 className="text-xl font-semibold mb-2 line-clamp-2">{post.title}</h2>
+                <p className="text-gray-500 text-sm">
+                  By {post.author?.name || 'Unknown'} • {new Date(post.created_at).toLocaleDateString()}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Modal for full post view */}
+      {selectedPost && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-screen overflow-y-auto">
+            <div className="sticky top-0 bg-white p-4 border-b flex justify-between items-center">
+              <h2 className="text-2xl font-bold">{selectedPost.title}</h2>
+              <button 
+                onClick={closePost}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            {selectedPost.image && (
+              <img 
+                src={selectedPost.image} 
+                alt={selectedPost.title} 
+                className="w-full h-64 object-cover"
+              />
+            )}
+            
+            <div className="p-6">
+              <div className="flex items-center text-gray-600 mb-4">
+                <span className="mr-4">By {selectedPost.author?.username || 'Unknown'}</span>
+                <span>{new Date(selectedPost.created_at).toLocaleDateString()}</span>
+              </div>
+              
+              <div className="prose max-w-none">
+                <p>{selectedPost.content}</p>
+                {/* Add more post details as needed */}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default BlogPosts;

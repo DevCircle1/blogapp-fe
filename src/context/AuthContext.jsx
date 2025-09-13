@@ -1,7 +1,6 @@
 // src/context/AuthContext.jsx
 import { createContext, useState, useEffect, useContext } from 'react';
-import { jwtDecode } from 'jwt-decode';
-import { privateRequest } from '../services/api'; // adjust path to where you export your axios instance
+import { privateRequest } from '../services/api'; 
 
 export const AuthContext = createContext();
 

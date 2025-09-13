@@ -17,7 +17,6 @@ const WriteBlog = ({ onPostCreated }) => {
   const [imagePreview, setImagePreview] = useState('');
   const [categories, setCategories] = useState([]);
 
-  // ✅ Fetch categories from API
   useEffect(() => {
     const fetchCategories = async () => {
       try {
