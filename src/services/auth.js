@@ -148,23 +148,25 @@ export const authService = {
   // Forgot password
   forgotPassword: async (email) => {
     try {
-      const response = await publicRequest.post('/forgot-password/', { email });
+      const res = await publicRequest.post(
+        '/forgot-password/',
+        { email },
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+      // expect backend shape like { success: true, message: "OTP sent" }
+      const data = res?.data ?? {};
       return {
-        success: true,
-        data: response.data,
-        message: 'Password reset email sent'
+        success: Boolean(data.success),
+        message: typeof data.message === 'string' ? data.message : 'OTP sent',
+        raw: data,
       };
     } catch (error) {
-      console.error('Forgot password error:', error);
-      const errorInfo = handleApiError(error);
-      return {
-        success: false,
-        error: errorInfo.details || errorInfo.message,
-        message: errorInfo.message
-      };
+      // keep one code path that always returns a string message
+      const api = handleApiError?.(error);
+      const msg = api?.details || api?.message || toErrorString(error?.response?.data);
+      return { success: false, message: msg };
     }
   },
-
   // Reset password
   resetPassword: async (resetData) => {
     try {
