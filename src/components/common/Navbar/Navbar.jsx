@@ -1,13 +1,16 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../context/AuthContext'
+import { toast } from 'react-toastify'
 
+// Define navigation items
 const navigation = [
-  { name: 'Home', href: '/', current: true },
+  { name: 'Home', href: '/', current: false },
   { name: 'Blogs', href: '/blogs', current: false },
-  { name: 'Tools', href: '#', current: false },
-  { name: 'Contact Us', href: '#', current: false },
-  { name: 'Write Blogs', href: '/write-blogs', current: false },
+  { name: 'Tools', href: '/tools', current: false },
+  { name: 'Contact Us', href: '/contact-us', current: false },
+  { name: 'Write Blogs', href: '/write-blogs', current: false, requiresAuth: true },
 ]
 
 function classNames(...classes) {
@@ -16,6 +19,24 @@ function classNames(...classes) {
 
 export default function Navbar() {
   const { isAuthenticated, user, logoutUser } = useAuth()
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  // Update the current property based on the current path
+  const updatedNavigation = navigation.map(item => ({
+    ...item,
+    current: location.pathname === item.href
+  }))
+
+  // Handle navigation with authentication check
+  const handleNavigation = (item, e) => {
+    if (item.requiresAuth && !isAuthenticated) {
+      e.preventDefault()
+      toast.info('Please log in first to write blogs')
+      // Optionally redirect to login page
+      // navigate('/login', { state: { from: location } })
+    }
+  }
 
   return (
     <Disclosure
@@ -41,19 +62,24 @@ export default function Navbar() {
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
-                {navigation.map((item) => (
-                  <a
+                {updatedNavigation.map((item) => (
+                  <NavLink
                     key={item.name}
-                    href={item.href}
+                    to={item.href}
+                    onClick={(e) => handleNavigation(item, e)}
                     className={classNames(
                       item.current
                         ? 'bg-indigo-500/20 text-white shadow-sm'
                         : 'text-slate-300 hover:bg-indigo-500/10 hover:text-white',
-                      'rounded-md px-3 py-2 text-sm font-medium'
+                      'rounded-md px-3 py-2 text-sm font-medium transition-colors duration-200',
+                      item.requiresAuth && !isAuthenticated ? 'opacity-80 cursor-not-allowed' : ''
                     )}
                   >
                     {item.name}
-                  </a>
+                    {item.requiresAuth && !isAuthenticated && (
+                      <span className="ml-1 text-xs">🔒</span>
+                    )}
+                  </NavLink>
                 ))}
               </div>
             </div>
@@ -67,6 +93,10 @@ export default function Navbar() {
                   className="relative rounded-full p-1 text-slate-300 hover:text-white"
                 >
                   <BellIcon aria-hidden="true" className="size-6" />
+                  <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span>
+                  </span>
                 </button>
 
                 <Menu as="div" className="relative ml-3">
@@ -78,7 +108,7 @@ export default function Navbar() {
                     />
                   </MenuButton>
 
-                  <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-slate-800 py-1">
+                  <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-slate-800 py-1 shadow-lg ring-1 ring-black ring-opacity-5">
                     <MenuItem>
                       <a href="/profile" className="block px-4 py-2 text-sm text-slate-200 hover:bg-indigo-500/10">
                         Your profile
@@ -97,18 +127,28 @@ export default function Navbar() {
               </>
             ) : (
               <div className="space-x-3">
-                <a
-                  href="/login"
-                  className="px-3 py-2 text-sm font-medium text-slate-300 hover:bg-indigo-500/10 hover:text-white rounded-md"
+                <NavLink
+                  to="/login"
+                  className={({ isActive }) => classNames(
+                    isActive 
+                      ? 'bg-indigo-500/20 text-white' 
+                      : 'text-slate-300 hover:bg-indigo-500/10 hover:text-white',
+                    'px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200'
+                  )}
                 >
                   Login
-                </a>
-                <a
-                  href="/signup"
-                  className="px-3 py-2 text-sm font-medium text-slate-300 hover:bg-indigo-500/10 hover:text-white rounded-md"
+                </NavLink>
+                <NavLink
+                  to="/signup"
+                  className={({ isActive }) => classNames(
+                    isActive 
+                      ? 'bg-indigo-500/20 text-white' 
+                      : 'text-slate-300 hover:bg-indigo-500/10 hover:text-white',
+                    'px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200'
+                  )}
                 >
                   Register
-                </a>
+                </NavLink>
               </div>
             )}
           </div>
@@ -117,17 +157,22 @@ export default function Navbar() {
 
       <DisclosurePanel className="sm:hidden">
         <div className="space-y-1 px-2 pt-2 pb-3 bg-slate-800 rounded-b-lg">
-          {navigation.map((item) => (
+          {updatedNavigation.map((item) => (
             <DisclosureButton
               key={item.name}
-              as="a"
-              href={item.href}
+              as={NavLink}
+              to={item.href}
+              onClick={(e) => handleNavigation(item, e)}
               className={classNames(
                 item.current ? 'bg-indigo-500/20 text-white' : 'text-slate-300 hover:bg-indigo-500/10 hover:text-white',
-                'block rounded-md px-3 py-2 text-base font-medium'
+                'block rounded-md px-3 py-2 text-base font-medium transition-colors duration-200',
+                item.requiresAuth && !isAuthenticated ? 'opacity-80 cursor-not-allowed' : ''
               )}
             >
               {item.name}
+              {item.requiresAuth && !isAuthenticated && (
+                <span className="ml-1 text-xs">🔒</span>
+              )}
             </DisclosureButton>
           ))}
         </div>

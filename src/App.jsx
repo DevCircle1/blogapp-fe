@@ -13,6 +13,8 @@ import WriteBlog from './components/blogs/WriteBlogs.jsx'
 import Blogs from './components/blogs/blogs.jsx'
 import BlogPostDetail from './components/blogs/BlogPostDetail.jsx'
 import TermsAndConditions from './components/common/Terms/Terms.jsx'
+import AboutUs from './components/common/Terms/AboutUs.jsx'
+import ContactUs from './components/common/Terms/ContactUs.jsx'
 import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
@@ -34,6 +36,9 @@ function App() {
         <Route path="/check-ip" element={<IPAddressChecker />} />
         <Route path="/posts/:id" element={<BlogPostDetail />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+        <Route path="/about-us" element={<AboutUs />} />
+        <Route path="/contact-us" element={<ContactUs />} />
+
       </Routes>
 
       {shouldShowNavbar(location.pathname) && <Footer />}

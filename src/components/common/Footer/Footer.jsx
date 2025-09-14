@@ -7,7 +7,7 @@ export default function Footer() {
         
         {/* Logo / Brand */}
         <div>
-          <h2 className="text-2xl font-bold text-white">YourBrand</h2>
+          <h2 className="text-2xl font-bold text-white">DevCircle</h2>
           <p className="mt-4 text-sm text-gray-400">
             Building modern solutions for the future of web and mobile.
           </p>
@@ -17,10 +17,9 @@ export default function Footer() {
         <div>
           <h3 className="text-lg font-semibold text-white">Company</h3>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><a href="#" className="hover:text-white transition">About Us</a></li>
+            <li><a href="/about-us" className="hover:text-white transition">About Us</a></li>
             <li><a href="#" className="hover:text-white transition">Careers</a></li>
-            <li><a href="#" className="hover:text-white transition">Blog</a></li>
-            <li><a href="#" className="hover:text-white transition">Press</a></li>
+            <li><a href="/blogs" className="hover:text-white transition">Blog</a></li>
           </ul>
         </div>
 
@@ -28,9 +27,9 @@ export default function Footer() {
           <h3 className="text-lg font-semibold text-white">Support</h3>
           <ul className="mt-4 space-y-2 text-sm">
             <li><a href="#" className="hover:text-white transition">Help Center</a></li>
-            <li><a href="#" className="hover:text-white transition">Terms of Service</a></li>
+            <li><a href="/terms-and-conditions" className="hover:text-white transition">Terms of Service</a></li>
             <li><a href="#" className="hover:text-white transition">Privacy Policy</a></li>
-            <li><a href="#" className="hover:text-white transition">Contact Us</a></li>
+            <li><a href="/contact-us" className="hover:text-white transition">Contact Us</a></li>
           </ul>
         </div>
 
@@ -50,12 +49,6 @@ export default function Footer() {
               Subscribe
             </button>
           </form>
-          <div className="flex space-x-4 mt-6">
-            <a href="#" className="hover:text-white transition">🌐</a>
-            <a href="#" className="hover:text-white transition">🐦</a>
-            <a href="#" className="hover:text-white transition">📸</a>
-            <a href="#" className="hover:text-white transition">💼</a>
-          </div>
         </div>
       </div>
 
