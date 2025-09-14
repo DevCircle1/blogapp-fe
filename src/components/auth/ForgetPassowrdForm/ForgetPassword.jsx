@@ -34,6 +34,7 @@ export default function ForgotPassword() {
 
 if (result.success) {
   toast.success(result.message || 'OTP sent to your email. Please check your inbox.');
+  localStorage.setItem('resetEmail', email);
   navigate('/verify-otp', { state: { email } });
 } else {
   toast.error(result.message.error || 'Failed to send OTP. Please try again.');

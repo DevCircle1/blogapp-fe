@@ -1,5 +1,6 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { useAuth } from '../../../context/AuthContext'
 
 const navigation = [
   { name: 'Home', href: '/', current: true },
@@ -14,6 +15,8 @@ function classNames(...classes) {
 }
 
 export default function Navbar() {
+  const { isAuthenticated, user, logoutUser } = useAuth()
+
   return (
     <Disclosure
       as="nav"
@@ -22,14 +25,12 @@ export default function Navbar() {
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-            {/* Mobile menu button*/}
-            <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-slate-300 hover:bg-indigo-500/10 hover:text-white focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-400">
-              <span className="absolute -inset-0.5" />
-              <span className="sr-only">Open main menu</span>
+            <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-slate-300 hover:bg-indigo-500/10 hover:text-white">
               <Bars3Icon aria-hidden="true" className="block size-6 group-data-open:hidden" />
               <XMarkIcon aria-hidden="true" className="hidden size-6 group-data-open:block" />
             </DisclosureButton>
           </div>
+
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex shrink-0 items-center">
               <img
@@ -44,10 +45,11 @@ export default function Navbar() {
                   <a
                     key={item.name}
                     href={item.href}
-                    aria-current={item.current ? 'page' : undefined}
                     className={classNames(
-                      item.current ? 'bg-indigo-500/20 text-white shadow-sm' : 'text-slate-300 hover:bg-indigo-500/10 hover:text-white',
-                      'rounded-md px-3 py-2 text-sm font-medium transition-colors duration-200',
+                      item.current
+                        ? 'bg-indigo-500/20 text-white shadow-sm'
+                        : 'text-slate-300 hover:bg-indigo-500/10 hover:text-white',
+                      'rounded-md px-3 py-2 text-sm font-medium'
                     )}
                   >
                     {item.name}
@@ -56,58 +58,59 @@ export default function Navbar() {
               </div>
             </div>
           </div>
+
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            <button
-              type="button"
-              className="relative rounded-full p-1 text-slate-300 hover:text-white focus:outline-2 focus:outline-offset-2 focus:outline-indigo-400"
-            >
-              <span className="absolute -inset-1.5" />
-              <span className="sr-only">View notifications</span>
-              <BellIcon aria-hidden="true" className="size-6" />
-            </button>
+            {isAuthenticated ? (
+              <>
+                <button
+                  type="button"
+                  className="relative rounded-full p-1 text-slate-300 hover:text-white"
+                >
+                  <BellIcon aria-hidden="true" className="size-6" />
+                </button>
 
-            {/* Profile dropdown */}
-            <Menu as="div" className="relative ml-3">
-              <MenuButton className="relative flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400">
-                <span className="absolute -inset-1.5" />
-                <span className="sr-only">Open user menu</span>
-                <img
-                  alt=""
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  className="size-8 rounded-full bg-slate-700 outline -outline-offset-1 outline-indigo-400/20"
-                />
-              </MenuButton>
+                <Menu as="div" className="relative ml-3">
+                  <MenuButton className="relative flex rounded-full">
+                    <img
+                      alt="User avatar"
+                      src={user?.avatar || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&q=80"}
+                      className="size-8 rounded-full bg-slate-700"
+                    />
+                  </MenuButton>
 
-              <MenuItems
-                transition
-                className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-slate-800 py-1 outline -outline-offset-1 outline-indigo-400/20 transition data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
-              >
-                <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-slate-200 data-focus:bg-indigo-500/10 data-focus:outline-hidden"
-                  >
-                    Your profile
-                  </a>
-                </MenuItem>
-                <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-slate-200 data-focus:bg-indigo-500/10 data-focus:outline-hidden"
-                  >
-                    Settings
-                  </a>
-                </MenuItem>
-                <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-slate-200 data-focus:bg-indigo-500/10 data-focus:outline-hidden"
-                  >
-                    Sign out
-                  </a>
-                </MenuItem>
-              </MenuItems>
-            </Menu>
+                  <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-slate-800 py-1">
+                    <MenuItem>
+                      <a href="/profile" className="block px-4 py-2 text-sm text-slate-200 hover:bg-indigo-500/10">
+                        Your profile
+                      </a>
+                    </MenuItem>
+                    <MenuItem>
+                      <button
+                        onClick={logoutUser}
+                        className="w-full text-left block px-4 py-2 text-sm text-slate-200 hover:bg-indigo-500/10"
+                      >
+                        Sign out
+                      </button>
+                    </MenuItem>
+                  </MenuItems>
+                </Menu>
+              </>
+            ) : (
+              <div className="space-x-3">
+                <a
+                  href="/login"
+                  className="px-3 py-2 text-sm font-medium text-slate-300 hover:bg-indigo-500/10 hover:text-white rounded-md"
+                >
+                  Login
+                </a>
+                <a
+                  href="/signup"
+                  className="px-3 py-2 text-sm font-medium text-slate-300 hover:bg-indigo-500/10 hover:text-white rounded-md"
+                >
+                  Register
+                </a>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -119,10 +122,9 @@ export default function Navbar() {
               key={item.name}
               as="a"
               href={item.href}
-              aria-current={item.current ? 'page' : undefined}
               className={classNames(
                 item.current ? 'bg-indigo-500/20 text-white' : 'text-slate-300 hover:bg-indigo-500/10 hover:text-white',
-                'block rounded-md px-3 py-2 text-base font-medium transition-colors duration-200',
+                'block rounded-md px-3 py-2 text-base font-medium'
               )}
             >
               {item.name}

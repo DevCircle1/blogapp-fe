@@ -169,32 +169,47 @@ export const authService = {
   },
   // Reset password
   resetPassword: async (resetData) => {
-    try {
-      const response = await publicRequest.post('/reset-password/', resetData);
-      return {
-        success: true,
-        data: response.data,
-        message: 'Password reset successful'
-      };
-    } catch (error) {
-      console.error('Reset password error:', error);
-      const errorInfo = handleApiError(error);
+  try {
+    const email = localStorage.getItem('resetEmail');
+    if (!email) {
       return {
         success: false,
-        error: errorInfo.details || errorInfo.message,
-        message: errorInfo.message
+        message: 'Reset email not found in local storage'
       };
     }
-  },
+
+    const payload = {
+      email,
+      password: resetData.password,
+      confirm_password: resetData.confirm_password
+    };
+
+    const response = await publicRequest.post('/update-password/', payload);
+
+    return {
+      success: true,
+      data: response.data,
+      message: 'Password reset successful'
+    };
+  } catch (error) {
+    console.error('Reset password error:', error);
+    const errorInfo = handleApiError(error);
+    return {
+      success: false,
+      error: errorInfo.details || errorInfo.message,
+      message: errorInfo.message
+    };
+  }
+},
 
   // Verify email
-  verifyEmail: async (token) => {
+  verifyEmail: async (email, otp) => {
     try {
-      const response = await publicRequest.post('/verify-email/', { token });
+      const response = await publicRequest.post('/verify-otp/', { email, otp });
       return {
         success: true,
         data: response.data,
-        message: 'Email verified successfully'
+        message: response.data?.message || 'Email verified successfully'
       };
     } catch (error) {
       console.error('Email verification error:', error);
