@@ -41,8 +41,6 @@ export default function VerifyOtp() {
       } else {
         toast.success("Email verified successfully ✅");
       }
-      localStorage.removeItem("resetEmail");
-
       navigate("/update-password"); 
     } catch (error) {
       console.error("Email verification error:", error);

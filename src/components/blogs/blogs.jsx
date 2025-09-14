@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { privateRequest } from '../../services/api';
+import { privateRequest, publicRequest } from '../../services/api';
 
 const BlogPosts = () => {
   const [posts, setPosts] = useState([]);
@@ -11,7 +11,7 @@ const BlogPosts = () => {
     const fetchPosts = async () => {
       try {
         setIsLoading(true);
-        const response = await privateRequest.get('/posts/');
+        const response = await publicRequest.get('/posts/');
         setPosts(response.data);
       } catch (err) {
         setError('Failed to fetch blog posts');

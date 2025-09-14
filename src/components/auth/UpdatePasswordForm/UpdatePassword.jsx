@@ -33,6 +33,7 @@ export default function UpdatePassword() {
     if (result.success) {
       toast.success(result.message || 'Password reset successful');
       localStorage.removeItem('resetEmail');
+      navigate('/');
     } else {
       toast.error(result.message || 'Failed to reset password');
     }
