@@ -8,6 +8,8 @@ import VerifyOtp from './components/auth/VerifyOtp/VerifyOtp.jsx'
 import { shouldShowNavbar } from './utils/navbarUtils.js'  
 import Footer from './components/common/Footer/Footer.jsx'
 import IPAddressChecker from './components/tools/ip.jsx'
+import ScreenResolutionTool from './components/tools/ScreenResolutionTool.jsx'
+import ProfitMarginCalculator from './components/tools/ProfitMarginCalculator.jsx'
 import { ToastContainer } from 'react-toastify'
 import WriteBlog from './components/blogs/WriteBlogs.jsx'
 import Blogs from './components/blogs/blogs.jsx'
@@ -34,6 +36,8 @@ function App() {
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/write-blogs" element={<WriteBlog />} />
         <Route path="/check-ip" element={<IPAddressChecker />} />
+        <Route path="/screen-resolution" element={<ScreenResolutionTool />} />
+        <Route path="/profit-margin-calculator" element={<ProfitMarginCalculator />} />
         <Route path="/posts/:id" element={<BlogPostDetail />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
         <Route path="/about-us" element={<AboutUs />} />
