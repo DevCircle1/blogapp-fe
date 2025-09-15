@@ -1,6 +1,14 @@
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems
+} from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { useAuth } from '../../../context/AuthContext'
 import { toast } from 'react-toastify'
 
@@ -20,7 +28,6 @@ function classNames(...classes) {
 export default function Navbar() {
   const { isAuthenticated, user, logoutUser } = useAuth()
   const location = useLocation()
-  const navigate = useNavigate()
 
   // Update the current property based on the current path
   const updatedNavigation = navigation.map(item => ({
@@ -33,8 +40,6 @@ export default function Navbar() {
     if (item.requiresAuth && !isAuthenticated) {
       e.preventDefault()
       toast.info('Please log in first to write blogs')
-      // Optionally redirect to login page
-      // navigate('/login', { state: { from: location } })
     }
   }
 
@@ -45,47 +50,43 @@ export default function Navbar() {
     >
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
-          <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-            <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-slate-300 hover:bg-indigo-500/10 hover:text-white">
-              <Bars3Icon aria-hidden="true" className="block size-6 group-data-open:hidden" />
-              <XMarkIcon aria-hidden="true" className="hidden size-6 group-data-open:block" />
-            </DisclosureButton>
+          
+          {/* Logo (Left) */}
+          <div className="flex items-center">
+            <img
+              alt="Dev Circle"
+              src="1-removebg-preview.png"
+              className="h-24 w-auto"
+            />
           </div>
 
-          <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-            <div className="flex shrink-0 items-center">
-              <img
-                alt="Your Company"
-                src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=400"
-                className="h-8 w-auto"
-              />
-            </div>
-            <div className="hidden sm:ml-6 sm:block">
-              <div className="flex space-x-4">
-                {updatedNavigation.map((item) => (
-                  <NavLink
-                    key={item.name}
-                    to={item.href}
-                    onClick={(e) => handleNavigation(item, e)}
-                    className={classNames(
-                      item.current
-                        ? 'bg-indigo-500/20 text-white shadow-sm'
-                        : 'text-slate-300 hover:bg-indigo-500/10 hover:text-white',
-                      'rounded-md px-3 py-2 text-sm font-medium transition-colors duration-200',
-                      item.requiresAuth && !isAuthenticated ? 'opacity-80 cursor-not-allowed' : ''
-                    )}
-                  >
-                    {item.name}
-                    {item.requiresAuth && !isAuthenticated && (
-                      <span className="ml-1 text-xs">🔒</span>
-                    )}
-                  </NavLink>
-                ))}
-              </div>
+          {/* Center Nav Links */}
+          <div className="hidden sm:block">
+            <div className="flex space-x-4 justify-center">
+              {updatedNavigation.map((item) => (
+                <NavLink
+                  key={item.name}
+                  to={item.href}
+                  onClick={(e) => handleNavigation(item, e)}
+                  className={classNames(
+                    item.current
+                      ? 'bg-indigo-500/20 text-white shadow-sm'
+                      : 'text-slate-300 hover:bg-indigo-500/10 hover:text-white',
+                    'rounded-md px-3 py-2 text-sm font-medium transition-colors duration-200',
+                    item.requiresAuth && !isAuthenticated ? 'opacity-80 cursor-not-allowed' : ''
+                  )}
+                >
+                  {item.name}
+                  {item.requiresAuth && !isAuthenticated && (
+                    <span className="ml-1 text-xs">🔒</span>
+                  )}
+                </NavLink>
+              ))}
             </div>
           </div>
 
-          <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+          {/* Right Side - Profile or Auth Links */}
+          <div className="flex items-center space-x-3">
             {isAuthenticated ? (
               <>
                 <button
@@ -99,7 +100,7 @@ export default function Navbar() {
                   </span>
                 </button>
 
-                <Menu as="div" className="relative ml-3">
+                <Menu as="div" className="relative">
                   <MenuButton className="relative flex rounded-full">
                     <img
                       alt="User avatar"
@@ -126,7 +127,7 @@ export default function Navbar() {
                 </Menu>
               </>
             ) : (
-              <div className="space-x-3">
+              <>
                 <NavLink
                   to="/login"
                   className={({ isActive }) => classNames(
@@ -149,12 +150,13 @@ export default function Navbar() {
                 >
                   Register
                 </NavLink>
-              </div>
+              </>
             )}
           </div>
         </div>
       </div>
 
+      {/* Mobile Menu */}
       <DisclosurePanel className="sm:hidden">
         <div className="space-y-1 px-2 pt-2 pb-3 bg-slate-800 rounded-b-lg">
           {updatedNavigation.map((item) => (
