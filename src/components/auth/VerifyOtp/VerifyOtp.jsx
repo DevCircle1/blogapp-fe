@@ -8,7 +8,9 @@ export default function VerifyOtp() {
   const [otp, setOtp] = useState(Array(6).fill(""));
 
   // ✅ get email from localStorage instead of location.state
-  const email = localStorage.getItem("resetEmail");
+  const signupEmail = localStorage.getItem("signupEmail");
+  const resetEmail = localStorage.getItem("resetEmail");
+  const email = signupEmail || resetEmail;
 
   const handleChange = (value, index) => {
     if (value.length > 1) return;
@@ -39,9 +41,16 @@ export default function VerifyOtp() {
       if (res?.data?.message) {
         toast.success(res.data.message);
       } else {
-        toast.success("Email verified successfully ✅");
+        toast.success("Email verified successfully");
       }
-      navigate("/update-password"); 
+
+      if (signupEmail) {
+        localStorage.removeItem("signupEmail");
+        navigate("/"); // after signup verification
+      } else if (resetEmail) {
+        localStorage.removeItem("resetEmail");
+        navigate("/update-password"); 
+      }
     } catch (error) {
       console.error("Email verification error:", error);
       const msg =
