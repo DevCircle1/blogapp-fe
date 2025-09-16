@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { privateRequest, publicRequest } from '../../services/api';
+import { publicRequest } from '../../services/api';
+import { Link } from 'react-router-dom';
 
 const BlogPosts = () => {
   const [posts, setPosts] = useState([]);
-  const [selectedPost, setSelectedPost] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -23,14 +23,6 @@ const BlogPosts = () => {
 
     fetchPosts();
   }, []);
-
-  const openPost = (post) => {
-    setSelectedPost(post);
-  };
-
-  const closePost = () => {
-    setSelectedPost(null);
-  };
 
   if (isLoading) {
     return (
@@ -57,10 +49,10 @@ const BlogPosts = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {posts.map((post) => (
-            <div 
+            <Link 
               key={post.id} 
+              to={`/posts/${post.id}`}
               className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-xl"
-              onClick={() => openPost(post)}
             >
               {/* Featured Image */}
               <div className="h-48 overflow-hidden">
@@ -87,55 +79,8 @@ const BlogPosts = () => {
                   <span>{new Date(post.created_at).toLocaleDateString()}</span>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
-        </div>
-      )}
-
-      {/* Modal for full post view */}
-      {selectedPost && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
-          onClick={closePost}
-        >
-          <div 
-            className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-screen overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="sticky top-0 bg-white p-5 border-b flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-gray-800">{selectedPost.title}</h2>
-              <button 
-                onClick={closePost}
-                className="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            
-            {/* Featured Image in Modal */}
-            {selectedPost.featured_image && (
-              <div className="h-64 overflow-hidden">
-                <img 
-                  src={selectedPost.featured_image} 
-                  alt={selectedPost.title} 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            )}
-            
-            <div className="p-6">
-              <div className="flex items-center text-gray-600 mb-4">
-                <span className="mr-4 font-medium">By {selectedPost.author?.name || selectedPost.author?.username || 'Unknown'}</span>
-                <span>{new Date(selectedPost.created_at).toLocaleDateString()}</span>
-              </div>
-              
-              <div className="prose max-w-none text-gray-700">
-                <p>{selectedPost.content}</p>
-              </div>
-            </div>
-          </div>
         </div>
       )}
     </div>

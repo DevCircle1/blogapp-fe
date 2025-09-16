@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { privateRequest } from '../../services/api';
+import { privateRequest, publicRequest } from '../../services/api';
 import { useParams, Link } from 'react-router-dom';
 
 const BlogPostDetail = () => {
@@ -43,8 +43,8 @@ const BlogPostDetail = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="text-red-500 text-lg text-center">{error}</div>
         <div className="text-center mt-4">
-          <Link to="/posts" className="text-blue-500 hover:underline">
-            Back to all posts
+          <Link to="/blogs" className="text-blue-500 hover:underline">
+            Back to all blogs
           </Link>
         </div>
       </div>
@@ -56,8 +56,8 @@ const BlogPostDetail = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">Post not found</div>
         <div className="text-center mt-4">
-          <Link to="/posts" className="text-blue-500 hover:underline">
-            Back to all posts
+          <Link to="/blogs" className="text-blue-500 hover:underline">
+            Back to all blogs
           </Link>
         </div>
       </div>
@@ -67,13 +67,13 @@ const BlogPostDetail = () => {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <Link 
-        to="/posts" 
+        to="/blogs" 
         className="inline-flex items-center text-blue-500 hover:underline mb-6"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
           <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
         </svg>
-        Back to all posts
+        Back to all blogs
       </Link>
 
       <article className="bg-white rounded-xl shadow-lg overflow-hidden">
