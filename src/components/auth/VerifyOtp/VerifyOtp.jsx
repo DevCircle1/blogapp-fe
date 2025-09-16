@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { publicRequest } from "../../../services/api";
+import { useAuth } from "../../../context/AuthContext"; 
 
 export default function VerifyOtp() {
   const navigate = useNavigate();
+  const { loginUser } = useAuth(); 
   const [otp, setOtp] = useState(Array(6).fill(""));
 
-  // ✅ get email from localStorage instead of location.state
   const signupEmail = localStorage.getItem("signupEmail");
   const resetEmail = localStorage.getItem("resetEmail");
   const email = signupEmail || resetEmail;
@@ -38,18 +39,26 @@ export default function VerifyOtp() {
         otp: otpCode,
       });
 
-      if (res?.data?.message) {
-        toast.success(res.data.message);
-      } else {
-        toast.success("Email verified successfully");
+      toast.success(res?.data?.message || "Email verified successfully ✅");
+
+      // ✅ If backend sends token + user
+      if (res.data.token && res.data.user) {
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+        loginUser(res.data.user); // update AuthContext
       }
 
+      // ✅ cleanup email flags
+      localStorage.removeItem("signupEmail");
+      localStorage.removeItem("resetEmail");
+
+      // ✅ redirect
       if (signupEmail) {
-        localStorage.removeItem("signupEmail");
-        navigate("/"); // after signup verification
+        navigate("/"); // go home
       } else if (resetEmail) {
-        localStorage.removeItem("resetEmail");
-        navigate("/update-password"); 
+        navigate("/update-password");
+      } else {
+        navigate("/"); // fallback
       }
     } catch (error) {
       console.error("Email verification error:", error);

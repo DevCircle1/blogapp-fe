@@ -79,7 +79,7 @@ export default function RegisterForm() {
       setLoading(false);
       return; 
     }
-    toast.success("Account created successfully. OTP sent to your email ✅");
+    toast.success("Account created successfully. OTP sent to your email");
     localStorage.setItem("signupEmail", formData.email);
     setFormData({ email: "", password: "", confirm_password: "" });
     navigate("/verify-otp", { state: { email: formData.email } });
