@@ -18,15 +18,14 @@ export default function Footer() {
           <h3 className="text-lg font-semibold text-white">Company</h3>
           <ul className="mt-4 space-y-2 text-sm">
             <li><a href="/about-us" className="hover:text-white transition">About Us</a></li>
-            <li><a href="#" className="hover:text-white transition">Careers</a></li>
-            <li><a href="/blogs" className="hover:text-white transition">Blog</a></li>
+            <li><a href="/blogs" className="hover:text-white transition">Blogs</a></li>
           </ul>
         </div>
 
         <div>
           <h3 className="text-lg font-semibold text-white">Support</h3>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><a href="#" className="hover:text-white transition">Help Center</a></li>
+            <li><a href="/help-center" className="hover:text-white transition">Help Center</a></li>
             <li><a href="/terms-and-conditions" className="hover:text-white transition">Terms of Service</a></li>
             <li><a href="#" className="hover:text-white transition">Privacy Policy</a></li>
             <li><a href="/contact-us" className="hover:text-white transition">Contact Us</a></li>

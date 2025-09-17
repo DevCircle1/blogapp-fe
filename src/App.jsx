@@ -17,6 +17,7 @@ import BlogPostDetail from './components/blogs/BlogPostDetail.jsx'
 import TermsAndConditions from './components/common/Terms/Terms.jsx'
 import AboutUs from './components/common/Terms/AboutUs.jsx'
 import ContactUs from './components/common/Terms/ContactUs.jsx'
+import HelpCenter from './components/common/Terms/HelpCenter.jsx'
 import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
@@ -42,7 +43,7 @@ function App() {
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/contact-us" element={<ContactUs />} />
-
+        <Route path="/help-center" element={<HelpCenter />}></Route>
       </Routes>
 
       {shouldShowNavbar(location.pathname) && <Footer />}
