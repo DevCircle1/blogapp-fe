@@ -7,6 +7,7 @@ import UpdatePassword from './components/auth/UpdatePasswordForm/UpdatePassword.
 import VerifyOtp from './components/auth/VerifyOtp/VerifyOtp.jsx'
 import { shouldShowNavbar } from './utils/navbarUtils.js'  
 import Footer from './components/common/Footer/Footer.jsx'
+import ToolsPage from './components/tools/ToolsPage.jsx'
 import IPAddressChecker from './components/tools/ip.jsx'
 import ScreenResolutionTool from './components/tools/ScreenResolutionTool.jsx'
 import ProfitMarginCalculator from './components/tools/ProfitMarginCalculator.jsx'
@@ -37,6 +38,7 @@ function App() {
         <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/write-blogs" element={<WriteBlog />} />
+        <Route path="/tools" element={<ToolsPage />} />
         <Route path="/check-ip" element={<IPAddressChecker />} />
         <Route path="/screen-resolution" element={<ScreenResolutionTool />} />
         <Route path="/profit-margin-calculator" element={<ProfitMarginCalculator />} />
