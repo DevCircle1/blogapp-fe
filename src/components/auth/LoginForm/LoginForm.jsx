@@ -16,13 +16,11 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { loginUser } = useAuth();
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
   };
-
   const validateForm = () => {
     const newErrors = {};
     if (!formData.email) {
@@ -36,23 +34,17 @@ export default function LoginForm() {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-
     setLoading(true);
     setErrors({});
-
     const response = await login(formData);
-
     if (response.success) {
       toast.success("Login successful");
-
       const tokens = response.data.tokens;
       const userData = response.data.user || null;
       loginUser(tokens, userData);
-
       navigate("/");
     } else {
       if (response.details) {
@@ -70,10 +62,8 @@ export default function LoginForm() {
         toast.error(errorMsg);
       }
     }
-
     setLoading(false);
   };
-
   const getInputClassName = (field) => {
     const base =
       "bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:text-white";
@@ -82,7 +72,6 @@ export default function LoginForm() {
       "border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500";
     return `${base} ${errors[field] ? err : normal}`;
   };
-
   return (
     <section className="bg-gray-50 dark:bg-gray-900 min-h-screen">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -154,9 +143,7 @@ export default function LoginForm() {
                 className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 disabled:opacity-50"
               >
                 {loading ? "Signing in..." : "Sign in"}
-              </button>
-              
-              {/* Forgot Password Link */}
+              </button>          
               <div className="text-right text-sm font-light text-gray-500 dark:text-gray-400">
                 <Link
                   to="/forget-password"
@@ -165,7 +152,6 @@ export default function LoginForm() {
                   Forgot password?
                 </Link>
               </div>
-              
               <p className="text-sm font-light text-gray-500 dark:text-gray-400 text-right">
                 Don't have an account?{" "}
                 <Link

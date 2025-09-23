@@ -13,8 +13,6 @@ export default function ForgotPassword() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validation
     if (!email) {
       toast.error('Email is required');
       return;
@@ -26,12 +24,9 @@ export default function ForgotPassword() {
       toast.error('You must accept the Terms and Conditions');
       return;
     }
-
     setLoading(true);
-
     try {
       const result = await authService.forgotPassword(email);
-
 if (result.success) {
   toast.success(result.message || 'OTP sent to your email. Please check your inbox.');
   localStorage.setItem('resetEmail', email);
@@ -41,9 +36,7 @@ if (result.success) {
 }
     } catch (error) {
       console.error('Forgot password error:', error);
-
       let backendError = 'An unexpected error occurred. Please try again.';
-
       if (error.response) {
         if (typeof error.response.data === 'string') {
           backendError = error.response.data;
@@ -56,13 +49,11 @@ if (result.success) {
       } else if (error.message) {
         backendError = error.message;
       }
-
       toast.error(backendError);
     } finally {
       setLoading(false);
     }
   };
-
   return (
     <section className="bg-gray-50 dark:bg-gray-900 min-h-screen">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -77,7 +68,6 @@ if (result.success) {
           />
           <span className="-ml-6">DevCircle</span>
         </Link>
-
         <div className="w-full p-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-gray-800 dark:border-gray-700 sm:p-8">
           <h1 className="mb-1 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
             Forgot your password?
@@ -86,7 +76,6 @@ if (result.success) {
             Don't fret! Just type in your email and we will send you a code to
             reset your password!
           </p>
-
           <form
             className="mt-4 space-y-4 lg:mt-5 md:space-y-5"
             onSubmit={handleSubmit}
@@ -109,7 +98,6 @@ if (result.success) {
                 required
               />
             </div>
-
             <div className="flex items-start">
               <div className="flex items-center h-5">
                 <input
@@ -137,7 +125,6 @@ if (result.success) {
                 </label>
               </div>
             </div>
-
             <button
               type="submit"
               disabled={loading}
@@ -145,7 +132,6 @@ if (result.success) {
             >
               {loading ? 'Sending OTP...' : 'Reset password'}
             </button>
-
             <p className="text-sm font-light text-gray-500 dark:text-gray-400 text-center">
               Remember your password?{' '}
               <Link

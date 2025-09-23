@@ -10,59 +10,47 @@ export default function RegisterForm() {
     password: "",
     confirm_password: "",
   });
-
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
   };
-
   const validateForm = () => {
     const newErrors = {};
-
     if (!formData.email) {
       newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = "Enter a valid email address";
     }
-
     if (!formData.password) {
       newErrors.password = "Password is required";
     } else if (formData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters";
     }
-
     if (!formData.confirm_password) {
       newErrors.confirm_password = "Please confirm password";
     } else if (formData.password !== formData.confirm_password) {
       newErrors.confirm_password = "Passwords do not match";
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-
     setLoading(true);
     setErrors({});
-
     const response = await signup({
       email: formData.email,
       password: formData.password,
       confirm_password: formData.confirm_password,
     });
-
     if (!response.success) {
-      // show each backend error
       if (response.details) {
         const newErrors = {};
         Object.keys(response.details).forEach((field) => {
@@ -83,10 +71,8 @@ export default function RegisterForm() {
     localStorage.setItem("signupEmail", formData.email);
     setFormData({ email: "", password: "", confirm_password: "" });
     navigate("/verify-otp", { state: { email: formData.email } });
-
     setLoading(false);
   };
-
   const getInputClassName = (field) => {
     const base =
       "bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:text-white";
@@ -95,7 +81,6 @@ export default function RegisterForm() {
       "border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500";
     return `${base} ${errors[field] ? err : normal}`;
   };
-
   return (
     <section className="bg-gray-50 dark:bg-gray-900 min-h-screen">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
