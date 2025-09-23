@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react';
-
 const PrivacyPolicy = () => {
   const [activeSection, setActiveSection] = useState('introduction');
-
-  // Update active section based on scroll position
   useEffect(() => {
     const handleScroll = () => {
       const sections = document.querySelectorAll('section');
@@ -32,7 +29,6 @@ const PrivacyPolicy = () => {
       });
     }
   };
-
   const navigationItems = [
     { id: 'introduction', title: 'Introduction' },
     { id: 'data-collection', title: 'Data Collection' },
@@ -84,23 +80,7 @@ const PrivacyPolicy = () => {
                 ))}
               </ul>
             </div>
-
-            {/* Download option */}
-            <div className="bg-white rounded-xl shadow-md p-6 mt-6">
-              <h3 className="font-semibold text-gray-800 mb-4">Download Policy</h3>
-              <p className="text-gray-600 text-sm mb-4">
-                You can download a copy of our privacy policy for your records.
-              </p>
-              <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
-                <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-                Download PDF
-              </button>
-            </div>
           </div>
-
-          {/* Main Content */}
           <div className="lg:w-3/4">
             <div className="bg-white rounded-xl shadow-md p-8">
               {/* Introduction */}
@@ -261,14 +241,13 @@ const PrivacyPolicy = () => {
                       <svg className="w-5 h-5 text-blue-600 mr-3 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                       </svg>
-                      <span>Email: privacy@yourwebsite.com</span>
+                      <span>Email: info.devcircle@gmail.com</span>
                     </li>
                     <li className="flex items-start">
                       <svg className="w-5 h-5 text-blue-600 mr-3 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
-                      <span>Address: 123 Privacy Lane, Data Protection City, DP 12345</span>
                     </li>
                   </ul>
                 </div>
@@ -283,9 +262,9 @@ const PrivacyPolicy = () => {
                   We value your privacy and are committed to protecting your personal information.
                 </p>
               </div>
-              <button className="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap">
+              {/* <button className="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap">
                 Accept Privacy Policy
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
