@@ -20,6 +20,7 @@ import AboutUs from './components/common/Terms/AboutUs.jsx'
 import ContactUs from './components/common/Terms/ContactUs.jsx'
 import HelpCenter from './components/common/Terms/HelpCenter.jsx'
 import PrivacyPolicy from './components/common/Terms/PrivacyPolicy.jsx'
+import HomePage from './components/common/Home/HomePage.jsx'
 import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
@@ -30,7 +31,7 @@ function App() {
       {shouldShowNavbar(location.pathname) && <Navbar />}
 
       <Routes>
-        <Route path="/" element={<h1 className="p-6 text-2xl">Welcome to Blog App 📝</h1>} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<RegisterForm />} />
         <Route path="/forget-password" element={<ForgetPassword />} />
