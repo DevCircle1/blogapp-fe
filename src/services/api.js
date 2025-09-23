@@ -1,10 +1,7 @@
-// src/services/api.js
 import axios from 'axios';
-
 const API_BASE_URL = import.meta.env.REACT_APP_API_URL || 'https://api.talkandtool.com/api';
 // const API_BASE_URL = import.meta.env.REACT_APP_API_URL || 'http://localhost:8000/api';
 
-// ✅ Create a public axios instance (no auth required)
 export const publicRequest = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
@@ -12,8 +9,6 @@ export const publicRequest = axios.create({
     'Content-Type': 'application/json',
   },
 });
-
-// ✅ Create a private axios instance (requires auth)
 export const privateRequest = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
@@ -21,8 +16,6 @@ export const privateRequest = axios.create({
     'Content-Type': 'application/json',
   },
 });
-
-// Request interceptor for private requests - automatically attach token
 privateRequest.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('accessToken');
@@ -36,14 +29,10 @@ privateRequest.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
-// Response interceptor for private requests - handle token refresh
 privateRequest.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-
-    // If token expired (401) and we haven't already tried to refresh
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
