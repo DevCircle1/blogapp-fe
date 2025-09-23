@@ -24,6 +24,7 @@ const IPAddressChecker = () => {
 
     fetchIPData();
   }, []);
+
   const copyToClipboard = () => {
     if (ipData && ipData.ip) {
       navigator.clipboard.writeText(ipData.ip);
@@ -79,44 +80,49 @@ const IPAddressChecker = () => {
 
         {/* Main Content */}
         <main className="bg-white rounded-2xl shadow-xl overflow-hidden mb-12">
-          {/* IP Address Display */}
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-8 text-center">
+          {/* IP Address Display - MOBILE FRIENDLY VERSION */}
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6 md:p-8 text-center">
             <div className="flex items-center justify-center mb-2">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 md:h-8 md:w-8 mr-2 md:mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <h2 className="text-2xl font-semibold">Your Public IP Address</h2>
+              <h2 className="text-xl md:text-2xl font-semibold">Your Public IP Address</h2>
             </div>
             
-            <div className="flex items-center justify-center mt-6 mb-4">
-              <span className="text-3xl md:text-4xl font-mono font-bold bg-blue-800 bg-opacity-25 px-6 py-3 rounded-lg">
-                {ipData.ip}
-              </span>
-              <button 
-                onClick={copyToClipboard}
-                className="ml-4 bg-white text-blue-700 hover:bg-blue-50 font-medium py-3 px-4 rounded-lg transition duration-200 flex items-center"
-              >
-                {copied ? (
-                  <>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                    </svg>
-                    Copy
-                  </>
-                )}
-              </button>
+            {/* Mobile-friendly IP display section */}
+            <div className="flex flex-col sm:flex-row items-center justify-center mt-4 md:mt-6 mb-4 space-y-4 sm:space-y-0">
+              <div className="w-full sm:w-auto flex justify-center">
+                <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-mono font-bold bg-blue-800 bg-opacity-25 px-4 py-3 rounded-lg break-all text-center max-w-full">
+                  {ipData.ip}
+                </span>
+              </div>
+              <div className="w-full sm:w-auto flex justify-center sm:ml-4">
+                <button 
+                  onClick={copyToClipboard}
+                  className="w-full sm:w-auto bg-white text-blue-700 hover:bg-blue-50 font-medium py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center min-w-[120px]"
+                >
+                  {copied ? (
+                    <>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                      Copy
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
 
           {/* Network Details */}
-          <div className="p-8">
+          <div className="p-6 md:p-8">
             <h3 className="text-xl font-semibold text-gray-800 mb-6 flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -124,23 +130,23 @@ const IPAddressChecker = () => {
               Network Information
             </h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-gray-50 p-5 rounded-xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+              <div className="bg-gray-50 p-4 md:p-5 rounded-xl">
                 <h4 className="text-sm font-medium text-gray-500 mb-1">City</h4>
                 <p className="text-lg font-semibold">{ipData.city || 'Unknown'}</p>
               </div>
               
-              <div className="bg-gray-50 p-5 rounded-xl">
+              <div className="bg-gray-50 p-4 md:p-5 rounded-xl">
                 <h4 className="text-sm font-medium text-gray-500 mb-1">Region</h4>
                 <p className="text-lg font-semibold">{ipData.region || 'Unknown'}</p>
               </div>
               
-              <div className="bg-gray-50 p-5 rounded-xl">
+              <div className="bg-gray-50 p-4 md:p-5 rounded-xl">
                 <h4 className="text-sm font-medium text-gray-500 mb-1">Country</h4>
                 <p className="text-lg font-semibold">{ipData.country || 'Unknown'}</p>
               </div>
               
-              <div className="bg-gray-50 p-5 rounded-xl">
+              <div className="bg-gray-50 p-4 md:p-5 rounded-xl">
                 <h4 className="text-sm font-medium text-gray-500 mb-1">ISP</h4>
                 <p className="text-lg font-semibold">{ipData.connection.org || 'Unknown'}</p>
               </div>
@@ -149,7 +155,7 @@ const IPAddressChecker = () => {
         </main>
 
         {/* FAQ Section */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 mb-12">
+        <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 mb-12">
           <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Frequently Asked Questions</h2>
           
           <div className="space-y-6">
