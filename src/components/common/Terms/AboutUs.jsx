@@ -6,11 +6,11 @@ const AboutUs = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
         <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-6">About DevCircle</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-6">About Talk and Tool</h1>
           
           <div className="prose prose-lg text-gray-600 mb-8">
             <p className="mb-4">
-              Welcome to DevCircle, your premier destination for developer resources, tools, and career opportunities. 
+              Welcome to Talk and Tool, your premier destination for developer resources, tools, and career opportunities. 
               We're dedicated to creating a thriving community where developers can learn, grow, and connect.
             </p>
             
@@ -61,12 +61,12 @@ const AboutUs = () => {
           <div className="bg-gray-50 p-6 rounded-lg">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Our Mission</h2>
             <p className="text-gray-600 mb-4">
-              At DevCircle, we believe in empowering developers with the resources they need to excel in their careers. 
+              At Talk and Tool, we believe in empowering developers with the resources they need to excel in their careers. 
               Whether you're looking to learn new skills, discover useful tools, or find your next career opportunity, 
               we're here to support your journey.
             </p>
             <p className="text-gray-600">
-              Join our growing community of developers and take your career to the next level with DevCircle.
+              Join our growing community of developers and take your career to the next level with Talk and Tool.
             </p>
           </div>
         </div>

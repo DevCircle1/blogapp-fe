@@ -80,7 +80,7 @@ export default function LoginForm() {
           className="flex items-center mb-6 text-3xl font-semibold text-gray-900 dark:text-white"
         >
           <img className="w-24 h-24" src="logo.png" alt="logo" />
-          <span className="-ml-6">DevCircle</span>
+          <span className="-ml-6">Talk and Tool</span>
         </a>
         <div className="w-full bg-white rounded-lg shadow dark:border sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">

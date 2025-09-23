@@ -12,7 +12,7 @@ const TermsAndConditions = () => {
           <section className="mb-6">
             <h2 className="text-xl font-semibold mb-3">1. Acceptance of Terms</h2>
             <p className="mb-4">
-              Welcome to DevCircle! By accessing or using our website located at devcircle.com (the "Site"), 
+              Welcome to Talk and Tool! By accessing or using our website located at talkandtool.com (the "Site"), 
               you agree to be bound by these Terms and Conditions ("Terms"). If you do not agree to these Terms, 
               please do not use our Site.
             </p>
@@ -21,7 +21,7 @@ const TermsAndConditions = () => {
           <section className="mb-6">
             <h2 className="text-xl font-semibold mb-3">2. Description of Services</h2>
             <p className="mb-4">
-              DevCircle provides users with access to:
+              Talk and Tool provides users with access to:
             </p>
             <ul className="list-disc pl-5 mb-4">
               <li className="mb-2">Educational blog posts on various technology topics</li>
@@ -54,7 +54,7 @@ const TermsAndConditions = () => {
             <h2 className="text-xl font-semibold mb-3">4. Intellectual Property Rights</h2>
             <p className="mb-4">
               All content on this Site, including but not limited to text, graphics, logos, images, tutorials, code samples, 
-              and tools, is the property of DevCircle or its content suppliers and is protected by international copyright laws.
+              and tools, is the property of Talk and Tool or its content suppliers and is protected by international copyright laws.
             </p>
             <p className="mb-4">
               You may access and use the content for your personal, non-commercial use. However, you may not:
@@ -73,7 +73,7 @@ const TermsAndConditions = () => {
             <h2 className="text-xl font-semibold mb-3">5. User-Generated Content</h2>
             <p className="mb-4">
               Users may have the opportunity to post comments, share code, or contribute other content. By submitting 
-              content to our Site, you grant DevCircle a perpetual, royalty-free, worldwide license to use, modify, 
+              content to our Site, you grant Talk and Tool a perpetual, royalty-free, worldwide license to use, modify, 
               and display your contribution.
             </p>
             <p className="mb-4">
@@ -93,7 +93,7 @@ const TermsAndConditions = () => {
           <section className="mb-6">
             <h2 className="text-xl font-semibold mb-3">6. Disclaimer of Warranties</h2>
             <p className="mb-4">
-              The content and tools on DevCircle are provided "as is" without warranties of any kind, either express or implied. 
+              The content and tools on Talk and Tool are provided "as is" without warranties of any kind, either express or implied. 
               While we strive to provide accurate and up-to-date information, we do not guarantee the completeness, reliability, 
               or accuracy of any content on our Site.
             </p>
@@ -106,7 +106,7 @@ const TermsAndConditions = () => {
           <section className="mb-6">
             <h2 className="text-xl font-semibold mb-3">7. Limitation of Liability</h2>
             <p>
-              DevCircle and its affiliates shall not be liable for any indirect, incidental, special, or consequential damages 
+              Talk and Tool and its affiliates shall not be liable for any indirect, incidental, special, or consequential damages 
               resulting from the use or inability to use our Site or services, even if we have been advised of the possibility 
               of such damages.
             </p>
@@ -115,9 +115,9 @@ const TermsAndConditions = () => {
           <section className="mb-6">
             <h2 className="text-xl font-semibold mb-3">8. Third-Party Links</h2>
             <p>
-              Our Site may contain links to third-party websites or services that are not owned or controlled by DevCircle. 
+              Our Site may contain links to third-party websites or services that are not owned or controlled by Talk and Tool. 
               We have no control over, and assume no responsibility for, the content, privacy policies, or practices of any 
-              third-party websites or services. You acknowledge and agree that DevCircle shall not be responsible for any 
+              third-party websites or services. You acknowledge and agree that Talk and Tool shall not be responsible for any 
               damage or loss caused by use of such third-party resources.
             </p>
           </section>
@@ -135,7 +135,7 @@ const TermsAndConditions = () => {
             <h2 className="text-xl font-semibold mb-3">10. Governing Law</h2>
             <p>
               These Terms shall be governed by and construed in accordance with the laws of the jurisdiction where 
-              DevCircle is established, without regard to its conflict of law provisions.
+              Talk and Tool is established, without regard to its conflict of law provisions.
             </p>
           </section>
 
