@@ -49,7 +49,7 @@ export default function Footer() {
         
         {/* Logo / Brand */}
         <div>
-          <h2 className="text-2xl font-bold text-white">DevCircle</h2>
+          <h2 className="text-2xl font-bold text-white">TalkandTool</h2>
           <p className="mt-4 text-sm text-gray-400">
             Building modern solutions for the future of web and mobile.
           </p>
