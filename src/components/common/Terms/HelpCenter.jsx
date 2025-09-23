@@ -257,10 +257,6 @@ const HelpCenter = () => {
                   >
                     Contact Us
                   </a>
-
-                  <button className="border border-white py-2 px-6 rounded-lg font-medium hover:bg-white/10 transition-colors">
-                    Live Chat
-                  </button>
                 </div>
               </div>
             </div>
