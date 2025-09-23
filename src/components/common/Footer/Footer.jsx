@@ -1,6 +1,48 @@
-import React from 'react'
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+import { publicRequest } from '../../../services/api'; 
 
 export default function Footer() {
+  const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    
+    if (!email.trim()) {
+      toast.error("Please enter your email address");
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const res = await publicRequest.post('/subscribe/', {
+        email: email.trim()
+      });
+
+      toast.success("You have subscribed successfully! 🎉");
+      setEmail(''); // Clear input after success
+    } catch (error) {
+      console.error('Subscription error:', error);
+      const errorMsg = error.response?.data?.message || 
+                      error.response?.data?.error || 
+                      "Failed to subscribe. Please try again.";
+      toast.error(errorMsg);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const isEmailEmpty = !email.trim();
+
   return (
     <footer className="bg-gray-900 text-gray-300 py-10">
       <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -35,25 +77,38 @@ export default function Footer() {
         {/* Newsletter */}
         <div>
           <h3 className="text-lg font-semibold text-white">Stay Updated</h3>
-          <form className="mt-4 flex">
+          <form onSubmit={handleSubscribe} className="mt-4 flex">
             <input
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              className="w-full px-3 py-2 rounded-l-lg bg-gray-800 text-sm border border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 rounded-l-lg bg-gray-800 text-sm border border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
+              disabled={isSubmitting}
             />
             <button
               type="submit"
-              className="px-4 py-2 bg-indigo-600 rounded-r-lg text-sm font-medium text-white hover:bg-indigo-700 transition"
+              disabled={isSubmitting || isEmailEmpty}
+              className={`px-4 py-2 rounded-r-lg text-sm font-medium text-white transition duration-200 ${
+                isSubmitting 
+                  ? 'bg-indigo-400 cursor-not-allowed' 
+                  : isEmailEmpty 
+                    ? 'bg-gray-600 cursor-not-allowed opacity-50' 
+                    : 'bg-indigo-600 hover:bg-indigo-700'
+              }`}
             >
-              Subscribe
+              {isSubmitting ? 'Subscribing...' : 'Subscribe'}
             </button>
           </form>
+          <p className="mt-2 text-xs text-gray-400">
+            Get the latest updates and news delivered to your inbox.
+          </p>
         </div>
       </div>
 
       {/* Bottom */}
       <div className="mt-10 border-t border-gray-800 pt-6 text-center text-sm text-gray-500">
-        © {new Date().getFullYear()} DevCircle. All rights reserved.
+        © {new Date().getFullYear()} TalkandTool. All rights reserved.
       </div>
     </footer>
   );
