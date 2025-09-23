@@ -63,7 +63,7 @@ if (result.success) {
         >
           <img
             className="w-24 h-24"
-            src="1-removebg-preview.png"
+            src="logo.png"
             alt="logo"
           />
           <span className="-ml-6">DevCircle</span>

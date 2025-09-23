@@ -76,10 +76,10 @@ export default function LoginForm() {
     <section className="bg-gray-50 dark:bg-gray-900 min-h-screen">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a
-          href="#"
+          href="/"
           className="flex items-center mb-6 text-3xl font-semibold text-gray-900 dark:text-white"
         >
-          <img className="w-24 h-24" src="1-removebg-preview.png" alt="logo" />
+          <img className="w-24 h-24" src="logo.png" alt="logo" />
           <span className="-ml-6">DevCircle</span>
         </a>
         <div className="w-full bg-white rounded-lg shadow dark:border sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
