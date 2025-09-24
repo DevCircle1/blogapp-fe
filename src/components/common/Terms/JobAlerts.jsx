@@ -4,7 +4,7 @@ import { publicRequest } from '../../../services/api';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// Icons (you can replace these with your actual icon library)
+// Icons
 const BellIcon = () => (
   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM10.24 8.56a5.97 5.97 0 01-4.66-6.24M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -29,20 +29,11 @@ const CalendarIcon = () => (
   </svg>
 );
 
-const LocationIcon = () => (
-  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-  </svg>
-);
-
 const JobAlerts = () => {
   const { user } = useAuth();
   const [jobAlerts, setJobAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState('all');
-  const [sortBy, setSortBy] = useState('newest');
 
   useEffect(() => {
     fetchJobAlerts();
@@ -62,24 +53,9 @@ const JobAlerts = () => {
     }
   };
 
-  const filteredAlerts = jobAlerts
-    .filter(alert => {
-      const matchesSearch = alert.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           alert.company?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           alert.description?.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesStatus = filterStatus === 'all' || alert.status === filterStatus;
-      
-      return matchesSearch && matchesStatus;
-    })
-    .sort((a, b) => {
-      if (sortBy === 'newest') {
-        return new Date(b.created_at) - new Date(a.created_at);
-      } else if (sortBy === 'oldest') {
-        return new Date(a.created_at) - new Date(b.created_at);
-      }
-      return 0;
-    });
+  const filteredAlerts = jobAlerts.filter(alert => {
+    return alert.message?.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   const handleDeleteAlert = async (alertId) => {
     try {
@@ -92,20 +68,18 @@ const JobAlerts = () => {
     }
   };
 
-  const getStatusBadge = (status) => {
-    const statusConfig = {
-      active: { color: 'bg-green-100 text-green-800', label: 'Active' },
-      paused: { color: 'bg-yellow-100 text-yellow-800', label: 'Paused' },
-      expired: { color: 'bg-red-100 text-red-800', label: 'Expired' },
-      draft: { color: 'bg-gray-100 text-gray-800', label: 'Draft' }
-    };
-    
-    const config = statusConfig[status] || statusConfig.draft;
-    return (
-      <span className={`px-3 py-1 rounded-full text-xs font-medium ${config.color}`}>
-        {config.label}
-      </span>
-    );
+  // Extract title from message (first line or first 50 characters)
+  const getTitleFromMessage = (message) => {
+    if (!message) return 'Job Alert';
+    const firstLine = message.split('\n')[0];
+    return firstLine.length > 50 ? firstLine.substring(0, 50) + '...' : firstLine;
+  };
+
+  // Get description from message (rest of the message after first line)
+  const getDescriptionFromMessage = (message) => {
+    if (!message) return 'No description available';
+    const lines = message.split('\n');
+    return lines.length > 1 ? lines.slice(1).join(' ').substring(0, 150) + '...' : 'No additional details';
   };
 
   if (loading) {
@@ -134,33 +108,15 @@ const JobAlerts = () => {
           </p>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        {/* Stats Card - Simplified for your API */}
+        <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-8">
           <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-500">
             <div className="text-2xl font-bold text-gray-900">{jobAlerts.length}</div>
-            <div className="text-gray-600">Total Alerts</div>
-          </div>
-          <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-green-500">
-            <div className="text-2xl font-bold text-gray-900">
-              {jobAlerts.filter(a => a.status === 'active').length}
-            </div>
-            <div className="text-gray-600">Active Alerts</div>
-          </div>
-          <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-yellow-500">
-            <div className="text-2xl font-bold text-gray-900">
-              {jobAlerts.filter(a => a.status === 'paused').length}
-            </div>
-            <div className="text-gray-600">Paused Alerts</div>
-          </div>
-          <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-red-500">
-            <div className="text-2xl font-bold text-gray-900">
-              {jobAlerts.filter(a => a.status === 'expired').length}
-            </div>
-            <div className="text-gray-600">Expired Alerts</div>
+            <div className="text-gray-600">Total Job Alerts</div>
           </div>
         </div>
 
-        {/* Search and Filter Section */}
+        {/* Search Section */}
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
           <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
             {/* Search Input */}
@@ -176,34 +132,6 @@ const JobAlerts = () => {
                 className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
-
-            {/* Filters */}
-            <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
-              <select
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-                className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="all">All Status</option>
-                <option value="active">Active</option>
-                <option value="paused">Paused</option>
-                <option value="expired">Expired</option>
-              </select>
-
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="newest">Newest First</option>
-                <option value="oldest">Oldest First</option>
-              </select>
-
-              <button className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition duration-200 flex items-center justify-center">
-                <FilterIcon />
-                <span className="ml-2">Filter</span>
-              </button>
-            </div>
           </div>
         </div>
 
@@ -211,8 +139,12 @@ const JobAlerts = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
           {filteredAlerts.length === 0 ? (
             <div className="col-span-full text-center py-12">
-              <div className="text-gray-500 text-lg">No job alerts found</div>
-              <p className="text-gray-400 mt-2">Try adjusting your search or filters</p>
+              <div className="text-gray-500 text-lg">
+                {jobAlerts.length === 0 ? 'No job alerts available' : 'No job alerts found'}
+              </div>
+              <p className="text-gray-400 mt-2">
+                {jobAlerts.length === 0 ? 'Check back later for new job opportunities' : 'Try adjusting your search'}
+              </p>
             </div>
           ) : (
             filteredAlerts.map((alert) => (
@@ -220,8 +152,12 @@ const JobAlerts = () => {
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">{alert.title}</h3>
-                      {getStatusBadge(alert.status)}
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">
+                        {getTitleFromMessage(alert.message)}
+                      </h3>
+                      <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        Active
+                      </span>
                     </div>
                     <button
                       onClick={() => handleDeleteAlert(alert.id)}
@@ -233,27 +169,25 @@ const JobAlerts = () => {
                     </button>
                   </div>
 
-                  <p className="text-gray-600 mb-4 line-clamp-2">{alert.description}</p>
+                  <p className="text-gray-600 mb-4 line-clamp-3">
+                    {alert.message || 'No description available'}
+                  </p>
 
                   <div className="space-y-3 mb-6">
                     <div className="flex items-center text-gray-500">
-                      <LocationIcon />
-                      <span className="ml-2">{alert.location || 'Remote'}</span>
-                    </div>
-                    <div className="flex items-center text-gray-500">
                       <CalendarIcon />
                       <span className="ml-2">
-                        Created: {new Date(alert.created_at).toLocaleDateString()}
+                        Posted: {new Date(alert.created_at).toLocaleDateString()}
                       </span>
                     </div>
                   </div>
 
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-500">
-                      Frequency: {alert.frequency || 'Daily'}
+                      ID: #{alert.id}
                     </span>
                     <button className="bg-blue-100 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-200 transition duration-200">
-                      Manage
+                      View Details
                     </button>
                   </div>
                 </div>
