@@ -11,12 +11,6 @@ const BellIcon = () => (
   </svg>
 );
 
-const FilterIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z" />
-  </svg>
-);
-
 const SearchIcon = () => (
   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -29,11 +23,61 @@ const CalendarIcon = () => (
   </svg>
 );
 
+const CloseIcon = () => (
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+  </svg>
+);
+
+// Modal Component
+const MessageModal = ({ isOpen, onClose, message, title, date }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+        <div className="flex justify-between items-center p-6 border-b">
+          <h3 className="text-xl font-bold text-gray-900">{title}</h3>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 transition duration-200"
+          >
+            <CloseIcon />
+          </button>
+        </div>
+        
+        <div className="p-6 overflow-y-auto max-h-[60vh]">
+          <div className="prose prose-lg max-w-none">
+            <div className="whitespace-pre-wrap text-gray-700 leading-relaxed">
+              {message}
+            </div>
+          </div>
+        </div>
+        
+        <div className="flex justify-between items-center p-6 border-t bg-gray-50">
+          <div className="flex items-center text-gray-500 text-sm">
+            <CalendarIcon />
+            <span className="ml-2">Posted: {new Date(date).toLocaleDateString()}</span>
+          </div>
+          <button
+            onClick={onClose}
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-200"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const JobAlerts = () => {
   const { user } = useAuth();
   const [jobAlerts, setJobAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedAlert, setSelectedAlert] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchJobAlerts();
@@ -57,17 +101,6 @@ const JobAlerts = () => {
     return alert.message?.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
-  const handleDeleteAlert = async (alertId) => {
-    try {
-      await publicRequest.delete(`/job-alerts/${alertId}/`);
-      setJobAlerts(jobAlerts.filter(alert => alert.id !== alertId));
-      toast.success('Job alert deleted successfully!');
-    } catch (error) {
-      console.error('Error deleting job alert:', error);
-      toast.error('Failed to delete job alert');
-    }
-  };
-
   // Extract title from message (first line or first 50 characters)
   const getTitleFromMessage = (message) => {
     if (!message) return 'Job Alert';
@@ -75,11 +108,21 @@ const JobAlerts = () => {
     return firstLine.length > 50 ? firstLine.substring(0, 50) + '...' : firstLine;
   };
 
-  // Get description from message (rest of the message after first line)
-  const getDescriptionFromMessage = (message) => {
+  // Truncate message for card display
+  const truncateMessage = (message, maxLength = 120) => {
     if (!message) return 'No description available';
-    const lines = message.split('\n');
-    return lines.length > 1 ? lines.slice(1).join(' ').substring(0, 150) + '...' : 'No additional details';
+    if (message.length <= maxLength) return message;
+    return message.substring(0, maxLength) + '...';
+  };
+
+  const openModal = (alert) => {
+    setSelectedAlert(alert);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedAlert(null);
   };
 
   if (loading) {
@@ -94,6 +137,15 @@ const JobAlerts = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4 sm:px-6 lg:px-8">
       <ToastContainer position="top-right" autoClose={3000} />
       
+      {/* Message Modal */}
+      <MessageModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        message={selectedAlert?.message}
+        title={getTitleFromMessage(selectedAlert?.message)}
+        date={selectedAlert?.created_at}
+      />
+
       {/* Header Section */}
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
@@ -108,7 +160,7 @@ const JobAlerts = () => {
           </p>
         </div>
 
-        {/* Stats Card - Simplified for your API */}
+        {/* Stats Card */}
         <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-8">
           <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-500">
             <div className="text-2xl font-bold text-gray-900">{jobAlerts.length}</div>
@@ -150,27 +202,17 @@ const JobAlerts = () => {
             filteredAlerts.map((alert) => (
               <div key={alert.id} className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition duration-300 overflow-hidden">
                 <div className="p-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">
-                        {getTitleFromMessage(alert.message)}
-                      </h3>
-                      <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                        Active
-                      </span>
-                    </div>
-                    <button
-                      onClick={() => handleDeleteAlert(alert.id)}
-                      className="text-gray-400 hover:text-red-500 transition duration-200"
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                    </button>
+                  <div className="mb-4">
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">
+                      {getTitleFromMessage(alert.message)}
+                    </h3>
+                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      Active
+                    </span>
                   </div>
 
                   <p className="text-gray-600 mb-4 line-clamp-3">
-                    {alert.message || 'No description available'}
+                    {truncateMessage(alert.message)}
                   </p>
 
                   <div className="space-y-3 mb-6">
@@ -186,7 +228,10 @@ const JobAlerts = () => {
                     <span className="text-sm text-gray-500">
                       ID: #{alert.id}
                     </span>
-                    <button className="bg-blue-100 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-200 transition duration-200">
+                    <button 
+                      onClick={() => openModal(alert)}
+                      className="bg-blue-100 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-200 transition duration-200"
+                    >
                       View Details
                     </button>
                   </div>
