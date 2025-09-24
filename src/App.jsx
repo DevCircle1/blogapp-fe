@@ -20,7 +20,7 @@ import AboutUs from './components/common/Terms/AboutUs.jsx'
 import ContactUs from './components/common/Terms/ContactUs.jsx'
 import HelpCenter from './components/common/Terms/HelpCenter.jsx'
 import PrivacyPolicy from './components/common/Terms/PrivacyPolicy.jsx'
-import JobAlert from './components/tools/JobAlert.jsx'
+import JobAlert from './components/common/Terms/JobAlerts.jsx'
 import HomePage from './components/common/Home/HomePage.jsx'
 import 'react-toastify/dist/ReactToastify.css'
 

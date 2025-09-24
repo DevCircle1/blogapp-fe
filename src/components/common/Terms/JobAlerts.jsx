@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from "../../../context/AuthContext";
-import { publicRequest } from '../../services/api';
+import { publicRequest } from '../../../services/api';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
