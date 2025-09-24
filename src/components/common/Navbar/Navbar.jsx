@@ -18,6 +18,7 @@ const navigation = [
   { name: 'Tools', href: '/tools', current: false },
   { name: 'Contact Us', href: '/contact-us', current: false },
   { name: 'Write Blogs', href: '/write-blogs', current: false, requiresAuth: true },
+  { name: 'Job Alerts', href: '/job-alert', current: false, requiresAuth: false }, 
 ]
 
 function classNames(...classes) {
@@ -38,7 +39,7 @@ export default function Navbar() {
   const handleNavigation = (item, e) => {
     if (item.requiresAuth && !isAuthenticated) {
       e.preventDefault()
-      toast.info('Please log in first to write blogs')
+      toast.info(`Please log in first to access ${item.name.toLowerCase()}`)
     }
   }
 
@@ -112,17 +113,6 @@ export default function Navbar() {
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 {isAuthenticated ? (
                   <>
-                    <button
-                      type="button"
-                      className="relative rounded-full p-1 text-slate-300 hover:text-white"
-                    >
-                      <BellIcon aria-hidden="true" className="size-6" />
-                      <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span>
-                      </span>
-                    </button>
-
                     <Menu as="div" className="relative ml-3">
                       <MenuButton className="relative flex rounded-full">
                         <img
@@ -137,6 +127,14 @@ export default function Navbar() {
                           <a href="/profile" className="block px-4 py-2 text-sm text-slate-200 hover:bg-indigo-500/10">
                             Your profile
                           </a>
+                        </MenuItem>
+                        <MenuItem>
+                          <NavLink 
+                            to="/job-alert" 
+                            className="block px-4 py-2 text-sm text-slate-200 hover:bg-indigo-500/10"
+                          >
+                            Job Alerts
+                          </NavLink>
                         </MenuItem>
                         <MenuItem>
                           <button
