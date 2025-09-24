@@ -20,6 +20,7 @@ import AboutUs from './components/common/Terms/AboutUs.jsx'
 import ContactUs from './components/common/Terms/ContactUs.jsx'
 import HelpCenter from './components/common/Terms/HelpCenter.jsx'
 import PrivacyPolicy from './components/common/Terms/PrivacyPolicy.jsx'
+import JobAlert from './components/tools/JobAlert.jsx'
 import HomePage from './components/common/Home/HomePage.jsx'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -49,6 +50,7 @@ function App() {
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/help-center" element={<HelpCenter />}></Route>
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/job-alert" element={<JobAlert />} />
       </Routes>
 
       {shouldShowNavbar(location.pathname) && <Footer />}
