@@ -4,7 +4,7 @@ import 'react-quill/dist/quill.snow.css';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../context/AuthContext';
-import { privateRequest } from '../../services/api';
+import { publicRequest } from '../../services/api';
 
 const WriteBlog = ({ onPostCreated }) => {
   const { user } = useAuth();
@@ -20,7 +20,7 @@ const WriteBlog = ({ onPostCreated }) => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await privateRequest.get('/categories');
+        const response = await publicRequest.get('/categories');
         setCategories(response.data);
       } catch (error) {
         console.error('Error fetching categories:', error);

@@ -108,18 +108,33 @@ export default function HomePage() {
     toast.info(`Opening tool ${toolId}...`);
   };
 
+  // Helper function to strip HTML tags and get plain text
+  const stripHtmlTags = (html) => {
+    if (!html) return "No description available...";
+    
+    // Remove HTML tags using regex
+    const plainText = html.replace(/<[^>]*>/g, '');
+    
+    // Decode HTML entities
+    const textArea = document.createElement('textarea');
+    textArea.innerHTML = plainText;
+    return textArea.value || "No description available...";
+  };
+
   // Helper function to calculate read time
   const calculateReadTime = (content) => {
     const wordsPerMinute = 200;
-    const words = content ? content.split(/\s+/).length : 0;
+    const plainText = stripHtmlTags(content);
+    const words = plainText ? plainText.split(/\s+/).length : 0;
     return Math.ceil(words / wordsPerMinute);
   };
 
   // Helper function to get excerpt from content
   const getExcerpt = (content, maxLength = 120) => {
     if (!content) return "No excerpt available...";
-    if (content.length <= maxLength) return content;
-    return content.substring(0, maxLength) + '...';
+    const plainText = stripHtmlTags(content);
+    if (plainText.length <= maxLength) return plainText;
+    return plainText.substring(0, maxLength) + '...';
   };
 
   // Default image if featured_image is not available
@@ -232,52 +247,42 @@ export default function HomePage() {
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {featuredBlogs.map((blog) => (
-                <div
+                <Link
+                  to={`/blogs/${blog.id}`}
                   key={blog.id}
-                  className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden"
+                  className="block"
                 >
-                  <div className="relative">
-                    <img
-                      src={getBlogImage(blog)}
-                      alt={blog.title}
-                      className="w-full h-48 object-cover"
-                    />
-                    <div className="absolute top-4 left-4">
-                      <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                        {blog.category || "General"}
-                      </span>
-                    </div>
-                    <button
-                      onClick={() => handleBlogLike(blog.id)}
-                      className="absolute top-4 right-4 bg-white/90 p-2 rounded-full hover:bg-white transition-colors"
-                    >
-                      <FiHeart className="text-gray-600 hover:text-red-500" />
-                    </button>
-                  </div>
-
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold mb-3 line-clamp-2">
-                      {blog.title}
-                    </h3>
-                    <p className="text-gray-600 mb-4 line-clamp-2">
-                      {getExcerpt(blog.content || blog.excerpt)}
-                    </p>
-
-                    <div className="flex items-center justify-between text-sm text-gray-500">
-                      <div className="flex items-center space-x-4">
-                        <span className="flex items-center space-x-1">
-                          <FiClock />
-                          <span>{calculateReadTime(blog.content)} min read</span>
-                        </span>
-                        <span className="flex items-center space-x-1">
-                          <FiHeart />
-                          <span>{blog.likes_count || 0}</span>
-                        </span>
+                  <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden cursor-pointer">
+                    <div className="relative">
+                      <img
+                        src={getBlogImage(blog)}
+                        alt={blog.title}
+                        className="w-full h-48 object-cover"
+                      />
+                      <div className="absolute top-4 left-4">
                       </div>
-                      <span>{new Date(blog.created_at).toLocaleDateString()}</span>
+                    </div>
+
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold mb-3 line-clamp-2">
+                        {blog.title}
+                      </h3>
+                      <p className="text-gray-600 mb-4 line-clamp-2">
+                        {getExcerpt(blog.content || blog.excerpt)}
+                      </p>
+
+                      <div className="flex items-center justify-between text-sm text-gray-500">
+                        <div className="flex items-center space-x-4">
+                          <span className="flex items-center space-x-1">
+                            <FiClock />
+                            <span>{calculateReadTime(blog.content)} min read</span>
+                          </span>
+                        </div>
+                        <span>{new Date(blog.created_at).toLocaleDateString()}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           )}
