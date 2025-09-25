@@ -17,7 +17,7 @@ const HelpCenter = () => {
         {
           question: "How do I create an account on your website?",
           answer:
-            'To create an account, click on the "Sign Up" button in the top right corner of the page. Fill in your details including email address and password, then verify your email to complete registration.',
+            'To create an account, click on the "Register" button in the top right corner of the page. Fill in your details including email address and password, then verify your email to complete registration.',
         },
         {
           question: "Is there a mobile app available?",
