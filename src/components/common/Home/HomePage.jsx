@@ -11,50 +11,38 @@ import {
   FiHeart,
   FiShare2,
 } from "react-icons/fi";
+import { publicRequest } from '../../services/api';
 
 export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [isScrolled, setIsScrolled] = useState(false);
+  const [featuredBlogs, setFeaturedBlogs] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Sample data - replace with actual API data
-  const featuredBlogs = [
-    {
-      id: 1,
-      title: "The Future of Web Development in 2024",
-      excerpt:
-        "Exploring the latest trends and technologies shaping the web development landscape...",
-      category: "Web Development",
-      readTime: "5 min read",
-      likes: 42,
-      image:
-        "https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=400",
-      date: "2024-01-15",
-    },
-    {
-      id: 2,
-      title: "Mastering React Hooks: A Comprehensive Guide",
-      excerpt:
-        "Deep dive into React Hooks and how to use them effectively in your projects...",
-      category: "React",
-      readTime: "8 min read",
-      likes: 89,
-      image:
-        "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400",
-      date: "2024-01-12",
-    },
-    {
-      id: 3,
-      title: "AI Tools Every Developer Should Know",
-      excerpt:
-        "Discover the most powerful AI tools that can boost your productivity...",
-      category: "AI",
-      readTime: "6 min read",
-      likes: 156,
-      image:
-        "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400",
-      date: "2024-01-10",
-    },
-  ];
+  // Fetch featured blogs from API
+  useEffect(() => {
+    const fetchFeaturedBlogs = async () => {
+      try {
+        setIsLoading(true);
+        const response = await publicRequest.get('/posts/');
+        // Get the 3 latest posts sorted by created_at
+        const latestPosts = response.data
+          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+          .slice(0, 3);
+        
+        setFeaturedBlogs(latestPosts);
+      } catch (err) {
+        setError('Failed to fetch featured blogs');
+        console.error('Error fetching featured blogs:', err);
+        toast.error('Failed to load featured blogs');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchFeaturedBlogs();
+  }, []);
 
   const popularTools = [
     {
@@ -100,7 +88,7 @@ export default function HomePage() {
     { id: "webdev", name: "Web Development", icon: "💻", count: 12 },
     { id: "ai", name: "Artificial Intelligence", icon: "🤖", count: 8 },
     { id: "mobile", name: "Mobile Development", icon: "📱", count: 6 },
-    { id: "design", name: "UI/UX Design", icon: "�", count: 9 },
+    { id: "design", name: "UI/UX Design", icon: "🎨", count: 9 },
     { id: "devops", name: "DevOps", icon: "⚙️", count: 5 },
   ];
 
@@ -111,12 +99,40 @@ export default function HomePage() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
   const handleBlogLike = (blogId) => {
     toast.success("Added to favorites! ❤️");
   };
 
   const handleToolClick = (toolId) => {
     toast.info(`Opening tool ${toolId}...`);
+  };
+
+  // Helper function to calculate read time
+  const calculateReadTime = (content) => {
+    const wordsPerMinute = 200;
+    const words = content ? content.split(/\s+/).length : 0;
+    return Math.ceil(words / wordsPerMinute);
+  };
+
+  // Helper function to get excerpt from content
+  const getExcerpt = (content, maxLength = 120) => {
+    if (!content) return "No excerpt available...";
+    if (content.length <= maxLength) return content;
+    return content.substring(0, maxLength) + '...';
+  };
+
+  // Default image if featured_image is not available
+  const getBlogImage = (blog) => {
+    if (blog.featured_image) return blog.featured_image;
+    
+    // Fallback images based on category or random
+    const fallbackImages = [
+      "https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=400",
+      "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400",
+      "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400"
+    ];
+    return fallbackImages[Math.floor(Math.random() * fallbackImages.length)];
   };
 
   return (
@@ -200,56 +216,71 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredBlogs.map((blog) => (
-              <div
-                key={blog.id}
-                className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden"
-              >
-                <div className="relative">
-                  <img
-                    src={blog.image}
-                    alt={blog.title}
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="absolute top-4 left-4">
-                    <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                      {blog.category}
-                    </span>
-                  </div>
-                  <button
-                    onClick={() => handleBlogLike(blog.id)}
-                    className="absolute top-4 right-4 bg-white/90 p-2 rounded-full hover:bg-white transition-colors"
-                  >
-                    <FiHeart className="text-gray-600 hover:text-red-500" />
-                  </button>
-                </div>
-
-                <div className="p-6">
-                  <h3 className="text-xl font-bold mb-3 line-clamp-2">
-                    {blog.title}
-                  </h3>
-                  <p className="text-gray-600 mb-4 line-clamp-2">
-                    {blog.excerpt}
-                  </p>
-
-                  <div className="flex items-center justify-between text-sm text-gray-500">
-                    <div className="flex items-center space-x-4">
-                      <span className="flex items-center space-x-1">
-                        <FiClock />
-                        <span>{blog.readTime}</span>
-                      </span>
-                      <span className="flex items-center space-x-1">
-                        <FiHeart />
-                        <span>{blog.likes}</span>
+          {isLoading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+          ) : error ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="text-red-500 text-lg">{error}</div>
+            </div>
+          ) : featuredBlogs.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="text-gray-500 text-lg">No featured blogs available</div>
+              <p className="text-gray-400 mt-2">Check back later for new posts</p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {featuredBlogs.map((blog) => (
+                <div
+                  key={blog.id}
+                  className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden"
+                >
+                  <div className="relative">
+                    <img
+                      src={getBlogImage(blog)}
+                      alt={blog.title}
+                      className="w-full h-48 object-cover"
+                    />
+                    <div className="absolute top-4 left-4">
+                      <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                        {blog.category || "General"}
                       </span>
                     </div>
-                    <span>{new Date(blog.date).toLocaleDateString()}</span>
+                    <button
+                      onClick={() => handleBlogLike(blog.id)}
+                      className="absolute top-4 right-4 bg-white/90 p-2 rounded-full hover:bg-white transition-colors"
+                    >
+                      <FiHeart className="text-gray-600 hover:text-red-500" />
+                    </button>
+                  </div>
+
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold mb-3 line-clamp-2">
+                      {blog.title}
+                    </h3>
+                    <p className="text-gray-600 mb-4 line-clamp-2">
+                      {getExcerpt(blog.content || blog.excerpt)}
+                    </p>
+
+                    <div className="flex items-center justify-between text-sm text-gray-500">
+                      <div className="flex items-center space-x-4">
+                        <span className="flex items-center space-x-1">
+                          <FiClock />
+                          <span>{calculateReadTime(blog.content)} min read</span>
+                        </span>
+                        <span className="flex items-center space-x-1">
+                          <FiHeart />
+                          <span>{blog.likes_count || 0}</span>
+                        </span>
+                      </div>
+                      <span>{new Date(blog.created_at).toLocaleDateString()}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
