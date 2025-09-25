@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { publicRequest } from '../../../services/api'; 
 
 const ContactUs = () => {
   const [contactForm, setContactForm] = useState({
@@ -10,6 +11,7 @@ const ContactUs = () => {
     subject: '',
     message: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -19,8 +21,9 @@ const ContactUs = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
     // Form validation
     if (!contactForm.name || !contactForm.email || !contactForm.message) {
       toast.error('Please fill in all required fields');
@@ -34,14 +37,28 @@ const ContactUs = () => {
       return;
     }
     
-    // Simulate form submission
-    toast.success('Message sent successfully! We will get back to you soon.');
-    setContactForm({
-      name: '',
-      email: '',
-      subject: '',
-      message: ''
-    });
+    setIsSubmitting(true);
+
+    try {
+      // API call to submit contact form
+      const response = await publicRequest.post('/contact/', contactForm);
+      
+      toast.success('Message sent successfully! We will get back to you soon.');
+      setContactForm({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      });
+    } catch (error) {
+      console.error('Error submitting contact form:', error);
+      const errorMessage = error.response?.data?.message || 
+                          error.response?.data?.error || 
+                          'Failed to send message. Please try again.';
+      toast.error(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -59,7 +76,7 @@ const ContactUs = () => {
       />
       
       <div className="max-w-5xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+        <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 p-6 md:p-8 transform transition-all duration-300 hover:shadow-3xl">
           <h1 className="text-3xl font-bold text-gray-900 mb-6">Get In Touch</h1>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -125,8 +142,9 @@ const ContactUs = () => {
                       id="name"
                       value={contactForm.name}
                       onChange={handleInputChange}
-                      className="py-3 px-4 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+                      className="py-3 px-4 block w-full border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
                       required
+                      disabled={isSubmitting}
                     />
                   </div>
                 </div>
@@ -142,8 +160,9 @@ const ContactUs = () => {
                       id="email"
                       value={contactForm.email}
                       onChange={handleInputChange}
-                      className="py-3 px-4 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+                      className="py-3 px-4 block w-full border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
                       required
+                      disabled={isSubmitting}
                     />
                   </div>
                 </div>
@@ -159,7 +178,8 @@ const ContactUs = () => {
                       id="subject"
                       value={contactForm.subject}
                       onChange={handleInputChange}
-                      className="py-3 px-4 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+                      className="py-3 px-4 block w-full border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                      disabled={isSubmitting}
                     />
                   </div>
                 </div>
@@ -175,8 +195,9 @@ const ContactUs = () => {
                       rows={4}
                       value={contactForm.message}
                       onChange={handleInputChange}
-                      className="py-3 px-4 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+                      className="py-3 px-4 block w-full border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
                       required
+                      disabled={isSubmitting}
                     ></textarea>
                   </div>
                 </div>
@@ -184,9 +205,14 @@ const ContactUs = () => {
                 <div>
                   <button
                     type="submit"
-                    className="w-full flex justify-center py-3 px-6 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    disabled={isSubmitting}
+                    className={`w-full flex justify-center py-3 px-6 border border-transparent rounded-lg shadow-sm text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200 ${
+                      isSubmitting 
+                        ? 'bg-blue-400 cursor-not-allowed' 
+                        : 'bg-blue-600 hover:bg-blue-700'
+                    }`}
                   >
-                    Send Message
+                    {isSubmitting ? 'Sending...' : 'Send Message'}
                   </button>
                 </div>
               </form>
