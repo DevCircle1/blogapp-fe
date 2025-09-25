@@ -11,7 +11,7 @@ import {
   FiHeart,
   FiShare2,
 } from "react-icons/fi";
-import { publicRequest } from '../../services/api';
+import { publicRequest } from '../../../services/api';
 
 export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState("all");
