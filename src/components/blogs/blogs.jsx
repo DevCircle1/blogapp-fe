@@ -75,7 +75,7 @@ const BlogPosts = () => {
               <div className="p-5">
                 <h2 className="text-xl font-bold mb-3 line-clamp-2 text-gray-800">{post.title}</h2>
                 <div className="flex items-center justify-between text-sm text-gray-500">
-                  <span>By {post.author?.name || 'Unknown'}</span>
+                  <span>By {post.author_name?.name || 'Unknown'}</span>
                   <span>{new Date(post.created_at).toLocaleDateString()}</span>
                 </div>
               </div>
