@@ -83,22 +83,22 @@ const HelpCenter = () => {
     {
       title: "Getting Started with Blog Writing",
       category: "Blogs",
-      views: "1.2k",
+      // views: "1.2k",
     },
     {
       title: "Understanding IP Addresses",
       category: "Tools",
-      views: "980",
+      // views: "980",
     },
     {
       title: "Optimizing Images for Blog Posts",
       category: "Blogs",
-      views: "845",
+      // views: "845",
     },
     {
       title: "Troubleshooting Tool Issues",
       category: "Tools",
-      views: "721",
+      // views: "721",
     },
   ];
 
@@ -114,21 +114,7 @@ const HelpCenter = () => {
             Find answers to common questions, guides, and troubleshooting tips
             for all our features.
           </p>
-
-          {/* Search Bar */}
-          <div className="relative max-w-2xl mx-auto mt-8">
-            <input
-              type="text"
-              placeholder="Search for help articles..."
-              className="w-full py-4 px-6 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
-            />
-            <button className="absolute right-2 top-2 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">
-              Search
-            </button>
-          </div>
         </div>
-
-        {/* Popular Articles */}
         <div className="bg-white rounded-xl shadow-md p-6 mb-12">
           <h2 className="text-2xl font-semibold text-gray-800 mb-6">
             Popular Help Articles
@@ -148,9 +134,9 @@ const HelpCenter = () => {
                       {article.category}
                     </p>
                   </div>
-                  <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                  {/* <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
                     {article.views} views
-                  </span>
+                  </span> */}
                 </div>
               </div>
             ))}
