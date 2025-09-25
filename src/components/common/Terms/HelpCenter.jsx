@@ -39,7 +39,7 @@ const HelpCenter = () => {
         {
           question: "Can I schedule blog posts for later?",
           answer:
-            'Yes, our platform allows you to schedule posts. After writing your content,  admin will review your blog and then post it laterand inform you.',
+            'Yes, our platform allows you to schedule posts. After writing your content,  admin will review your blog and then post it later and inform you.',
         },
       ],
     },
