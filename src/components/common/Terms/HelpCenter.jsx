@@ -34,12 +34,12 @@ const HelpCenter = () => {
         {
           question: "How can I write a blog post?",
           answer:
-            'After logging in, navigate to your dashboard and click "Write New Post". You can use our rich text editor to format your content, add images, and preview before publishing.',
+            'After logging in, navigate to your Home screen and click "Write Blogs". You can use our rich text editor to format your content, add images, and preview before publishing.',
         },
         {
           question: "Can I schedule blog posts for later?",
           answer:
-            'Yes, our platform allows you to schedule posts. After writing your content, instead of clicking "Publish", select "Schedule" and choose your desired date and time.',
+            'Yes, our platform allows you to schedule posts. After writing your content,  admin will review your blog and then post it laterand inform you.',
         },
       ],
     },
@@ -71,10 +71,10 @@ const HelpCenter = () => {
             'Click "Forgot Password" on the login page. Enter your email address, and we\'ll send you a link to reset your password. The link will expire after 24 hours for security reasons.',
         },
         {
-          question: "How can I delete my account?",
-          answer:
-            "To delete your account, go to Account Settings > Privacy. At the bottom, you'll find the option to delete your account. Note that this action is permanent and cannot be undone.",
-        },
+      question: "Is my account information private?",
+      answer:
+        "Yes. We take privacy seriously — your personal details are protected and never shared with third parties without your consent. You can also review and adjust your privacy settings anytime in your account.",
+    },
       ],
     },
   ];
