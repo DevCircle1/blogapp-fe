@@ -92,7 +92,7 @@ const BlogPostDetail = () => {
           <header className="mb-6">
             <h1 className="text-3xl font-bold text-gray-800 mb-2">{post.title}</h1>
             <div className="flex items-center text-gray-600">
-              <span className="mr-4">By {post.author?.name || 'Unknown'}</span>
+              <span className="mr-4">By {post.author_name || 'Unknown'}</span>
               <span>{new Date(post.created_at).toLocaleDateString()}</span>
             </div>
           </header>
