@@ -46,7 +46,7 @@ export default function Navbar() {
   return (
     <Disclosure
       as="nav"
-      className="relative bg-gradient-to-r from-slate-800 to-slate-900 shadow-md after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-indigo-400/20"
+      className="relative bg-gradient-to-r from-gray-50 to-gray-100 shadow-sm border-b border-gray-200"
     >
       {({ open }) => (
         <>
@@ -55,7 +55,7 @@ export default function Navbar() {
               
               {/* Mobile menu button and logo */}
               <div className="flex items-center sm:hidden">
-                <DisclosureButton className="relative inline-flex items-center justify-center rounded-md p-2 text-slate-300 hover:bg-indigo-500/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                <DisclosureButton className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-600 hover:bg-blue-500/10 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
                   <span className="absolute -inset-0.5" />
                   <span className="sr-only">Open main menu</span>
                   {open ? (
@@ -94,8 +94,8 @@ export default function Navbar() {
                       onClick={(e) => handleNavigation(item, e)}
                       className={classNames(
                         item.current
-                          ? 'bg-indigo-500/20 text-white shadow-sm'
-                          : 'text-slate-300 hover:bg-indigo-500/10 hover:text-white',
+                          ? 'bg-blue-500/20 text-gray-900 shadow-sm'
+                          : 'text-gray-600 hover:bg-blue-500/10 hover:text-gray-900',
                         'rounded-md px-3 py-2 text-sm font-medium transition-colors duration-200',
                         item.requiresAuth && !isAuthenticated ? 'opacity-80 cursor-not-allowed' : ''
                       )}
@@ -118,20 +118,20 @@ export default function Navbar() {
                         <img
                           alt="User avatar"
                           src={user?.avatar || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&q=80"}
-                          className="size-8 rounded-full bg-slate-700"
+                          className="size-8 rounded-full bg-gray-300"
                         />
                       </MenuButton>
 
-                      <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-slate-800 py-1 shadow-lg ring-1 ring-black ring-opacity-5">
+                      <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 border border-gray-200">
                         <MenuItem>
-                          <a href="/profile" className="block px-4 py-2 text-sm text-slate-200 hover:bg-indigo-500/10">
+                          <a href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500/10">
                             Your profile
                           </a>
                         </MenuItem>
                         <MenuItem>
                           <NavLink 
                             to="/job-alert" 
-                            className="block px-4 py-2 text-sm text-slate-200 hover:bg-indigo-500/10"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500/10"
                           >
                             Job Alerts
                           </NavLink>
@@ -139,7 +139,7 @@ export default function Navbar() {
                         <MenuItem>
                           <button
                             onClick={logoutUser}
-                            className="w-full text-left block px-4 py-2 text-sm text-slate-200 hover:bg-indigo-500/10"
+                            className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500/10"
                           >
                             Sign out
                           </button>
@@ -153,8 +153,8 @@ export default function Navbar() {
                       to="/login"
                       className={({ isActive }) => classNames(
                         isActive 
-                          ? 'bg-indigo-500/20 text-white' 
-                          : 'text-slate-300 hover:bg-indigo-500/10 hover:text-white',
+                          ? 'bg-blue-500/20 text-gray-900' 
+                          : 'text-gray-600 hover:bg-blue-500/10 hover:text-gray-900',
                         'px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200'
                       )}
                     >
@@ -164,8 +164,8 @@ export default function Navbar() {
                       to="/signup"
                       className={({ isActive }) => classNames(
                         isActive 
-                          ? 'bg-indigo-500/20 text-white' 
-                          : 'text-slate-300 hover:bg-indigo-500/10 hover:text-white',
+                          ? 'bg-blue-500/20 text-gray-900' 
+                          : 'text-gray-600 hover:bg-blue-500/10 hover:text-gray-900',
                         'px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200'
                       )}
                     >
@@ -179,7 +179,7 @@ export default function Navbar() {
 
           {/* Mobile Menu */}
           <DisclosurePanel className="sm:hidden">
-            <div className="space-y-1 px-2 pt-2 pb-3 bg-slate-800 rounded-b-lg">
+            <div className="space-y-1 px-2 pt-2 pb-3 bg-white rounded-b-lg border-b border-gray-200">
               {updatedNavigation.map((item) => (
                 <DisclosureButton
                   key={item.name}
@@ -187,7 +187,7 @@ export default function Navbar() {
                   to={item.href}
                   onClick={(e) => handleNavigation(item, e)}
                   className={classNames(
-                    item.current ? 'bg-indigo-500/20 text-white' : 'text-slate-300 hover:bg-indigo-500/10 hover:text-white',
+                    item.current ? 'bg-blue-500/20 text-gray-900' : 'text-gray-600 hover:bg-blue-500/10 hover:text-gray-900',
                     'block rounded-md px-3 py-2 text-base font-medium transition-colors duration-200',
                     item.requiresAuth && !isAuthenticated ? 'opacity-80 cursor-not-allowed' : ''
                   )}
