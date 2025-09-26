@@ -397,11 +397,11 @@ const HelpCenter = () => {
                       {openFaq === index && (
                         <div className="p-4 bg-white border-t border-gray-100">
                           <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
-                          <div className="mt-3 flex space-x-2">
+                          {/* <div className="mt-3 flex space-x-2">
                             <span className="text-xs text-gray-500">Was this helpful?</span>
                             <button className="text-xs text-blue-600 hover:text-blue-800">Yes</button>
                             <button className="text-xs text-gray-600 hover:text-gray-800">No</button>
-                          </div>
+                          </div> */}
                         </div>
                       )}
                     </div>
@@ -428,9 +428,9 @@ const HelpCenter = () => {
                   >
                     Contact Us
                   </button>
-                  <button className="border border-white py-2 px-6 rounded-lg font-medium hover:bg-white hover:text-blue-700 transition-colors">
+                  {/* <button className="border border-white py-2 px-6 rounded-lg font-medium hover:bg-white hover:text-blue-700 transition-colors">
                     Live Chat
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>
