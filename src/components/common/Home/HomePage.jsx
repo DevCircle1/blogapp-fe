@@ -17,7 +17,9 @@ export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [isScrolled, setIsScrolled] = useState(false);
   const [featuredBlogs, setFeaturedBlogs] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [error, setError] = useState(null);
 
   // Fetch featured blogs from API
@@ -41,56 +43,73 @@ export default function HomePage() {
       }
     };
 
+    // Fetch categories from API
+    const fetchCategories = async () => {
+      try {
+        setCategoriesLoading(true);
+        const response = await publicRequest.get('/top-categories/');
+        setCategories(response.data);
+      } catch (err) {
+        console.error('Error fetching categories:', err);
+        toast.error('Failed to load categories');
+        // Fallback to empty array if API fails
+        setCategories([]);
+      } finally {
+        setCategoriesLoading(false);
+      }
+    };
+
     fetchFeaturedBlogs();
+    fetchCategories();
   }, []);
 
   const popularTools = [
-    {
-      id: 1,
-      name: "Code Optimizer",
-      description: "AI-powered code optimization tool",
-      category: "Development",
-      icon: "⚡",
-      rating: 4.8,
-      isNew: true,
-    },
-    {
-      id: 2,
-      name: "Design Assistant",
-      description: "Smart design suggestions and feedback",
-      category: "Design",
-      icon: "🎨",
-      rating: 4.6,
-      isNew: false,
-    },
-    {
-      id: 3,
-      name: "Content Generator",
-      description: "AI content creation made easy",
-      category: "Writing",
-      icon: "✍️",
-      rating: 4.9,
-      isNew: true,
-    },
-    {
-      id: 4,
-      name: "SEO Analyzer",
-      description: "Comprehensive SEO analysis tool",
-      category: "Marketing",
-      icon: "📊",
-      rating: 4.7,
-      isNew: false,
-    },
-  ];
+  {
+    id: 1,
+    name: "Check Ip Address",
+    description: "Quickly find and display your current public IP address.",
+    category: "Development",
+    icon: "🌐",
+    isNew: true,
+    url: "https://talkandtool.com/check-ip",
+  },
+  {
+    id: 2,
+    name: "Screen Resolution",
+    description: "Detect and display your device’s current screen resolution.",
+    category: "Design",
+    icon: "🖥️",
+    isNew: false,
+    url: "https://talkandtool.com/screen-resolution",
+  },
+  {
+    id: 3,
+    name: "Profit Margin Calculator",
+    description: "Easily calculate profit margin, markup, and cost analysis.",
+    category: "Business",
+    icon: "📊",
+    isNew: true,
+    url: "https://talkandtool.com/profit-margin-calculator",
+  },
+];
 
-  const categories = [
-    { id: "all", name: "All Topics", icon: "🌐", count: 28 },
-    { id: "webdev", name: "Web Development", icon: "💻", count: 12 },
-    { id: "ai", name: "Artificial Intelligence", icon: "🤖", count: 8 },
-    { id: "mobile", name: "Mobile Development", icon: "📱", count: 6 },
-    { id: "design", name: "UI/UX Design", icon: "🎨", count: 9 },
-    { id: "devops", name: "DevOps", icon: "⚙️", count: 5 },
-  ];
+  // Icon mapping for categories
+  const categoryIcons = {
+  "Technology": "💻",
+  "Health": "🏥",
+  "Travel": "✈️",
+  "Education": "🎓",
+  "Sports": "⚽",
+  "Food": "🍕",
+  "News": "📰",
+  "Fashion": "👗",
+  "Tools": "🛠️",
+  "all": "🌐"
+};
+
+  const getCategoryIcon = (categoryName) => {
+    return categoryIcons[categoryName] || "📁";
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -99,10 +118,6 @@ export default function HomePage() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const handleBlogLike = (blogId) => {
-    toast.success("Added to favorites! ❤️");
-  };
 
   const handleToolClick = (toolId) => {
     toast.info(`Opening tool ${toolId}...`);
@@ -189,31 +204,65 @@ export default function HomePage() {
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
             Browse by Category
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {categories.map((category) => (
+          
+          {categoriesLoading ? (
+            <div className="flex justify-center items-center h-40">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+          ) : categories.length === 0 ? (
+            <div className="text-center py-8">
+              <div className="text-gray-500 text-lg">No categories available</div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              {/* All Topics Button */}
               <button
-                key={category.id}
-                onClick={() => setActiveCategory(category.id)}
+                onClick={() => setActiveCategory("all")}
                 className={`p-6 rounded-xl transition-all duration-300 transform hover:scale-105 ${
-                  activeCategory === category.id
+                  activeCategory === "all"
                     ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-2xl"
                     : "bg-white text-gray-700 shadow-lg hover:shadow-xl"
                 }`}
               >
-                <div className="text-2xl mb-2">{category.icon}</div>
-                <div className="font-semibold">{category.name}</div>
+                <div className="text-2xl mb-2">🌐</div>
+                <div className="font-semibold">All Topics</div>
                 <div
                   className={`text-sm mt-1 ${
-                    activeCategory === category.id
+                    activeCategory === "all"
                       ? "text-blue-100"
                       : "text-gray-500"
                   }`}
                 >
-                  {category.count} articles
+                  {categories.reduce((total, cat) => total + cat.article_count, 0)} articles
                 </div>
               </button>
-            ))}
-          </div>
+
+              {/* API Categories */}
+              {categories.map((category) => (
+                <button
+                  key={category.id}
+                  onClick={() => setActiveCategory(category.id.toString())}
+                  className={`p-6 rounded-xl transition-all duration-300 transform hover:scale-105 ${
+                    activeCategory === category.id.toString()
+                      ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-2xl"
+                      : "bg-white text-gray-700 shadow-lg hover:shadow-xl"
+                  }`}
+                >
+                  <div className="text-2xl mb-2">{getCategoryIcon(category.name)}</div>
+                  <div className="font-semibold">{category.name}</div>
+                  <div
+                    className={`text-sm mt-1 ${
+                      activeCategory === category.id.toString()
+                        ? "text-blue-100"
+                        : "text-gray-500"
+                    }`}
+                  >
+                    {category.article_count} articles
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -307,7 +356,7 @@ export default function HomePage() {
             {popularTools.map((tool) => (
               <div
                 key={tool.id}
-                onClick={() => handleToolClick(tool.id)}
+                onClick={() => window.location.href = tool.url}
                 className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 p-6 cursor-pointer group"
               >
                 <div className="flex items-center justify-between mb-4">
