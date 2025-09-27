@@ -5,8 +5,8 @@ import 'react-quill/dist/quill.snow.css';
 const TextToHtmlTool = () => {
   const [inputText, setInputText] = useState('');
   const [htmlOutput, setHtmlOutput] = useState('');
+  const [formattedHtml, setFormattedHtml] = useState('');
   const [isCopied, setIsCopied] = useState(false);
-  const [activeTab, setActiveTab] = useState('preview');
   const [theme, setTheme] = useState('light');
   const quillRef = useRef(null);
 
@@ -34,6 +34,38 @@ const TextToHtmlTool = () => {
     'align',
     'color', 'background'
   ];
+
+  // Format HTML with proper indentation and line breaks
+  const formatHtml = (html) => {
+    if (!html) return '';
+    
+    // Remove the wrapper div first
+    let cleanHtml = html
+      .replace('<div class="prose max-w-none p-4">', '')
+      .replace('</div>', '')
+      .trim();
+
+    // Basic HTML formatting with indentation
+    let formatted = '';
+    let indentLevel = 0;
+    const tags = cleanHtml.split(/(<[^>]*>)/g);
+    
+    tags.forEach(tag => {
+      if (tag.startsWith('</')) {
+        indentLevel--;
+        formatted += '\n' + '  '.repeat(indentLevel) + tag;
+      } else if (tag.startsWith('<') && !tag.endsWith('/>')) {
+        formatted += '\n' + '  '.repeat(indentLevel) + tag;
+        if (!tag.includes('/>') && !tag.startsWith('<!--')) {
+          indentLevel++;
+        }
+      } else if (tag.trim() !== '') {
+        formatted += tag;
+      }
+    });
+
+    return formatted.trim();
+  };
 
   // Convert Quill content to clean HTML
   const convertToHtml = (content) => {
@@ -65,6 +97,7 @@ const TextToHtmlTool = () => {
   const clearContent = () => {
     setInputText('');
     setHtmlOutput('');
+    setFormattedHtml('');
     if (quillRef.current) {
       const quill = quillRef.current.getEditor();
       quill.root.innerHTML = '';
@@ -76,8 +109,10 @@ const TextToHtmlTool = () => {
     if (inputText && inputText !== '<p><br></p>') {
       const html = convertToHtml(inputText);
       setHtmlOutput(html);
+      setFormattedHtml(formatHtml(html));
     } else {
       setHtmlOutput('');
+      setFormattedHtml('');
     }
   }, [inputText]);
 
@@ -178,67 +213,38 @@ const TextToHtmlTool = () => {
               </div>
             </div>
 
-            {/* Output Section */}
+            {/* Output Section - Only HTML Code */}
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <h3 className="text-lg font-semibold">HTML Output</h3>
-                <div className="flex items-center space-x-4">
-                  <div className="flex space-x-1 bg-gray-200 dark:bg-gray-700 rounded-lg p-1">
-                    <button
-                      onClick={() => setActiveTab('preview')}
-                      className={`px-3 py-1 rounded-md transition-all ${
-                        activeTab === 'preview' 
-                          ? 'bg-white dark:bg-gray-600 shadow-sm' 
-                          : 'opacity-75'
-                      }`}
-                    >
-                      Preview
-                    </button>
-                    <button
-                      onClick={() => setActiveTab('code')}
-                      className={`px-3 py-1 rounded-md transition-all ${
-                        activeTab === 'code' 
-                          ? 'bg-white dark:bg-gray-600 shadow-sm' 
-                          : 'opacity-75'
-                      }`}
-                    >
-                      Code
-                    </button>
-                  </div>
-                  
-                  <button
-                    onClick={copyToClipboard}
-                    disabled={!htmlOutput}
-                    className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center space-x-2 ${
-                      !htmlOutput 
-                        ? 'opacity-50 cursor-not-allowed' 
-                        : 'hover:scale-105'
-                    } ${
-                      theme === 'dark' 
-                        ? 'bg-green-600 hover:bg-green-500' 
-                        : 'bg-green-500 hover:bg-green-400 text-white'
-                    }`}
-                  >
-                    {isCopied ? '✅ Copied!' : '📋 Copy HTML'}
-                  </button>
-                </div>
+                <button
+                  onClick={copyToClipboard}
+                  disabled={!htmlOutput}
+                  className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center space-x-2 ${
+                    !htmlOutput 
+                      ? 'opacity-50 cursor-not-allowed' 
+                      : 'hover:scale-105'
+                  } ${
+                    theme === 'dark' 
+                      ? 'bg-green-600 hover:bg-green-500' 
+                      : 'bg-green-500 hover:bg-green-400 text-white'
+                  }`}
+                >
+                  {isCopied ? '✅ Copied!' : '📋 Copy HTML'}
+                </button>
               </div>
 
+              {/* HTML Code Output */}
               <div className={`h-96 rounded-lg border overflow-auto ${
-                theme === 'dark' ? 'border-gray-700' : 'border-gray-300'
+                theme === 'dark' ? 'border-gray-700 bg-gray-900' : 'border-gray-300 bg-gray-900'
               }`}>
-                {activeTab === 'preview' ? (
-                  <div 
-                    className="h-full"
-                    dangerouslySetInnerHTML={{ __html: htmlOutput || '<div class="flex items-center justify-center h-full text-gray-500"><p>HTML preview will appear here...</p></div>' }}
-                  />
-                ) : (
-                  <pre className={`p-4 h-full overflow-auto text-sm ${
-                    theme === 'dark' ? 'bg-gray-900 text-green-400' : 'bg-gray-900 text-green-300'
-                  }`}>
-                    <code>{htmlOutput.replace('<div class="prose max-w-none p-4">', '').replace('</div>', '').trim() || '<!-- HTML code will appear here... -->'}</code>
-                  </pre>
-                )}
+                <pre className={`p-4 h-full overflow-auto text-sm whitespace-pre-wrap ${
+                  theme === 'dark' ? 'text-green-400' : 'text-green-300'
+                }`}>
+                  <code>
+                    {formattedHtml || '<!-- HTML code will appear here... -->'}
+                  </code>
+                </pre>
               </div>
 
               {/* Output Stats */}
@@ -249,7 +255,7 @@ const TextToHtmlTool = () => {
                   <div className="grid grid-cols-3 gap-4 text-sm text-center">
                     <div>
                       <div className="font-semibold">Lines</div>
-                      <div>{htmlOutput.split('\n').length}</div>
+                      <div>{formattedHtml.split('\n').length}</div>
                     </div>
                     <div>
                       <div className="font-semibold">Elements</div>
@@ -280,16 +286,16 @@ const TextToHtmlTool = () => {
             theme === 'dark' ? 'bg-gray-800' : 'bg-white shadow-md'
           }`}>
             <div className="text-3xl mb-3">⚡</div>
-            <h3 className="font-semibold mb-2">Real-time Preview</h3>
-            <p className="opacity-75 text-sm">Instant HTML conversion as you type</p>
+            <h3 className="font-semibold mb-2">Real-time Conversion</h3>
+            <p className="opacity-75 text-sm">Instant HTML code generation as you type</p>
           </div>
           
           <div className={`p-6 rounded-2xl transition-all hover:scale-105 ${
             theme === 'dark' ? 'bg-gray-800' : 'bg-white shadow-md'
           }`}>
             <div className="text-3xl mb-3">🎨</div>
-            <h3 className="font-semibold mb-2">Modern UI</h3>
-            <p className="opacity-75 text-sm">Dark/light themes with smooth animations</p>
+            <h3 className="font-semibold mb-2">Formatted Output</h3>
+            <p className="opacity-75 text-sm">Beautifully formatted HTML code with indentation</p>
           </div>
           
           <div className={`p-6 rounded-2xl transition-all hover:scale-105 ${
@@ -311,13 +317,13 @@ const TextToHtmlTool = () => {
               <strong>Rich Formatting:</strong> Use the toolbar for text formatting, lists, links, and more
             </div>
             <div>
-              <strong>Real-time Conversion:</strong> Changes appear instantly in the HTML preview
+              <strong>Real-time Conversion:</strong> HTML code updates instantly as you edit
             </div>
             <div>
               <strong>Copy & Paste:</strong> Use the copy button to get clean HTML code
             </div>
             <div>
-              <strong>Professional Output:</strong> Generates clean, semantic HTML code
+              <strong>Formatted Output:</strong> Get properly indented and readable HTML code
             </div>
           </div>
         </div>
