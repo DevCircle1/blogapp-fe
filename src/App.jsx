@@ -11,6 +11,7 @@ import ToolsPage from './components/tools/ToolsPage.jsx'
 import IPAddressChecker from './components/tools/ip.jsx'
 import ScreenResolutionTool from './components/tools/ScreenResolutionTool.jsx'
 import ProfitMarginCalculator from './components/tools/ProfitMarginCalculator.jsx'
+import TextToHtmlTool from './components/tools/TextToHtmlTool.jsx'
 import { ToastContainer } from 'react-toastify'
 import WriteBlog from './components/blogs/WriteBlogs.jsx'
 import Blogs from './components/blogs/blogs.jsx'
@@ -44,6 +45,7 @@ function App() {
         <Route path="/check-ip" element={<IPAddressChecker />} />
         <Route path="/screen-resolution" element={<ScreenResolutionTool />} />
         <Route path="/profit-margin-calculator" element={<ProfitMarginCalculator />} />
+        <Route path="/text-to-html" element={<TextToHtmlTool />} />
         <Route path="/blogs/:id" element={<BlogPostDetail />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
         <Route path="/about-us" element={<AboutUs />} />
