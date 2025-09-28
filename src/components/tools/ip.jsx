@@ -8,14 +8,6 @@ const IPAddressChecker = () => {
   const [isBot, setIsBot] = useState(false);
 
   useEffect(() => {
-    // Detect bots by user agent
-    const botRegex = /(bot|crawl|spider|slurp|bing|duckduck|baidu|yandex|sogou|exabot|facebook|pinterest)/i;
-    if (botRegex.test(navigator.userAgent)) {
-      setIsBot(true);
-      setLoading(false);
-      return;
-    }
-
     const fetchIPData = async () => {
       try {
         setLoading(true);
