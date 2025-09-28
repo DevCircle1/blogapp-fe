@@ -19,9 +19,7 @@ const IPAddressChecker = () => {
     const fetchIPData = async () => {
       try {
         setLoading(true);
-        
-        // Call your Django backend API
-        const response = await fetch('/api/ip-checker/', {
+        const response = await fetch('https://api.talkandtool.com/api/ip-checker/', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
