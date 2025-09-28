@@ -91,6 +91,15 @@ export default function HomePage() {
     isNew: true,
     url: "https://talkandtool.com/profit-margin-calculator",
   },
+  {
+    id: 4,
+    name: "Text to Html Converter",
+    description: "Easily convert plain text to formatted HTML code.",
+    category: "Development",
+    icon: "📊",
+    isNew: true,
+    url: "https://talkandtool.com/text-to-html",
+  },
 ];
 
   // Icon mapping for categories
