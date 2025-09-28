@@ -12,20 +12,37 @@ const IPAddressChecker = () => {
     const botRegex = /(bot|crawl|spider|slurp|bing|duckduck|baidu|yandex|sogou|exabot|facebook|pinterest)/i;
     if (botRegex.test(navigator.userAgent)) {
       setIsBot(true);
-      setLoading(false); // don’t fetch if bot
+      setLoading(false);
       return;
     }
 
     const fetchIPData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('https://ipwho.is/');
-        if (!response.ok) throw new Error('Failed to fetch IP data');
-        const data = await response.json();
-        if (!data.success) throw new Error('Failed to get valid IP data');
-        setIpData(data);
+        
+        // Call your Django backend API
+        const response = await fetch('/api/ip-checker/', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to fetch IP data');
+        }
+        
+        const result = await response.json();
+        
+        if (!result.success) {
+          throw new Error(result.error || 'Failed to get valid IP data');
+        }
+        
+        setIpData(result.data);
       } catch (err) {
         setError(err.message);
+        console.error('IP fetch error:', err);
       } finally {
         setLoading(false);
       }
@@ -42,7 +59,7 @@ const IPAddressChecker = () => {
     }
   };
 
-  // ✅ Structured Data JSON-LD
+  // Structured Data JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
@@ -78,7 +95,7 @@ const IPAddressChecker = () => {
           <li>Detect public IP address</li>
           <li>Show city, region, country, and ISP</li>
           <li>Copy IP address with one click</li>
-          <li>Privacy-focused (we don’t store your data)</li>
+          <li>Privacy-focused (we don't store your data)</li>
         </ul>
         <p>Trusted tool by Talk and Tool for online privacy and quick IP lookup.</p>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
