@@ -11,7 +11,7 @@ import {
   FiHeart,
   FiShare2,
 } from "react-icons/fi";
-import { publicRequest } from '../../../services/api';
+import { publicRequest } from "../../../services/api";
 
 export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState("all");
@@ -27,17 +27,17 @@ export default function HomePage() {
     const fetchFeaturedBlogs = async () => {
       try {
         setIsLoading(true);
-        const response = await publicRequest.get('/posts/');
+        const response = await publicRequest.get("/posts/");
         // Get the 3 latest posts sorted by created_at
         const latestPosts = response.data
           .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
           .slice(0, 3);
-        
+
         setFeaturedBlogs(latestPosts);
       } catch (err) {
-        setError('Failed to fetch featured blogs');
-        console.error('Error fetching featured blogs:', err);
-        toast.error('Failed to load featured blogs');
+        setError("Failed to fetch featured blogs");
+        console.error("Error fetching featured blogs:", err);
+        toast.error("Failed to load featured blogs");
       } finally {
         setIsLoading(false);
       }
@@ -47,11 +47,11 @@ export default function HomePage() {
     const fetchCategories = async () => {
       try {
         setCategoriesLoading(true);
-        const response = await publicRequest.get('/top-categories/');
+        const response = await publicRequest.get("/top-categories/");
         setCategories(response.data);
       } catch (err) {
-        console.error('Error fetching categories:', err);
-        toast.error('Failed to load categories');
+        console.error("Error fetching categories:", err);
+        toast.error("Failed to load categories");
         // Fallback to empty array if API fails
         setCategories([]);
       } finally {
@@ -64,57 +64,58 @@ export default function HomePage() {
   }, []);
 
   const popularTools = [
-  {
-    id: 1,
-    name: "Check Ip Address",
-    description: "Quickly find and display your current public IP address.",
-    category: "Development",
-    icon: "🌐",
-    isNew: true,
-    url: "https://talkandtool.com/check-ip",
-  },
-  {
-    id: 2,
-    name: "Screen Resolution",
-    description: "Detect and display your device’s current screen resolution.",
-    category: "Design",
-    icon: "🖥️",
-    isNew: false,
-    url: "https://talkandtool.com/screen-resolution",
-  },
-  {
-    id: 3,
-    name: "Profit Margin Calculator",
-    description: "Easily calculate profit margin, markup, and cost analysis.",
-    category: "Business",
-    icon: "📊",
-    isNew: true,
-    url: "https://talkandtool.com/profit-margin-calculator",
-  },
-  {
-    id: 4,
-    name: "Text to Html Converter",
-    description: "Easily convert plain text to formatted HTML code.",
-    category: "Development",
-    icon: "📊",
-    isNew: true,
-    url: "https://talkandtool.com/text-to-html",
-  },
-];
+    {
+      id: 1,
+      name: "Check Ip Address",
+      description: "Quickly find and display your current public IP address.",
+      category: "Development",
+      icon: "🌐",
+      isNew: true,
+      url: "https://talkandtool.com/check-ip",
+    },
+    {
+      id: 2,
+      name: "Screen Resolution",
+      description:
+        "Detect and display your device’s current screen resolution.",
+      category: "Design",
+      icon: "🖥️",
+      isNew: false,
+      url: "https://talkandtool.com/screen-resolution",
+    },
+    {
+      id: 3,
+      name: "Profit Margin Calculator",
+      description: "Easily calculate profit margin, markup, and cost analysis.",
+      category: "Business",
+      icon: "📊",
+      isNew: true,
+      url: "https://talkandtool.com/profit-margin-calculator",
+    },
+    {
+      id: 4,
+      name: "Text to Html Converter",
+      description: "Easily convert plain text to formatted HTML code.",
+      category: "Development",
+      icon: "📊",
+      isNew: true,
+      url: "https://talkandtool.com/text-to-html",
+    },
+  ];
 
   // Icon mapping for categories
   const categoryIcons = {
-  "Technology": "💻",
-  "Health": "🏥",
-  "Travel": "✈️",
-  "Education": "🎓",
-  "Sports": "⚽",
-  "Food": "🍕",
-  "News": "📰",
-  "Fashion": "👗",
-  "Tools": "🛠️",
-  "all": "🌐"
-};
+    Technology: "💻",
+    Health: "🏥",
+    Travel: "✈️",
+    Education: "🎓",
+    Sports: "⚽",
+    Food: "🍕",
+    News: "📰",
+    Fashion: "👗",
+    Tools: "🛠️",
+    all: "🌐",
+  };
 
   const getCategoryIcon = (categoryName) => {
     return categoryIcons[categoryName] || "📁";
@@ -135,12 +136,12 @@ export default function HomePage() {
   // Helper function to strip HTML tags and get plain text
   const stripHtmlTags = (html) => {
     if (!html) return "No description available...";
-    
+
     // Remove HTML tags using regex
-    const plainText = html.replace(/<[^>]*>/g, '');
-    
+    const plainText = html.replace(/<[^>]*>/g, "");
+
     // Decode HTML entities
-    const textArea = document.createElement('textarea');
+    const textArea = document.createElement("textarea");
     textArea.innerHTML = plainText;
     return textArea.value || "No description available...";
   };
@@ -158,18 +159,18 @@ export default function HomePage() {
     if (!content) return "No excerpt available...";
     const plainText = stripHtmlTags(content);
     if (plainText.length <= maxLength) return plainText;
-    return plainText.substring(0, maxLength) + '...';
+    return plainText.substring(0, maxLength) + "...";
   };
 
   // Default image if featured_image is not available
   const getBlogImage = (blog) => {
     if (blog.featured_image) return blog.featured_image;
-    
+
     // Fallback images based on category or random
     const fallbackImages = [
       "https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=400",
       "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400",
-      "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400"
+      "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400",
     ];
     return fallbackImages[Math.floor(Math.random() * fallbackImages.length)];
   };
@@ -213,14 +214,16 @@ export default function HomePage() {
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
             Browse by Category
           </h2>
-          
+
           {categoriesLoading ? (
             <div className="flex justify-center items-center h-40">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
             </div>
           ) : categories.length === 0 ? (
             <div className="text-center py-8">
-              <div className="text-gray-500 text-lg">No categories available</div>
+              <div className="text-gray-500 text-lg">
+                No categories available
+              </div>
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -237,12 +240,14 @@ export default function HomePage() {
                 <div className="font-semibold">All Topics</div>
                 <div
                   className={`text-sm mt-1 ${
-                    activeCategory === "all"
-                      ? "text-blue-100"
-                      : "text-gray-500"
+                    activeCategory === "all" ? "text-blue-100" : "text-gray-500"
                   }`}
                 >
-                  {categories.reduce((total, cat) => total + cat.article_count, 0)} articles
+                  {categories.reduce(
+                    (total, cat) => total + cat.article_count,
+                    0
+                  )}{" "}
+                  articles
                 </div>
               </button>
 
@@ -257,7 +262,9 @@ export default function HomePage() {
                       : "bg-white text-gray-700 shadow-lg hover:shadow-xl"
                   }`}
                 >
-                  <div className="text-2xl mb-2">{getCategoryIcon(category.name)}</div>
+                  <div className="text-2xl mb-2">
+                    {getCategoryIcon(category.name)}
+                  </div>
                   <div className="font-semibold">{category.name}</div>
                   <div
                     className={`text-sm mt-1 ${
@@ -299,15 +306,19 @@ export default function HomePage() {
             </div>
           ) : featuredBlogs.length === 0 ? (
             <div className="text-center py-12">
-              <div className="text-gray-500 text-lg">No featured blogs available</div>
-              <p className="text-gray-400 mt-2">Check back later for new posts</p>
+              <div className="text-gray-500 text-lg">
+                No featured blogs available
+              </div>
+              <p className="text-gray-400 mt-2">
+                Check back later for new posts
+              </p>
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {featuredBlogs.map((blog) => (
                 <Link
-                  to={`/blogs/${blog.id}`}
-                  key={blog.id}
+                  to={`/blogs/${blog.slug}`}
+                  key={blog.slug}
                   className="block"
                 >
                   <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden cursor-pointer">
@@ -317,8 +328,7 @@ export default function HomePage() {
                         alt={blog.title}
                         className="w-full h-48 object-cover"
                       />
-                      <div className="absolute top-4 left-4">
-                      </div>
+                      <div className="absolute top-4 left-4"></div>
                     </div>
 
                     <div className="p-6">
@@ -333,10 +343,14 @@ export default function HomePage() {
                         <div className="flex items-center space-x-4">
                           <span className="flex items-center space-x-1">
                             <FiClock />
-                            <span>{calculateReadTime(blog.content)} min read</span>
+                            <span>
+                              {calculateReadTime(blog.content)} min read
+                            </span>
                           </span>
                         </div>
-                        <span>{new Date(blog.created_at).toLocaleDateString()}</span>
+                        <span>
+                          {new Date(blog.created_at).toLocaleDateString()}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -365,7 +379,7 @@ export default function HomePage() {
             {popularTools.map((tool) => (
               <div
                 key={tool.id}
-                onClick={() => window.location.href = tool.url}
+                onClick={() => (window.location.href = tool.url)}
                 className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 p-6 cursor-pointer group"
               >
                 <div className="flex items-center justify-between mb-4">
