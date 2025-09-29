@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { publicRequest } from '../../services/api';
+import { publicRequest, privateRequest } from '../../services/api';
 import { Link } from 'react-router-dom';
 
 const BlogPosts = () => {
@@ -51,7 +51,7 @@ const BlogPosts = () => {
           {posts.map((post) => (
             <Link 
               key={post.id} 
-              to={`/blogs/${post.id}`}
+              to={`/blogs/${post.slug}`}  
               className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-xl"
             >
               {/* Featured Image */}
