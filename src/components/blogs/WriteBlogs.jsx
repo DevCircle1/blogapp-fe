@@ -4,7 +4,7 @@ import 'react-quill/dist/quill.snow.css';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../context/AuthContext';
-import { publicRequest } from '../../services/api';
+import { publicRequest, privateRequest } from '../../services/api';
 
 const WriteBlog = ({ onPostCreated }) => {
   const { user } = useAuth();
