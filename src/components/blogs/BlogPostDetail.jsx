@@ -6,7 +6,7 @@ const BlogPostDetail = () => {
   const [post, setPost] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { id } = useParams();
+  const { slug } = useParams();
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -23,7 +23,7 @@ const BlogPostDetail = () => {
     };
 
     fetchPost();
-  }, [id]);
+  }, [slug]);
 
   // Function to render HTML content safely
   const renderHTML = (htmlString) => {
