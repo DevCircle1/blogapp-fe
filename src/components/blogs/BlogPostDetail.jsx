@@ -12,7 +12,7 @@ const BlogPostDetail = () => {
     const fetchPost = async () => {
       try {
         setIsLoading(true);
-        const response = await publicRequest.get(`/posts/${id}/`);
+        const response = await publicRequest.get(`/posts/${slug}/`);
         setPost(response.data);
       } catch (err) {
         setError('Failed to fetch blog post');
