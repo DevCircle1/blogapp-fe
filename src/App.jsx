@@ -46,7 +46,7 @@ function App() {
         <Route path="/screen-resolution" element={<ScreenResolutionTool />} />
         <Route path="/profit-margin-calculator" element={<ProfitMarginCalculator />} />
         <Route path="/text-to-html" element={<TextToHtmlTool />} />
-        <Route path="/blogs/:id" element={<BlogPostDetail />} />
+        <Route path="/blogs/:slug" element={<BlogPostDetail />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/contact-us" element={<ContactUs />} />
