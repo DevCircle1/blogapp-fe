@@ -317,7 +317,7 @@ export default function HomePage() {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {featuredBlogs.map((blog) => (
                 <Link
-                  to={`/blogs/${blog.slug}`}
+                  to={`/blogs/article/${blog.slug}`}
                   key={blog.slug}
                   className="block"
                 >
