@@ -16,6 +16,8 @@ import { ToastContainer } from 'react-toastify'
 import WriteBlog from './components/blogs/WriteBlogs.jsx'
 import Blogs from './components/blogs/blogs.jsx'
 import BlogPostDetail from './components/blogs/BlogPostDetail.jsx'
+import BlogCategories from './components/blogs/BlogCategories.jsx'
+import CategoryBlogPosts from './components/blogs/CategoryBlogPosts.jsx'
 import TermsAndConditions from './components/common/Terms/Terms.jsx'
 import AboutUs from './components/common/Terms/AboutUs.jsx'
 import ContactUs from './components/common/Terms/ContactUs.jsx'
@@ -40,6 +42,8 @@ function App() {
         <Route path="/update-password" element={<UpdatePassword />} />
         <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/blogs" element={<Blogs />} />
+        <Route path="/blogs/categories" element={<BlogCategories />} />
+        <Route path="/blogs/category/:categoryId" element={<CategoryBlogPosts />} />
         <Route path="/write-blogs" element={<WriteBlog />} />
         <Route path="/tools" element={<ToolsPage />} />
         <Route path="/check-ip" element={<IPAddressChecker />} />
