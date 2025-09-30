@@ -17,7 +17,7 @@ const CategoryBlogPosts = () => {
       try {
         setIsLoading(true);
         // Fetch category details and posts
-        const response = await publicRequest.get(`/categories/${categoryId}/`);
+        const response = await publicRequest.get(`/all-categories/${categoryId}/`);
         const categoryData = response.data;
         
         setCategory(categoryData);
