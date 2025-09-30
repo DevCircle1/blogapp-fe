@@ -7,8 +7,9 @@ const CategoryBlogPosts = () => {
   const [category, setCategory] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  const { categoryId } = useParams();
+
+  // ✅ We now always use slug (from URL)
+  const { categorySlug } = useParams();
   const location = useLocation();
   const categoryName = location.state?.categoryName;
 
@@ -16,13 +17,17 @@ const CategoryBlogPosts = () => {
     const fetchCategoryPosts = async () => {
       try {
         setIsLoading(true);
-        // Fetch category details and posts
-        const response = await publicRequest.get(`/all-categories/${categoryId}/`);
+
+        // ✅ Fetch by slug
+        const response = await publicRequest.get(`/all-categories/${categorySlug}/`);
         const categoryData = response.data;
-        
+
         setCategory(categoryData);
-        // Filter only approved posts
-        const approvedPosts = categoryData.articles.filter(post => post.status === 'approved');
+
+        // ✅ Only approved posts
+        const approvedPosts = categoryData.articles.filter(
+          (post) => post.status === 'approved'
+        );
         setPosts(approvedPosts);
       } catch (err) {
         setError('Failed to fetch category posts');
@@ -33,7 +38,7 @@ const CategoryBlogPosts = () => {
     };
 
     fetchCategoryPosts();
-  }, [categoryId]);
+  }, [categorySlug]);
 
   if (isLoading) {
     return (
@@ -58,8 +63,8 @@ const CategoryBlogPosts = () => {
         <div className="container mx-auto px-4 py-8">
           <div className="flex items-center justify-between">
             <div>
-              <Link 
-                to="/blogs/categories" 
+              <Link
+                to="/blogs"
                 className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-4 transition-colors duration-300"
               >
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,8 +93,8 @@ const CategoryBlogPosts = () => {
             <div className="text-6xl mb-4">📭</div>
             <h3 className="text-2xl font-bold text-gray-700 mb-2">No articles yet</h3>
             <p className="text-gray-500 mb-6">There are no published articles in this category.</p>
-            <Link 
-              to="/blogs/categories" 
+            <Link
+              to="/blogs"
               className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-300"
             >
               Browse Other Categories
@@ -98,17 +103,17 @@ const CategoryBlogPosts = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map((post) => (
-              <Link 
-                key={post.id} 
-                to={`/blogs/${post.slug}`}
+              <Link
+                key={post.id}
+                to={`/blogs/article/${post.slug}`}   // ✅ still slug for posts
                 className="bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl border border-gray-100"
               >
                 {/* Featured Image */}
                 <div className="h-48 overflow-hidden relative">
                   {post.featured_image ? (
-                    <img 
-                      src={post.featured_image} 
-                      alt={post.title} 
+                    <img
+                      src={post.featured_image}
+                      alt={post.title}
                       className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                     />
                   ) : (
@@ -124,13 +129,13 @@ const CategoryBlogPosts = () => {
                     </span>
                   </div>
                 </div>
-                
+
                 {/* Card Content */}
                 <div className="p-6">
                   <h2 className="text-xl font-bold mb-3 line-clamp-2 text-gray-800 hover:text-blue-600 transition-colors duration-300">
                     {post.title}
                   </h2>
-                  
+
                   <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
                     <span className="flex items-center">
                       <svg className="w-4 h-4 mr-1 text-green-500" fill="currentColor" viewBox="0 0 20 20">
@@ -141,9 +146,7 @@ const CategoryBlogPosts = () => {
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-blue-600 font-semibold text-sm">
-                      Read More
-                    </span>
+                    <span className="text-blue-600 font-semibold text-sm">Read More</span>
                     <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>

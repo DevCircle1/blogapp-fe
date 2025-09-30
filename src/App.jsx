@@ -14,7 +14,6 @@ import ProfitMarginCalculator from './components/tools/ProfitMarginCalculator.js
 import TextToHtmlTool from './components/tools/TextToHtmlTool.jsx'
 import { ToastContainer } from 'react-toastify'
 import WriteBlog from './components/blogs/WriteBlogs.jsx'
-import Blogs from './components/blogs/blogs.jsx'
 import BlogPostDetail from './components/blogs/BlogPostDetail.jsx'
 import BlogCategories from './components/blogs/BlogCategories.jsx'
 import CategoryBlogPosts from './components/blogs/CategoryBlogPosts.jsx'
@@ -42,14 +41,14 @@ function App() {
         <Route path="/update-password" element={<UpdatePassword />} />
         <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/blogs" element={<BlogCategories />} />
-        <Route path="/blogs/category/:categoryId" element={<CategoryBlogPosts />} />
+        <Route path="/blogs/category/:categorySlug" element={<CategoryBlogPosts />} />
+        <Route path="/blogs/article/:slug" element={<BlogPostDetail />} />
         <Route path="/write-blogs" element={<WriteBlog />} />
         <Route path="/tools" element={<ToolsPage />} />
         <Route path="/check-ip" element={<IPAddressChecker />} />
         <Route path="/screen-resolution" element={<ScreenResolutionTool />} />
         <Route path="/profit-margin-calculator" element={<ProfitMarginCalculator />} />
         <Route path="/text-to-html" element={<TextToHtmlTool />} />
-        <Route path="/blogs/:slug" element={<BlogPostDetail />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/contact-us" element={<ContactUs />} />
