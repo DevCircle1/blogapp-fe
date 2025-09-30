@@ -41,8 +41,7 @@ function App() {
         <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/update-password" element={<UpdatePassword />} />
         <Route path="/verify-otp" element={<VerifyOtp />} />
-        <Route path="/blogs" element={<Blogs />} />
-        <Route path="/blogs/categories" element={<BlogCategories />} />
+        <Route path="/blogs" element={<BlogCategories />} />
         <Route path="/blogs/category/:categoryId" element={<CategoryBlogPosts />} />
         <Route path="/write-blogs" element={<WriteBlog />} />
         <Route path="/tools" element={<ToolsPage />} />

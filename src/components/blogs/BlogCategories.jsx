@@ -11,7 +11,7 @@ const BlogCategories = () => {
     const fetchCategories = async () => {
       try {
         setIsLoading(true);
-        const response = await publicRequest.get('/categories/');
+        const response = await publicRequest.get('/all-categories/');
         setCategories(response.data);
       } catch (err) {
         setError('Failed to fetch categories');
