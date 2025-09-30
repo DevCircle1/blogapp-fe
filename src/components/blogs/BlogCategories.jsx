@@ -61,8 +61,8 @@ const BlogCategories = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {categories.map((category) => (
               <Link
-                key={category.id}
-                to={`/blogs/category/${category.id}`}
+                key={category.slug}   // ✅ use slug
+                to={`/blogs/category/${category.slug}`}   // ✅ slug instead of id
                 state={{ categoryName: category.name }}
                 className="group"
               >
@@ -96,7 +96,7 @@ const BlogCategories = () => {
                         .filter(article => article.status === 'approved')
                         .slice(0, 2)
                         .map((article) => (
-                          <div key={article.id} className="flex items-center space-x-3 p-2 rounded-lg bg-gray-50 group-hover:bg-blue-50 transition-colors duration-300">
+                          <div key={article.slug} className="flex items-center space-x-3 p-2 rounded-lg bg-gray-50 group-hover:bg-blue-50 transition-colors duration-300">
                             {article.featured_image ? (
                               <img 
                                 src={article.featured_image} 
