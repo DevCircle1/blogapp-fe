@@ -51,7 +51,7 @@ const BlogPosts = () => {
           {posts.map((post) => (
             <Link 
               key={post.id} 
-              to={`/blogs/${post.slug}`}  
+              to={`/blogs/article/${post.slug}`}  
               className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-xl"
             >
               {/* Featured Image */}
