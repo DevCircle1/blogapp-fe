@@ -98,11 +98,11 @@ const CodeShare = () => {
       });
 
       const data = response.data;
-      const newUrl = `${window.location.origin}/${data.id}`;
+      const newUrl = `${window.location.origin}/codes/${data.id}`;
       setShareUrl(newUrl);
       setCurrentCodeId(data.id);
 
-      window.history.pushState({}, '', `/${data.id}`);
+      window.history.pushState({}, '', `/codes/${data.id}`);
       toast.success('Code shared successfully!');
       navigator.clipboard.writeText(newUrl);
       toast.info('URL copied to clipboard!');
