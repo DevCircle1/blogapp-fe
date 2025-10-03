@@ -68,27 +68,28 @@ const CodeShare = () => {
   };
 
   const loadSharedCode = async (codeId) => {
-    try {
-      const response = await publicRequest.get(`/codes/${codeId}/`);
-      const data = response.data;
-      setContent(data.content);
-      setLanguage(data.language);
-      setCurrentCodeId(codeId);
-      setIsEditing(false);
-      toast.success('Code loaded successfully!');
-    } catch (error) {
-      toast.error('Code not found or expired');
-      // window.location.href = '/';
-    }
-  };
+  try {
+    const response = await publicRequest.get(`/codes/${codeId}/`);
+    const data = response.data;
+    setContent(data.content);
+    setLanguage(data.language);
+    setCurrentCodeId(codeId);
+    setIsEditing(false);
+    toast.success('Code loaded successfully!');
+  } catch (error) {
+    toast.error('Code not found or expired');
+  }
+};
 
   const handleShare = async () => {
-    if (!content.trim()) {
-      toast.error('Please enter some code to share');
-      return;
-    }
+  if (!content.trim()) {
+    toast.error('Please enter some code to share');
+    return;
+  }
 
-    try {
+  try {
+    if (!currentCodeId) {
+      // CREATE new
       const response = await publicRequest.post('/codes/', {
         content,
         language
@@ -99,20 +100,23 @@ const CodeShare = () => {
       setShareUrl(newUrl);
       setCurrentCodeId(data.id);
 
-      // Update URL without reload
       window.history.pushState({}, '', `/${data.id}`);
-
-      setIsEditing(true);
-      connectWebSocket();
       toast.success('Code shared successfully!');
-
-      // Copy to clipboard
       navigator.clipboard.writeText(newUrl);
       toast.info('URL copied to clipboard!');
-    } catch (error) {
-      toast.error('Error sharing code');
+    } else {
+      // UPDATE existing
+      const response = await publicRequest.put(`/codes/${currentCodeId}/update/`, {
+        content,
+        language
+      });
+
+      toast.success('Code updated successfully!');
     }
-  };
+  } catch (error) {
+    toast.error('Error sharing code');
+  }
+};
 
   const handleContentChange = (e) => {
     const newContent = e.target.value;
