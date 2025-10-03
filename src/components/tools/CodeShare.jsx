@@ -24,8 +24,10 @@ const CodeShare = () => {
 
   useEffect(() => {
   const path = window.location.pathname.split('/').filter(Boolean);
-  if (path.length === 1 && path[0] !== 'codeshare') {
-    const codeId = path[0];
+
+  // Example: /codes/<uuid>
+  if (path.length === 2 && path[0] === 'codes') {
+    const codeId = path[1];
     loadSharedCode(codeId);
   }
 }, []);
