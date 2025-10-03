@@ -24,6 +24,7 @@ import HelpCenter from './components/common/Terms/HelpCenter.jsx'
 import PrivacyPolicy from './components/common/Terms/PrivacyPolicy.jsx'
 import JobAlert from './components/common/Terms/JobAlerts.jsx'
 import HomePage from './components/common/Home/HomePage.jsx'
+import CodeShare from './components/tools/CodeShare.jsx'
 import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
@@ -55,6 +56,7 @@ function App() {
         <Route path="/help-center" element={<HelpCenter />}></Route>
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/job-alert" element={<JobAlert />} />
+        <Route path="/code-share" element={<CodeShare />} />
       </Routes>
 
       {shouldShowNavbar(location.pathname) && <Footer />}
