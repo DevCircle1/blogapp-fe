@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { publicRequest } from '../../services/api';
 
 const CodeShare = () => {
   const [content, setContent] = useState('');
@@ -22,13 +23,12 @@ const CodeShare = () => {
   ];
 
   useEffect(() => {
-    // Check if we're viewing a shared code
-    const path = window.location.pathname.split('/').filter(Boolean);
-    if (path.length > 0) {
-      const codeId = path[path.length - 1];
-      loadSharedCode(codeId);
-    }
-  }, []);
+  const path = window.location.pathname.split('/').filter(Boolean);
+  if (path.length === 1 && path[0] !== 'codeshare') {
+    const codeId = path[0];
+    loadSharedCode(codeId);
+  }
+}, []);
 
   useEffect(() => {
     if (currentCodeId) {
@@ -69,20 +69,16 @@ const CodeShare = () => {
 
   const loadSharedCode = async (codeId) => {
     try {
-      const response = await fetch(`/api/codes/${codeId}/`);
-      if (response.ok) {
-        const data = await response.json();
-        setContent(data.content);
-        setLanguage(data.language);
-        setCurrentCodeId(codeId);
-        setIsEditing(false);
-        toast.success('Code loaded successfully!');
-      } else {
-        toast.error('Code not found or expired');
-        window.location.href = '/';
-      }
+      const response = await publicRequest.get(`/codes/${codeId}/`);
+      const data = response.data;
+      setContent(data.content);
+      setLanguage(data.language);
+      setCurrentCodeId(codeId);
+      setIsEditing(false);
+      toast.success('Code loaded successfully!');
     } catch (error) {
-      toast.error('Error loading code');
+      toast.error('Code not found or expired');
+      // window.location.href = '/';
     }
   };
 
@@ -93,34 +89,26 @@ const CodeShare = () => {
     }
 
     try {
-      const response = await fetch('/api/codes/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          content,
-          language
-        }),
+      const response = await publicRequest.post('/codes/', {
+        content,
+        language
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        const newUrl = `${window.location.origin}/${data.id}`;
-        setShareUrl(newUrl);
-        setCurrentCodeId(data.id);
-        
-        // Update URL without reload
-        window.history.pushState({}, '', `/${data.id}`);
-        
-        setIsEditing(true);
-        connectWebSocket();
-        toast.success('Code shared successfully!');
-        
-        // Copy to clipboard
-        navigator.clipboard.writeText(newUrl);
-        toast.info('URL copied to clipboard!');
-      }
+      const data = response.data;
+      const newUrl = `${window.location.origin}/${data.id}`;
+      setShareUrl(newUrl);
+      setCurrentCodeId(data.id);
+
+      // Update URL without reload
+      window.history.pushState({}, '', `/${data.id}`);
+
+      setIsEditing(true);
+      connectWebSocket();
+      toast.success('Code shared successfully!');
+
+      // Copy to clipboard
+      navigator.clipboard.writeText(newUrl);
+      toast.info('URL copied to clipboard!');
     } catch (error) {
       toast.error('Error sharing code');
     }
