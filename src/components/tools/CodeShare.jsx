@@ -106,7 +106,7 @@ const CodeShare = () => {
       window.history.pushState({}, '', `/codes/${data.id}`);
       // toast.success('Code shared successfully!');
       navigator.clipboard.writeText(newUrl);
-      toast.info('URL copied to clipboard!');
+      // toast.info('URL copied to clipboard!');
     } else {
       // UPDATE existing
       const response = await publicRequest.put(`/codes/${currentCodeId}/update/`, {
