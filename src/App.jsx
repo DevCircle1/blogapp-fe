@@ -56,8 +56,8 @@ function App() {
         <Route path="/help-center" element={<HelpCenter />}></Route>
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/job-alert" element={<JobAlert />} />
-        <Route path="/code-share" element={<CodeShare />} />
-        <Route path="/code-share/:id" element={<CodeShare />} />
+        <Route path="/codes" element={<CodeShare />} />
+        <Route path="/codes/:id" element={<CodeShare />} />
       </Routes>
 
       {shouldShowNavbar(location.pathname) && <Footer />}
