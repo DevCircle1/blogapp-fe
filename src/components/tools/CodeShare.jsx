@@ -50,7 +50,8 @@ const CodeShare = () => {
     }
 
     const wsScheme = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${wsScheme}//${window.location.host}/ws/code/${currentCodeId}/`;
+    const wsUrl = `${wsScheme}//${window.location.host}/ws/codes/${currentCodeId}/`;
+
     
     socketRef.current = new WebSocket(wsUrl);
 
