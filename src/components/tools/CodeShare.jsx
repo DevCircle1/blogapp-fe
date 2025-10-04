@@ -103,7 +103,7 @@ const CodeShare = () => {
       setCurrentCodeId(data.id);
 
       window.history.pushState({}, '', `/codes/${data.id}`);
-      toast.success('Code shared successfully!');
+      // toast.success('Code shared successfully!');
       navigator.clipboard.writeText(newUrl);
       toast.info('URL copied to clipboard!');
     } else {
