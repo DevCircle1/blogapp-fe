@@ -218,13 +218,13 @@ const CodeShare = () => {
                 >
                   New
                 </button>
-                <button
+                {/* <button
                   onClick={handleShare}
                   disabled={!content.trim()}
                   className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50"
                 >
                   {currentCodeId ? 'Update' : 'Share'}
-                </button>
+                </button> */}
               </div>
             </div>
 
