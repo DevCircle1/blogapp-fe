@@ -47,7 +47,7 @@ const CodeShare = () => {
       socketRef.current.close();
     }
 
-    const backendUrl = 'api.talkandtool.com'; 
+    const backendUrl = 'api.talkandtool.com/api'; 
     const wsUrl = `wss://${backendUrl}/ws/codes/${currentCodeId}/`;
     console.log('Connecting to WebSocket:', wsUrl);
     console.log('🔵 Connecting to WebSocket:', wsUrl);
