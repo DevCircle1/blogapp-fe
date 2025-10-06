@@ -50,7 +50,7 @@ const ToolsPage = () => {
   description:
     "Collaborate on code in real-time. Share short links, edit together, and download instantly with WebSocket-powered sync.",
   icon: "💻",
-  link: "/codeshare",
+  link: "/codes",
   category: "Web Tools",
   tags: ["code", "collaboration", "websocket", "realtime", "share"],
 },
