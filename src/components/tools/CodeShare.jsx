@@ -49,8 +49,8 @@ const CodeShare = () => {
       socketRef.current.close();
     }
 
-    const wsScheme = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${wsScheme}//${window.location.host}/ws/codes/${currentCodeId}/`;
+    const backendUrl = 'https://api.talkandtool.com'; 
+    const wsUrl = `wss://${backendUrl}/ws/codes/${currentCodeId}/`;
 
     
     socketRef.current = new WebSocket(wsUrl);
@@ -68,6 +68,10 @@ const CodeShare = () => {
     socketRef.current.onclose = () => {
       console.log('WebSocket disconnected');
     };
+    socketRef.current.onerror = (error) => {
+    console.error('WebSocket error:', error);
+    toast.error('WebSocket connection failed');
+  };
   };
 
   const loadSharedCode = async (codeId) => {
