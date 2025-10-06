@@ -45,16 +45,15 @@ const ToolsPage = () => {
       tags: ["html", "converter", "text", "developer", "web"],
     },
     {
-      id: 5,
-      title: "Color Picker",
-      description:
-        "Find the perfect color for your design projects. Get HEX, RGB, and HSL values instantly.",
-      icon: "🎨",
-      link: "/color-picker",
-      category: "Design",
-      tags: ["design", "color", "web"],
-      comingSoon: true,
-    },
+  id: 6,
+  title: "CodeShare",
+  description:
+    "Collaborate on code in real-time. Share short links, edit together, and download instantly with WebSocket-powered sync.",
+  icon: "💻",
+  link: "/codeshare",
+  category: "Web Tools",
+  tags: ["code", "collaboration", "websocket", "realtime", "share"],
+},
     {
       id: 6,
       title: "Unit Converter",
