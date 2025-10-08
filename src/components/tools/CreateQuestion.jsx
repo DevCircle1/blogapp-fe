@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Send } from "lucide-react";
-import { publicRequest } from "../../services/api";
+import { privateRequest } from "../../services/api";
 import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthContext"; 
 
@@ -30,7 +30,7 @@ const CreateQuestion = () => {
 
     setLoading(true);
     try {
-      const response = await publicRequest.post("/questions/", {
+      const response = await privateRequest.post("/questions/", {
         content: trimmed,
       });
       toast.success("Question created successfully!");
