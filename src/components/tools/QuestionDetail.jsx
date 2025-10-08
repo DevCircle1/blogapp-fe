@@ -1,11 +1,9 @@
-// pages/QuestionDetail.jsx
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Share2, MessageCircle, User, Send, Copy } from "lucide-react";
 import { publicRequest } from "../../services/api";
 import { toast } from "react-toastify";
-import { useAuth } from "../../context/AuthContext"; // ✅ FIXED import
-
+import { useAuth } from "../../context/AuthContext"; 
 const QuestionDetail = () => {
   const { id } = useParams();
   const [question, setQuestion] = useState(null);
@@ -13,14 +11,11 @@ const QuestionDetail = () => {
   const [newAnswer, setNewAnswer] = useState("");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const { user } = useAuth(); // ✅ cleaned up
+  const { user } = useAuth();
   const navigate = useNavigate();
-
   useEffect(() => {
     fetchQuestionAndAnswers();
   }, [id]);
-
-  // ✅ Fetch question + answers
   const fetchQuestionAndAnswers = async () => {
     try {
       const response = await publicRequest.get(`/questions/${id}/`);
@@ -28,16 +23,13 @@ const QuestionDetail = () => {
       setAnswers(response.data.answers || []);
     } catch (error) {
       toast.error("Question not found");
-      navigate("/");
+      navigate("/signup");
     } finally {
       setLoading(false);
     }
   };
-
-  // ✅ Submit answer handler
   const handleSubmitAnswer = async (e) => {
     e.preventDefault();
-
     const trimmed = newAnswer.trim();
     if (!trimmed) {
       toast.error("Please enter your answer");
@@ -47,17 +39,15 @@ const QuestionDetail = () => {
       toast.error("Answer should be at least 5 characters long");
       return;
     }
-
     setSubmitting(true);
     try {
       await publicRequest.post("/answers/", {
         question: id,
         content: trimmed,
       });
-
       toast.success("Answer submitted anonymously!");
       setNewAnswer("");
-      fetchQuestionAndAnswers(); // refresh list
+      fetchQuestionAndAnswers(); 
     } catch (error) {
       console.error(error);
       toast.error("Failed to submit answer");
@@ -65,15 +55,11 @@ const QuestionDetail = () => {
       setSubmitting(false);
     }
   };
-
-  // ✅ Share link
   const copyToClipboard = () => {
     const url = window.location.href;
     navigator.clipboard.writeText(url);
     toast.success("Link copied to clipboard! Share it to get more answers.");
   };
-
-  // ✅ Loading skeleton
   if (loading) {
     return (
       <div className="max-w-4xl mx-auto animate-pulse space-y-6 p-4">
@@ -87,12 +73,9 @@ const QuestionDetail = () => {
       </div>
     );
   }
-
   if (!question) return null;
-
   return (
     <div className="max-w-4xl mx-auto p-4">
-      {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <button
           onClick={() => navigate("/")}
@@ -110,8 +93,6 @@ const QuestionDetail = () => {
           <span>Share Question</span>
         </button>
       </div>
-
-      {/* Question Card */}
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200 mb-8">
         <div className="flex items-start space-x-4 mb-6">
           <div className="bg-blue-100 p-3 rounded-xl">
@@ -131,8 +112,6 @@ const QuestionDetail = () => {
           </div>
         </div>
       </div>
-
-      {/* Answers Section */}
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200 mb-8">
         <div className="flex items-center space-x-3 mb-6">
           <MessageCircle className="h-6 w-6 text-blue-600" />
@@ -140,7 +119,6 @@ const QuestionDetail = () => {
             Answers ({answers.length})
           </h2>
         </div>
-
         {answers.length === 0 ? (
           <div className="text-center py-12">
             <MessageCircle className="h-16 w-16 text-gray-300 mx-auto mb-4" />
@@ -173,13 +151,10 @@ const QuestionDetail = () => {
           </div>
         )}
       </div>
-
-      {/* Answer Form */}
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200">
         <h3 className="text-xl font-bold text-gray-900 mb-6">
           Your Anonymous Answer
         </h3>
-
         <form onSubmit={handleSubmitAnswer} className="space-y-6">
           <div>
             <textarea
@@ -201,7 +176,6 @@ const QuestionDetail = () => {
               )}
             </div>
           </div>
-
           <div className="bg-green-50 border border-green-200 rounded-xl p-4">
             <div className="flex items-start space-x-3">
               <Copy className="h-5 w-5 text-green-600 mt-0.5" />
@@ -216,7 +190,6 @@ const QuestionDetail = () => {
               </div>
             </div>
           </div>
-
           <div className="flex justify-between items-center">
             <Link
               to="/create"
@@ -224,7 +197,6 @@ const QuestionDetail = () => {
             >
               Want to ask your own question?
             </Link>
-
             <button
               type="submit"
               disabled={submitting || newAnswer.trim().length < 5}
@@ -248,5 +220,4 @@ const QuestionDetail = () => {
     </div>
   );
 };
-
 export default QuestionDetail;
