@@ -1,109 +1,110 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Share2, MessageCircle, User, Send, Copy } from 'lucide-react';
-import { publicRequest } from '../../services/api';
-import { toast } from 'react-toastify';
-import axios from 'axios';
+// pages/QuestionDetail.jsx
+import React, { useState, useEffect } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { ArrowLeft, Share2, MessageCircle, User, Send, Copy } from "lucide-react";
+import { publicRequest } from "../../services/api";
+import { toast } from "react-toastify";
+import { useAuth } from "../../context/AuthContext"; // ✅ FIXED import
 
 const QuestionDetail = () => {
   const { id } = useParams();
   const [question, setQuestion] = useState(null);
   const [answers, setAnswers] = useState([]);
-  const [newAnswer, setNewAnswer] = useState('');
+  const [newAnswer, setNewAnswer] = useState("");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const { user, API_BASE } = useAuth();
+  const { user } = useAuth(); // ✅ cleaned up
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchQuestionAndAnswers();
   }, [id]);
 
+  // ✅ Fetch question + answers
   const fetchQuestionAndAnswers = async () => {
     try {
       const response = await publicRequest.get(`/questions/${id}/`);
       setQuestion(response.data);
       setAnswers(response.data.answers || []);
     } catch (error) {
-      toast.error('Question not found');
-      navigate('/');
+      toast.error("Question not found");
+      navigate("/");
     } finally {
       setLoading(false);
     }
   };
 
+  // ✅ Submit answer handler
   const handleSubmitAnswer = async (e) => {
     e.preventDefault();
-    
-    if (!newAnswer.trim()) {
-      toast.error('Please enter your answer');
+
+    const trimmed = newAnswer.trim();
+    if (!trimmed) {
+      toast.error("Please enter your answer");
       return;
     }
-
-    if (newAnswer.trim().length < 5) {
-      toast.error('Answer should be at least 5 characters long');
+    if (trimmed.length < 5) {
+      toast.error("Answer should be at least 5 characters long");
       return;
     }
 
     setSubmitting(true);
-
     try {
-      await axios.post(`${API_BASE}/answers/`, {
+      await publicRequest.post("/answers/", {
         question: id,
-        content: newAnswer.trim(),
+        content: trimmed,
       });
-      
-      toast.success('Answer submitted anonymously!');
-      setNewAnswer('');
-      fetchQuestionAndAnswers(); // Refresh answers
+
+      toast.success("Answer submitted anonymously!");
+      setNewAnswer("");
+      fetchQuestionAndAnswers(); // refresh list
     } catch (error) {
-      toast.error('Failed to submit answer');
+      console.error(error);
+      toast.error("Failed to submit answer");
     } finally {
       setSubmitting(false);
     }
   };
 
+  // ✅ Share link
   const copyToClipboard = () => {
     const url = window.location.href;
     navigator.clipboard.writeText(url);
-    toast.success('Link copied to clipboard! Share it to get more answers.');
+    toast.success("Link copied to clipboard! Share it to get more answers.");
   };
 
+  // ✅ Loading skeleton
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto">
-        <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-gray-200 rounded-xl w-3/4"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-          <div className="space-y-4">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-20 bg-gray-200 rounded-xl"></div>
-            ))}
-          </div>
+      <div className="max-w-4xl mx-auto animate-pulse space-y-6 p-4">
+        <div className="h-8 bg-gray-200 rounded-xl w-3/4"></div>
+        <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+        <div className="space-y-4">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="h-20 bg-gray-200 rounded-xl"></div>
+          ))}
         </div>
       </div>
     );
   }
 
-  if (!question) {
-    return null;
-  }
+  if (!question) return null;
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto p-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <button
-          onClick={() => navigate('/')}
+          onClick={() => navigate("/")}
           className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors"
         >
           <ArrowLeft className="h-5 w-5" />
           <span>Back to Home</span>
         </button>
-        
+
         <button
           onClick={copyToClipboard}
-          className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-primary-500 to-blue-600 text-white rounded-xl hover:from-primary-600 hover:to-blue-700 transition-all duration-200 shadow-lg"
+          className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-lg"
         >
           <Share2 className="h-4 w-4" />
           <span>Share Question</span>
@@ -113,8 +114,8 @@ const QuestionDetail = () => {
       {/* Question Card */}
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200 mb-8">
         <div className="flex items-start space-x-4 mb-6">
-          <div className="bg-primary-100 p-3 rounded-xl">
-            <MessageCircle className="h-6 w-6 text-primary-600" />
+          <div className="bg-blue-100 p-3 rounded-xl">
+            <MessageCircle className="h-6 w-6 text-blue-600" />
           </div>
           <div className="flex-1">
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -123,7 +124,7 @@ const QuestionDetail = () => {
             <div className="flex items-center space-x-4 text-sm text-gray-500">
               <span className="flex items-center space-x-1">
                 <User className="h-4 w-4" />
-                <span>By {question.user_email}</span>
+                <span>{question.user_email || "Anonymous"}</span>
               </span>
               <span>{new Date(question.created_at).toLocaleDateString()}</span>
             </div>
@@ -134,7 +135,7 @@ const QuestionDetail = () => {
       {/* Answers Section */}
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200 mb-8">
         <div className="flex items-center space-x-3 mb-6">
-          <MessageCircle className="h-6 w-6 text-primary-600" />
+          <MessageCircle className="h-6 w-6 text-blue-600" />
           <h2 className="text-xl font-bold text-gray-900">
             Answers ({answers.length})
           </h2>
@@ -143,15 +144,19 @@ const QuestionDetail = () => {
         {answers.length === 0 ? (
           <div className="text-center py-12">
             <MessageCircle className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-500 text-lg mb-4">No answers yet. Be the first to respond!</p>
-            <p className="text-gray-400">Share the question link to get more answers</p>
+            <p className="text-gray-500 text-lg mb-4">
+              No answers yet. Be the first to respond!
+            </p>
+            <p className="text-gray-400">
+              Share the question link to get more answers
+            </p>
           </div>
         ) : (
           <div className="space-y-6">
             {answers.map((answer) => (
               <div
                 key={answer.id}
-                className="border-l-4 border-primary-500 pl-6 py-4 bg-gradient-to-r from-gray-50 to-transparent rounded-r-xl"
+                className="border-l-4 border-blue-500 pl-6 py-4 bg-gradient-to-r from-gray-50 to-transparent rounded-r-xl"
               >
                 <p className="text-gray-800 mb-3 text-lg leading-relaxed">
                   {answer.content}
@@ -174,16 +179,16 @@ const QuestionDetail = () => {
         <h3 className="text-xl font-bold text-gray-900 mb-6">
           Your Anonymous Answer
         </h3>
-        
+
         <form onSubmit={handleSubmitAnswer} className="space-y-6">
           <div>
             <textarea
               value={newAnswer}
               onChange={(e) => setNewAnswer(e.target.value)}
-              placeholder="Share your thoughts anonymously... (Your identity will be completely hidden)"
+              placeholder="Share your thoughts anonymously..."
               rows={5}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all resize-none"
               maxLength={1000}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
             />
             <div className="flex justify-between items-center mt-2">
               <span className="text-sm text-gray-500">
@@ -201,9 +206,12 @@ const QuestionDetail = () => {
             <div className="flex items-start space-x-3">
               <Copy className="h-5 w-5 text-green-600 mt-0.5" />
               <div>
-                <p className="text-green-800 font-medium mb-1">Your answer is anonymous</p>
+                <p className="text-green-800 font-medium mb-1">
+                  Your answer is anonymous
+                </p>
                 <p className="text-green-700 text-sm">
-                  The question owner won't know who you are. Feel free to be honest and open in your response.
+                  The question owner won't know who you are. Feel free to be
+                  honest and open.
                 </p>
               </div>
             </div>
@@ -212,15 +220,15 @@ const QuestionDetail = () => {
           <div className="flex justify-between items-center">
             <Link
               to="/create"
-              className="text-primary-600 hover:text-primary-700 font-medium transition-colors"
+              className="text-blue-600 hover:text-blue-700 font-medium transition-colors"
             >
               Want to ask your own question?
             </Link>
-            
+
             <button
               type="submit"
-              disabled={submitting || !newAnswer.trim() || newAnswer.trim().length < 5}
-              className="flex items-center space-x-2 px-8 py-3 bg-gradient-to-r from-primary-500 to-blue-600 text-white rounded-xl hover:from-primary-600 hover:to-blue-700 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 transition-all duration-200 font-medium"
+              disabled={submitting || newAnswer.trim().length < 5}
+              className="flex items-center space-x-2 px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 transition-all duration-200 font-medium"
             >
               {submitting ? (
                 <>
