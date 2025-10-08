@@ -4,16 +4,13 @@ import { Plus, MessageCircle, Share2, Clock, Users } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { publicRequest } from '../../services/api';
 import { useAuth } from '../../context/AuthContext'; 
-
 const Q = () => {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth(); 
-
   useEffect(() => {
     fetchQuestions();
   }, []);
-
   const fetchQuestions = async () => {
     try {
       const response = await publicRequest.get('/questions/');
@@ -25,13 +22,11 @@ const Q = () => {
       setLoading(false);
     }
   };
-
   const copyToClipboard = (questionId) => {
     const url = `${window.location.origin}/q/${questionId}`;
     navigator.clipboard.writeText(url);
     toast.success('Link copied to clipboard!');
   };
-
   if (loading) {
     return (
       <div className="max-w-4xl mx-auto">
@@ -49,10 +44,8 @@ const Q = () => {
       </div>
     );
   }
-
   return (
     <div className="max-w-4xl mx-auto">
-      {/* Hero Section */}
       <div className="text-center mb-12">
         <h1 className="text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-4">
           Ask Anything,<br />Get Honest Answers
@@ -60,7 +53,6 @@ const Q = () => {
         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
           Create anonymous Q&A pages and share them with anyone. Get honest feedback without knowing who replied.
         </p>
-
         {user ? (
           <Link
             to="/create"
@@ -162,5 +154,4 @@ const Q = () => {
     </div>
   );
 };
-
 export default Q;
