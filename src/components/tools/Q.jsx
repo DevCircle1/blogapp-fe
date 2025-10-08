@@ -9,10 +9,12 @@ const Q = () => {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user, loading: authLoading } = useAuth();
+
   useEffect(() => {
     console.log(" [Q Component] Mounted");
     fetchQuestions();
   }, []);
+
   useEffect(() => {
     console.log("👤 useAuth() user:", user);
   }, [user]);
@@ -63,30 +65,14 @@ const Q = () => {
   return (
     <div className="max-w-4xl mx-auto">
       {/* ===== Hero Section ===== */}
-      <div
-        className={`text-center mb-12 py-12 rounded-2xl shadow-inner transition-all duration-300 ${
-          user
-            ? "bg-gradient-to-b from-gray-900 to-gray-800 text-white"
-            : "bg-gradient-to-b from-gray-50 to-gray-100 text-gray-900"
-        }`}
-      >
-        <h1
-          className={`text-5xl font-bold mb-4 ${
-            user
-              ? "text-white"
-              : "bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
-          }`}
-        >
+      <div className="text-center mb-12 py-12 rounded-2xl shadow-inner transition-all duration-300 bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+        <h1 className="text-5xl font-bold mb-4 text-white">
           Ask Anything,
           <br />
           Get Honest Answers
         </h1>
 
-        <p
-          className={`text-xl mb-8 max-w-2xl mx-auto ${
-            user ? "text-gray-300" : "text-gray-600"
-          }`}
-        >
+        <p className="text-xl mb-8 max-w-2xl mx-auto text-gray-300">
           Create anonymous Q&A pages and share them with anyone. Get honest
           feedback without knowing who replied.
         </p>
@@ -100,13 +86,13 @@ const Q = () => {
             <span>Ask a Question</span>
           </Link>
         ) : (
-          <div className="space-y-4 inline-block bg-white border border-gray-300 rounded-2xl shadow-md px-8 py-6">
-            <p className="text-gray-700 text-lg font-medium">
+          <div className="space-y-4 inline-block bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-lg px-8 py-6">
+            <p className="text-gray-200 text-lg font-medium">
               Sign up to start asking questions
             </p>
             <Link
               to="/signup"
-              className="inline-flex items-center space-x-2 bg-gradient-to-r from-primary-500 to-blue-600 text-white px-8 py-4 rounded-2xl hover:from-primary-600 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl font-medium text-lg"
+              className="inline-flex items-center space-x-2 bg-gradient-to-r from-indigo-500 to-blue-600 text-white px-8 py-4 rounded-2xl hover:from-indigo-600 hover:to-blue-700 transition-all duration-200 shadow-2xl font-medium text-lg"
             >
               <Plus className="h-5 w-5" />
               <span>Get Started Free</span>
