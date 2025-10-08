@@ -9,23 +9,17 @@ import { useAuth } from "../../context/AuthContext";
 const CreateQuestion = () => {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
-  const { user } = useAuth(); // ✅ simplified
+  const { user } = useAuth(); 
   const navigate = useNavigate();
-
-  // ✅ Redirect if user not logged in
   useEffect(() => {
     if (!user) {
       toast.error("Please sign in to create a question");
-      navigate("/");
+      navigate("/signup");
     }
   }, [user, navigate]);
-
-  // ✅ Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const trimmed = content.trim();
-
     if (!trimmed) {
       toast.error("Please enter your question");
       return;
@@ -49,8 +43,6 @@ const CreateQuestion = () => {
       setLoading(false);
     }
   };
-
-  // ✅ Avoid flicker when redirecting
   if (!user) return null;
 
   return (

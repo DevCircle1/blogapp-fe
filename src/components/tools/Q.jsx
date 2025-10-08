@@ -82,8 +82,6 @@ const Q = () => {
           </div>
         )}
       </div>
-
-      {/* Features Grid */}
       <div className="grid md:grid-cols-3 gap-6 mb-12">
         <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl border border-gray-200 text-center">
           <div className="bg-primary-100 w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4">
