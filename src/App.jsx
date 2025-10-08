@@ -61,7 +61,7 @@ function App() {
         <Route path="/job-alert" element={<JobAlert />} />
         <Route path="/codes" element={<CodeShare />} />
         <Route path="/codes/:id" element={<CodeShare />} />
-        <Route path="/iqra" element={<Q />} />
+        <Route path="/ask-anything" element={<Q />} />
         <Route path="/create" element={<CreateQuestion />} />
         <Route path="/q/:id" element={<QuestionDetail />} />
       </Routes>

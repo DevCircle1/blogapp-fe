@@ -1,4 +1,3 @@
-// src/pages/Home.jsx
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, MessageCircle, Share2, Clock, Users } from 'lucide-react';
