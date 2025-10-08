@@ -99,8 +99,6 @@ const Q = () => {
           <p className="text-gray-600 text-sm">Anyone can answer without creating an account</p>
         </div>
       </div>
-
-      {/* Questions List */}
       <div className="space-y-6">
         <h2 className="text-2xl font-bold text-gray-900">Recent Questions</h2>
 
