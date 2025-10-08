@@ -25,6 +25,9 @@ import PrivacyPolicy from './components/common/Terms/PrivacyPolicy.jsx'
 import JobAlert from './components/common/Terms/JobAlerts.jsx'
 import HomePage from './components/common/Home/HomePage.jsx'
 import CodeShare from './components/tools/CodeShare.jsx'
+import Q from './components/tools/Q.jsx'
+import CreateQuestion from './components/tools/CreateQuestion.jsx'
+import QuestionDetail from './components/tools/QuestionDetail.jsx'
 import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
@@ -58,12 +61,13 @@ function App() {
         <Route path="/job-alert" element={<JobAlert />} />
         <Route path="/codes" element={<CodeShare />} />
         <Route path="/codes/:id" element={<CodeShare />} />
+        <Route path="/iqra" element={<Q />} />
+        <Route path="/create" element={<CreateQuestion />} />
+        <Route path="/q/:id" element={<QuestionDetail />} />
       </Routes>
-
       {shouldShowNavbar(location.pathname) && <Footer />}
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
     </>
   )
 }
-
 export default App
