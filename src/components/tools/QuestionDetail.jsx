@@ -25,7 +25,7 @@ const QuestionDetail = () => {
   }, [id]);
   const fetchQuestionAndAnswers = async () => {
     try {
-      const response = await publicRequest.get(`/questions/${id}/`);
+      const response = await publicRequest.get(`/questions/latest/`);
       setQuestion(response.data);
       setAnswers(response.data.answers || []);
     } catch (error) {

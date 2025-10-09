@@ -30,7 +30,7 @@ const CreateQuestion = () => {
 
     setLoading(true);
     try {
-      const response = await publicRequest.post("/questions/latest/", {
+      const response = await privateRequest.post("/questions/", {
         content: trimmed,
       });
       toast.success("Question created successfully!");
