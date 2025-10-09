@@ -23,7 +23,7 @@ const Q = () => {
   const fetchQuestions = async () => {
     console.log("📡 Fetching questions...");
     try {
-      const response = await publicRequest.get("/questions/");
+      const response = await publicRequest.get("/questions/latest/");
       console.log("✅ API Response:", response.data);
       setQuestions(response.data || []);
     } catch (error) {
