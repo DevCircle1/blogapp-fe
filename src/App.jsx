@@ -28,6 +28,7 @@ import CodeShare from './components/tools/CodeShare.jsx'
 import Q from './components/tools/Q.jsx'
 import CreateQuestion from './components/tools/CreateQuestion.jsx'
 import QuestionDetail from './components/tools/QuestionDetail.jsx'
+import MyAnswers from './components/tools/MyAnswers.jsx'
 import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
@@ -64,6 +65,7 @@ function App() {
         <Route path="/ask-anything" element={<Q />} />
         <Route path="/create" element={<CreateQuestion />} />
         <Route path="/q/:id" element={<QuestionDetail />} />
+        <Route path="/my-answers" element={<MyAnswers />} />
       </Routes>
       {shouldShowNavbar(location.pathname) && <Footer />}
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
