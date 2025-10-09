@@ -84,8 +84,6 @@ const CreateQuestion = () => {
               )}
             </div>
           </div>
-
-          {/* Info Cards */}
           <div className="grid gap-4">
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
               <h3 className="font-semibold text-blue-800 mb-2">
@@ -144,5 +142,4 @@ const CreateQuestion = () => {
     </div>
   );
 };
-
 export default CreateQuestion;
