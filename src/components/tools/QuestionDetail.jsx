@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Share2, MessageCircle, User, Send, Copy } from "lucide-react";
+import {
+  ArrowLeft,
+  Share2,
+  MessageCircle,
+  User,
+  Send,
+  Copy,
+} from "lucide-react";
 import { publicRequest } from "../../services/api";
 import { toast } from "react-toastify";
-import { useAuth } from "../../context/AuthContext"; 
+import { useAuth } from "../../context/AuthContext";
 const QuestionDetail = () => {
   const { id } = useParams();
   const [question, setQuestion] = useState(null);
@@ -47,7 +54,7 @@ const QuestionDetail = () => {
       });
       toast.success("Answer submitted anonymously!");
       setNewAnswer("");
-      fetchQuestionAndAnswers(); 
+      fetchQuestionAndAnswers();
     } catch (error) {
       console.error(error);
       toast.error("Failed to submit answer");
@@ -144,7 +151,9 @@ const QuestionDetail = () => {
                     <User className="h-4 w-4" />
                     <span>Anonymous</span>
                   </span>
-                  <span>{new Date(answer.created_at).toLocaleDateString()}</span>
+                  <span>
+                    {new Date(answer.created_at).toLocaleDateString()}
+                  </span>
                 </div>
               </div>
             ))}
@@ -190,6 +199,32 @@ const QuestionDetail = () => {
               </div>
             </div>
           </div>
+          {/* Shareable Link Section */}
+          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 mb-8">
+            <h3 className="text-lg font-semibold text-blue-800 mb-3 flex items-center space-x-2">
+              <Share2 className="h-5 w-5 text-blue-600" />
+              <span>Share this Question</span>
+            </h3>
+            <div className="flex flex-col sm:flex-row items-center gap-3">
+              <input
+                type="text"
+                readOnly
+                value={window.location.href}
+                className="flex-1 px-4 py-3 border border-blue-300 rounded-xl text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+              <button
+                onClick={copyToClipboard}
+                className="flex items-center justify-center space-x-2 px-5 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md"
+              >
+                <Copy className="h-4 w-4" />
+                <span>Copy Link</span>
+              </button>
+            </div>
+            <p className="text-sm text-blue-700 mt-3">
+              Share this link to invite others to answer your question.
+            </p>
+          </div>
+
           <div className="flex justify-between items-center">
             <Link
               to="/create"
