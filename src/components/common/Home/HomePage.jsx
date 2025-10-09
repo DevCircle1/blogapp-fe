@@ -409,7 +409,24 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-indigo-50 via-blue-50 to-purple-50">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            Got a Question in Mind?
+          </h2>
+          <p className="text-lg text-gray-600 mb-8">
+            Don’t wait—ask anything and get expert answers from the Talk & Tool
+            community. Whether it’s coding, design, or business, we’ve got you covered.
+          </p>
+          <Link
+            to="/ask-anything"
+            className="inline-flex items-center space-x-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-10 py-4 rounded-full font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
+          >
+            <span>Ask a Question</span>
+            <FiArrowRight className="h-5 w-5" />
+          </Link>
+        </div>
+      </section>
       {/* CTA Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
