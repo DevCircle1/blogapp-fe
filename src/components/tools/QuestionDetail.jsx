@@ -85,11 +85,11 @@ const QuestionDetail = () => {
     <div className="max-w-4xl mx-auto p-4">
       <div className="flex items-center justify-between mb-8">
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/ask-anything")}
           className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors"
         >
           <ArrowLeft className="h-5 w-5" />
-          <span>Back to Home</span>
+          <span>Back to Ask Anything</span>
         </button>
 
         <button
