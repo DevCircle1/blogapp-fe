@@ -1,48 +1,53 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Plus, MessageCircle, Share2, Clock, Users } from "lucide-react";
+import { Plus, MessageCircle, Share2, Clock } from "lucide-react";
 import { toast } from "react-toastify";
-import { publicRequest } from "../../services/api";
+import { publicRequest, privateRequest } from "../../services/api"; // 👈 userRequest includes token
 import { useAuth } from "../../context/AuthContext";
 
 const Q = () => {
   const [questions, setQuestions] = useState([]);
+  const [myQuestions, setMyQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("all"); // 'all' | 'mine'
   const { user, loading: authLoading } = useAuth();
 
   useEffect(() => {
-    console.log(" [Q Component] Mounted");
     fetchQuestions();
-  }, []);
-
-  useEffect(() => {
-    console.log("👤 useAuth() user:", user);
+    if (user) fetchMyQuestions();
   }, [user]);
 
-  // === Fetch Questions ===
+  // === Fetch All Questions ===
   const fetchQuestions = async () => {
-    console.log("📡 Fetching questions...");
     try {
       const response = await publicRequest.get("/questions/latest/");
-      console.log("✅ API Response:", response.data);
       setQuestions(response.data || []);
     } catch (error) {
       console.error("❌ Failed to load questions:", error);
       toast.error("Failed to load questions");
     } finally {
-      console.log("⏳ Finished loading questions");
       setLoading(false);
     }
   };
 
-  // === Copy to Clipboard ===
+  // === Fetch My Questions (Authenticated Only) ===
+  const fetchMyQuestions = async () => {
+    try {
+      const response = await privateRequest.get("/questions/my_questions/");
+      setMyQuestions(response.data || []);
+    } catch (error) {
+      console.error("❌ Failed to load your questions:", error);
+    }
+  };
+
+  // === Copy Link ===
   const copyToClipboard = (questionId) => {
     const url = `${window.location.origin}/q/${questionId}`;
     navigator.clipboard.writeText(url);
     toast.success("Link copied to clipboard!");
   };
 
-  // === Show Loading Skeleton ===
+  // === Loading Skeleton ===
   if (loading || authLoading) {
     return (
       <div className="max-w-4xl mx-auto py-20">
@@ -61,38 +66,38 @@ const Q = () => {
     );
   }
 
-  // === Main Render ===
+  // === Choose which questions to show ===
+  const displayedQuestions = activeTab === "mine" ? myQuestions : questions;
+
   return (
     <div className="max-w-4xl mx-auto">
       {/* ===== Hero Section ===== */}
-      <div className="text-center mb-12 py-12 rounded-2xl shadow-inner transition-all duration-300 bg-gradient-to-b from-gray-900 to-gray-800 text-white">
-        <h1 className="text-5xl font-bold mb-4 text-white">
+      <div className="text-center mb-12 py-12 rounded-2xl bg-gradient-to-b from-gray-900 to-gray-800 text-white shadow-inner">
+        <h1 className="text-5xl font-bold mb-4">
           Ask Anything,
           <br />
           Get Honest Answers
         </h1>
-
-        <p className="text-xl mb-8 max-w-2xl mx-auto text-gray-300">
-          Create anonymous Q&A pages and share them with anyone. Get honest
-          feedback without knowing who replied.
+        <p className="text-xl mb-8 text-gray-300 max-w-2xl mx-auto">
+          Create anonymous Q&A pages and share them with anyone.
         </p>
 
         {user ? (
           <Link
             to="/create"
-            className="inline-flex items-center space-x-2 bg-gradient-to-r from-indigo-500 to-blue-600 text-white px-8 py-4 rounded-2xl hover:from-indigo-600 hover:to-blue-700 transition-all duration-200 shadow-xl hover:shadow-2xl font-medium text-lg"
+            className="inline-flex items-center space-x-2 bg-gradient-to-r from-indigo-500 to-blue-600 text-white px-8 py-4 rounded-2xl hover:from-indigo-600 hover:to-blue-700 transition-all duration-200 shadow-xl"
           >
             <Plus className="h-5 w-5" />
             <span>Ask a Question</span>
           </Link>
         ) : (
-          <div className="space-y-4 inline-block bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-lg px-8 py-6">
-            <p className="text-gray-200 text-lg font-medium">
+          <div className="bg-white/10 border border-white/20 rounded-2xl px-8 py-6 inline-block">
+            <p className="text-gray-200 mb-3">
               Sign up to start asking questions
             </p>
             <Link
               to="/signup"
-              className="inline-flex items-center space-x-2 bg-gradient-to-r from-indigo-500 to-blue-600 text-white px-8 py-4 rounded-2xl hover:from-indigo-600 hover:to-blue-700 transition-all duration-200 shadow-2xl font-medium text-lg"
+              className="inline-flex items-center space-x-2 bg-gradient-to-r from-indigo-500 to-blue-600 text-white px-8 py-4 rounded-2xl hover:from-indigo-600 hover:to-blue-700 transition-all duration-200 shadow-xl"
             >
               <Plus className="h-5 w-5" />
               <span>Get Started Free</span>
@@ -101,33 +106,71 @@ const Q = () => {
         )}
       </div>
 
-      {/* ===== Recent Questions ===== */}
-      <div className="space-y-6 mb-20">
-        <h2 className="text-2xl font-bold text-gray-900">Recent Questions</h2>
+      {/* ===== Tabs (All / My Questions) ===== */}
+      {user && (
+        <div className="flex justify-center space-x-4 mb-10">
+          <button
+            onClick={() => setActiveTab("all")}
+            className={`px-6 py-2 rounded-full font-medium ${
+              activeTab === "all"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            All Questions
+          </button>
+          <button
+            onClick={() => setActiveTab("mine")}
+            className={`px-6 py-2 rounded-full font-medium ${
+              activeTab === "mine"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            My Questions
+          </button>
+        </div>
+      )}
 
-        {questions.length === 0 ? (
+      {/* ===== Questions List ===== */}
+      <div className="space-y-6 mb-20">
+        <h2 className="text-2xl font-bold text-gray-900">
+          {activeTab === "mine" ? "My Questions" : "Recent Questions"}
+        </h2>
+
+        {displayedQuestions.length === 0 ? (
           <div className="text-center py-12 bg-gray-50 rounded-xl border border-gray-100">
             <MessageCircle className="h-16 w-16 text-gray-300 mx-auto mb-4" />
             <p className="text-gray-500 text-lg">
-              No questions yet. Be the first to ask!
+              No questions yet.{" "}
+              {activeTab === "mine"
+                ? "Ask your first one!"
+                : "Be the first to ask!"}
             </p>
           </div>
         ) : (
-          questions.map((question) => (
+          displayedQuestions.map((question) => (
             <div
               key={question.id}
-              className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-200 hover:border-primary-300 transition-all duration-200 hover:shadow-lg"
+              className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-200 hover:border-indigo-300 hover:shadow-lg transition-all"
             >
               <div className="flex justify-between items-start mb-4">
-                <Link
-                  to={`/q/${question.id}`}
-                  className="text-lg font-semibold text-gray-900 hover:text-primary-600 transition-colors flex-1 pr-4"
+                <button
+                  onClick={() => {
+                    if (!user) {
+                      toast.info("Please log in to view answers.");
+                      window.location.href = "/login";
+                    } else {
+                      window.location.href = `/q/${question.id}`;
+                    }
+                  }}
+                  className="text-left text-lg font-semibold text-gray-900 hover:text-indigo-600 flex-1 pr-4"
                 >
                   {question.content}
-                </Link>
+                </button>
                 <button
                   onClick={() => copyToClipboard(question.id)}
-                  className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all"
+                  className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
                 >
                   <Share2 className="h-4 w-4" />
                   <span>Share</span>
@@ -147,7 +190,7 @@ const Q = () => {
                     </span>
                   </span>
                 </div>
-                <span className="text-primary-600 font-medium">
+                <span className="text-indigo-600 font-medium">
                   By {question.user_email || "Anonymous"}
                 </span>
               </div>
