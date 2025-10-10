@@ -126,37 +126,50 @@ const QuestionDetail = () => {
             Answers ({answers.length})
           </h2>
         </div>
-        {answers.length === 0 ? (
+        {/* ===== Answers Section ===== */}
+        {user && user.email === question.user_email ? (
+          answers.length === 0 ? (
+            <div className="text-center py-12">
+              <MessageCircle className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-500 text-lg mb-4">
+                No answers yet. Be the first to respond!
+              </p>
+              <p className="text-gray-400">
+                Share the question link to get more answers
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {answers.map((answer) => (
+                <div
+                  key={answer.id}
+                  className="border-l-4 border-blue-500 pl-6 py-4 bg-gradient-to-r from-gray-50 to-transparent rounded-r-xl"
+                >
+                  <p className="text-gray-800 mb-3 text-lg leading-relaxed">
+                    {answer.content}
+                  </p>
+                  <div className="flex items-center justify-between text-sm text-gray-500">
+                    <span className="flex items-center space-x-2">
+                      <User className="h-4 w-4" />
+                      <span>Anonymous</span>
+                    </span>
+                    <span>
+                      {new Date(answer.created_at).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )
+        ) : (
           <div className="text-center py-12">
             <MessageCircle className="h-16 w-16 text-gray-300 mx-auto mb-4" />
             <p className="text-gray-500 text-lg mb-4">
-              No answers yet. Be the first to respond!
+              Answers are hidden for privacy.
             </p>
             <p className="text-gray-400">
-              Share the question link to get more answers
+              You can still share your own anonymous response below.
             </p>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {answers.map((answer) => (
-              <div
-                key={answer.id}
-                className="border-l-4 border-blue-500 pl-6 py-4 bg-gradient-to-r from-gray-50 to-transparent rounded-r-xl"
-              >
-                <p className="text-gray-800 mb-3 text-lg leading-relaxed">
-                  {answer.content}
-                </p>
-                <div className="flex items-center justify-between text-sm text-gray-500">
-                  <span className="flex items-center space-x-2">
-                    <User className="h-4 w-4" />
-                    <span>Anonymous</span>
-                  </span>
-                  <span>
-                    {new Date(answer.created_at).toLocaleDateString()}
-                  </span>
-                </div>
-              </div>
-            ))}
           </div>
         )}
       </div>
