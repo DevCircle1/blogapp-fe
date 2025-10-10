@@ -137,7 +137,6 @@ const Q = () => {
         <h2 className="text-2xl font-bold text-gray-900">
           {activeTab === "mine" ? "My Questions" : "Recent Questions"}
         </h2>
-
         {displayedQuestions.length === 0 ? (
           <div className="text-center py-12 bg-gray-50 rounded-xl border border-gray-100">
             <MessageCircle className="h-16 w-16 text-gray-300 mx-auto mb-4" />
@@ -171,11 +170,8 @@ const Q = () => {
                   onClick={() => copyToClipboard(question.id)}
                   className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
                 >
-                  <Share2 className="h-4 w-4" />
-                  <span>Share</span>
                 </button>
               </div>
-
               <div className="flex items-center justify-between text-sm text-gray-500">
                 <div className="flex items-center space-x-4">
                   <span className="flex items-center space-x-1">
