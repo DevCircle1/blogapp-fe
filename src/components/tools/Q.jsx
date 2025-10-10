@@ -117,7 +117,7 @@ const Q = () => {
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
-            All Questions
+            Recent Questions
           </button>
           <button
             onClick={() => setActiveTab("mine")}
@@ -155,19 +155,18 @@ const Q = () => {
               className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-200 hover:border-indigo-300 hover:shadow-lg transition-all"
             >
               <div className="flex justify-between items-start mb-4">
-                <button
-                  onClick={() => {
-                    if (!user) {
-                      toast.info("Please log in to view answers.");
-                      window.location.href = "/login";
-                    } else {
-                      window.location.href = `/q/${question.id}`;
-                    }
-                  }}
-                  className="text-left text-lg font-semibold text-gray-900 hover:text-indigo-600 flex-1 pr-4"
-                >
-                  {question.content}
-                </button>
+                {activeTab === "mine" ? (
+                  <button
+                    onClick={() => (window.location.href = `/q/${question.id}`)}
+                    className="text-left text-lg font-semibold text-gray-900 hover:text-indigo-600 flex-1 pr-4"
+                  >
+                    {question.content}
+                  </button>
+                ) : (
+                  <div className="text-left text-lg font-semibold text-gray-900 flex-1 pr-4 cursor-default">
+                    {question.content}
+                  </div>
+                )}
                 <button
                   onClick={() => copyToClipboard(question.id)}
                   className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
