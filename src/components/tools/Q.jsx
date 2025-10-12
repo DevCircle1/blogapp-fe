@@ -107,13 +107,14 @@ const Q = () => {
       </div>
 
       {/* ===== Tabs (All / My Questions) ===== */}
+      {/* ===== Tabs (All / My Questions) ===== */}
       {user && (
-        <div className="flex justify-center space-x-4 mb-10">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:space-x-4 mb-10 px-4">
           <button
             onClick={() => setActiveTab("all")}
-            className={`px-6 py-2 rounded-full font-medium ${
+            className={`w-full sm:w-auto px-6 py-2 rounded-full font-medium text-center transition-all duration-200 ${
               activeTab === "all"
-                ? "bg-indigo-600 text-white"
+                ? "bg-indigo-600 text-white shadow-md"
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
@@ -121,9 +122,9 @@ const Q = () => {
           </button>
           <button
             onClick={() => setActiveTab("mine")}
-            className={`px-6 py-2 rounded-full font-medium ${
+            className={`w-full sm:w-auto px-6 py-2 rounded-full font-medium text-center transition-all duration-200 ${
               activeTab === "mine"
-                ? "bg-indigo-600 text-white"
+                ? "bg-indigo-600 text-white shadow-md"
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
@@ -169,8 +170,7 @@ const Q = () => {
                 <button
                   onClick={() => copyToClipboard(question.id)}
                   className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
-                >
-                </button>
+                ></button>
               </div>
               <div className="flex items-center justify-between text-sm text-gray-500">
                 <div className="flex items-center space-x-4">

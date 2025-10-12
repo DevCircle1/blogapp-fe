@@ -4,7 +4,6 @@ import { ArrowLeft, Send } from "lucide-react";
 import { privateRequest, publicRequest } from "../../services/api";
 import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthContext"; 
-
 const CreateQuestion = () => {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
