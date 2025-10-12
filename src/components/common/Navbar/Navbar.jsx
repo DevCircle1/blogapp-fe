@@ -71,7 +71,7 @@ export default function Navbar() {
 
               {/* Desktop Logo */}
               <div className="hidden sm:flex flex-shrink-0 items-center sm:absolute sm:left-0">
-                <img alt="Dev Circle" src="logo.png" className="h-8 w-auto sm:h-24" />
+                <img alt="Dev Circle" src={logo} className="h-8 w-auto sm:h-24" />
               </div>
 
               {/* Center Navigation */}
