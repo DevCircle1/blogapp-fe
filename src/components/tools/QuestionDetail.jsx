@@ -91,13 +91,13 @@ const QuestionDetail = () => {
           <ArrowLeft className="h-5 w-5" />
           <span>Back to Ask Anything</span>
         </button>
-
         <button
+          type="button"
           onClick={copyToClipboard}
-          className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-lg"
+          className="flex items-center justify-center space-x-2 px-5 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md"
         >
-          <Share2 className="h-4 w-4" />
-          <span>Share Question</span>
+          <Copy className="h-4 w-4" />
+          <span>Copy Link</span>
         </button>
       </div>
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200 mb-8">
