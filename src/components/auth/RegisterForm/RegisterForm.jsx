@@ -3,7 +3,7 @@ import { signup } from "../../../services/auth";
 import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-
+import logo from "../../../assets/logo.png";
 export default function RegisterForm() {
   const [formData, setFormData] = useState({
     email: "",
@@ -88,7 +88,7 @@ export default function RegisterForm() {
           href="#"
           className="flex items-center mb-6 text-3xl font-semibold text-gray-900 dark:text-white"
         >
-          <img className="w-24 h-24" src="logo.png" alt="logo" />
+          <img className="w-24 h-24" src={logo} alt="logo" />
           <span className="-ml-6">Talk and Tool</span>
         </a>
         <div className="w-full bg-white rounded-lg shadow dark:border sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">

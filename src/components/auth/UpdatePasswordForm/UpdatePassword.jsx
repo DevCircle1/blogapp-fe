@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import authService from '../../../services/auth';
-
+import logo from '../../../assets/logo.png';
 export default function UpdatePassword() {
   const [formData, setFormData] = useState({
     password: '',

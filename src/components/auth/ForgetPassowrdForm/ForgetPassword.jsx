@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { authService } from '../../../services/auth';
 import { Link, useNavigate } from 'react-router-dom';
-
+import logo from '../../../assets/logo.png';
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
@@ -63,7 +63,7 @@ if (result.success) {
         >
           <img
             className="w-24 h-24"
-            src="logo.png"
+            src={logo}
             alt="logo"
           />
           <span className="-ml-6">Talk and Tool</span>
