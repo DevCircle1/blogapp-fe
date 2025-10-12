@@ -11,8 +11,10 @@ const CodeShare = () => {
   const [isEditing, setIsEditing] = useState(true);
   const [currentCodeId, setCurrentCodeId] = useState('');
   const [isConnected, setIsConnected] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const socketRef = useRef(null);
   const textareaRef = useRef(null);
+  const editorContainerRef = useRef(null);
 
   const languages = [
     { value: 'javascript', label: 'JavaScript' },
@@ -51,6 +53,18 @@ const CodeShare = () => {
       sendUpdate.cancel();
     };
   }, [currentCodeId]);
+
+  // Handle fullscreen change events
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, []);
 
   const connectWebSocket = () => {
     if (socketRef.current) socketRef.current.close();
@@ -188,26 +202,46 @@ const CodeShare = () => {
     toast.success('URL copied to clipboard!');
   };
 
+  const toggleFullscreen = () => {
+    if (!editorContainerRef.current) return;
+
+    if (!document.fullscreenElement) {
+      editorContainerRef.current.requestFullscreen().catch(err => {
+        console.error(`Error attempting to enable fullscreen: ${err.message}`);
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
   const isShortCode = (codeId) => codeId && codeId.length === 6 && /^[A-Za-z0-9]+$/.test(codeId);
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">CodeShare</h1>
-          <p className="text-gray-600">Share code instantly with real-time collaboration</p>
-          {currentCodeId && (
-            <div className="mt-2 text-sm text-gray-500">
-              Current Code ID: {currentCodeId} {isShortCode(currentCodeId) && '(Short Code)'}
-            </div>
-          )}
-        </div>
+  // Calculate line numbers
+  const lineNumbers = content.split('\n').map((_, index) => index + 1);
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  return (
+    <div className={`min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4 ${isFullscreen ? 'fixed inset-0 z-50 bg-white' : ''}`}>
+      <div className={`${isFullscreen ? 'h-full' : 'max-w-6xl mx-auto'}`}>
+        {/* Header - Hidden in fullscreen */}
+        {!isFullscreen && (
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-bold text-gray-800 mb-2">CodeShare</h1>
+            <p className="text-gray-600">Share code instantly with real-time collaboration</p>
+            {currentCodeId && (
+              <div className="mt-2 text-sm text-gray-500">
+                Current Code ID: {currentCodeId} {isShortCode(currentCodeId) && '(Short Code)'}
+              </div>
+            )}
+          </div>
+        )}
+
+        <div className={`grid grid-cols-1 ${isFullscreen ? 'h-full' : 'lg:grid-cols-3 gap-6'}`}>
           {/* Main Editor */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+          <div className={`${isFullscreen ? 'h-full' : 'lg:col-span-2'}`}>
+            <div 
+              ref={editorContainerRef}
+              className={`bg-white rounded-2xl shadow-xl overflow-hidden ${isFullscreen ? 'h-full rounded-none' : ''}`}
+            >
               {/* Toolbar */}
               <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
                 <div className="flex flex-wrap items-center justify-between gap-4">
@@ -236,6 +270,13 @@ const CodeShare = () => {
 
                   <div className="flex items-center space-x-2">
                     <button
+                      onClick={toggleFullscreen}
+                      className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center space-x-2"
+                    >
+                      <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
+                    </button>
+
+                    <button
                       onClick={handleDownload}
                       disabled={!content.trim()}
                       className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 disabled:bg-purple-300 disabled:cursor-not-allowed transition-colors flex items-center space-x-2"
@@ -243,12 +284,14 @@ const CodeShare = () => {
                       <span>Download</span>
                     </button>
 
-                    <button
-                      onClick={handleNewShare}
-                      className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors flex items-center space-x-2"
-                    >
-                      <span>New</span>
-                    </button>
+                    {!isFullscreen && (
+                      <button
+                        onClick={handleNewShare}
+                        className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors flex items-center space-x-2"
+                      >
+                        <span>New</span>
+                      </button>
+                    )}
 
                     <button
                       onClick={handleShare}
@@ -261,20 +304,37 @@ const CodeShare = () => {
                 </div>
               </div>
 
-              {/* Code Editor */}
-              <div className="relative">
-                <textarea
-                  ref={textareaRef}
-                  value={content}
-                  onChange={handleContentChange}
-                  placeholder="Paste your code here..."
-                  className="w-full h-96 font-mono text-sm p-6 border-0 focus:ring-0 resize-none bg-white"
-                  style={{
-                    fontFamily: 'Monaco, Menlo, "Ubuntu Mono", monospace',
-                    lineHeight: '1.5',
-                    tabSize: 2
-                  }}
-                />
+              {/* Code Editor with Line Numbers */}
+              <div className={`relative ${isFullscreen ? 'h-[calc(100%-80px)]' : 'h-96'}`}>
+                <div className="flex h-full">
+                  {/* Line Numbers */}
+                  <div className="flex flex-col items-end pr-4 py-6 bg-gray-50 border-r border-gray-200 overflow-hidden">
+                    {lineNumbers.map((number) => (
+                      <div
+                        key={number}
+                        className="text-right text-gray-400 text-sm font-mono leading-6 select-none"
+                        style={{ lineHeight: '1.5' }}
+                      >
+                        {number}
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* Textarea */}
+                  <textarea
+                    ref={textareaRef}
+                    value={content}
+                    onChange={handleContentChange}
+                    placeholder="Paste your code here..."
+                    className="flex-1 font-mono text-sm p-6 border-0 focus:ring-0 resize-none bg-white overflow-auto"
+                    style={{
+                      fontFamily: 'Monaco, Menlo, "Ubuntu Mono", monospace',
+                      lineHeight: '1.5',
+                      tabSize: 2
+                    }}
+                  />
+                </div>
+                
                 {!content && (
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                     <div className="text-gray-400 text-center">
@@ -301,71 +361,78 @@ const CodeShare = () => {
             </div>
           </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {shareUrl && (
-              <div className="bg-white rounded-2xl shadow-xl p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">Share Link</h3>
-                <div className="space-y-3">
-                  <input
-                    type="text"
-                    value={shareUrl}
-                    readOnly
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-gray-50"
-                    onClick={(e) => e.target.select()}
-                  />
-                  <button
-                    onClick={handleCopyUrl}
-                    className="w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-                  >
-                    Copy URL to Clipboard
-                  </button>
+          {/* Sidebar - Hidden in fullscreen */}
+          {!isFullscreen && (
+            <div className="space-y-6">
+              {shareUrl && (
+                <div className="bg-white rounded-2xl shadow-xl p-6">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Share Link</h3>
+                  <div className="space-y-3">
+                    <input
+                      type="text"
+                      value={shareUrl}
+                      readOnly
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-gray-50"
+                      onClick={(e) => e.target.select()}
+                    />
+                    <button
+                      onClick={handleCopyUrl}
+                      className="w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                    >
+                      Copy URL to Clipboard
+                    </button>
+                  </div>
+                  <p className="text-sm text-gray-500 mt-3">
+                    <span className="font-medium">This link will expire in 5 hours</span>
+                    <br />
+                    Share this URL with others to collaborate in real-time
+                  </p>
                 </div>
-                <p className="text-sm text-gray-500 mt-3">
-                  <span className="font-medium">This link will expire in 5 hours</span>
-                  <br />
-                  Share this URL with others to collaborate in real-time
-                </p>
-              </div>
-            )}
-
-            <div className="bg-white rounded-2xl shadow-xl p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3">Connection Status</h3>
-              <div className="flex items-center space-x-2">
-                <div
-                  className={`w-3 h-3 rounded-full ${
-                    isConnected ? 'bg-green-500' : 'bg-red-500'
-                  }`}
-                ></div>
-                <span className="text-sm text-gray-600">
-                  {isConnected ? 'Connected' : 'Disconnected'}
-                </span>
-              </div>
-              {currentCodeId && (
-                <p className="text-sm text-gray-500 mt-2">
-                  Real-time collaboration {isConnected ? 'active' : 'inactive'}
-                </p>
               )}
-            </div>
 
-            {/* Features */}
-            <div className="bg-white rounded-2xl shadow-xl p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Features</h3>
-              <ul className="space-y-3 text-sm text-gray-600">
-                <li>✅ Real-time collaboration</li>
-                <li>✅ Short URLs (6-character codes)</li>
-                <li>✅ Auto-expiry in 5 hours</li>
-                <li>✅ Multiple language support</li>
-                <li>✅ One-click download</li>
-                <li>✅ Syntax highlighting ready</li>
-              </ul>
+              <div className="bg-white rounded-2xl shadow-xl p-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-3">Connection Status</h3>
+                <div className="flex items-center space-x-2">
+                  <div
+                    className={`w-3 h-3 rounded-full ${
+                      isConnected ? 'bg-green-500' : 'bg-red-500'
+                    }`}
+                  ></div>
+                  <span className="text-sm text-gray-600">
+                    {isConnected ? 'Connected' : 'Disconnected'}
+                  </span>
+                </div>
+                {currentCodeId && (
+                  <p className="text-sm text-gray-500 mt-2">
+                    Real-time collaboration {isConnected ? 'active' : 'inactive'}
+                  </p>
+                )}
+              </div>
+
+              {/* Features */}
+              <div className="bg-white rounded-2xl shadow-xl p-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Features</h3>
+                <ul className="space-y-3 text-sm text-gray-600">
+                  <li>✅ Real-time collaboration</li>
+                  <li>✅ Short URLs (6-character codes)</li>
+                  <li>✅ Auto-expiry in 5 hours</li>
+                  <li>✅ Multiple language support</li>
+                  <li>✅ One-click download</li>
+                  <li>✅ Syntax highlighting ready</li>
+                  <li>✅ Line numbers</li>
+                  <li>✅ Fullscreen mode</li>
+                </ul>
+              </div>
             </div>
+          )}
+        </div>
+
+        {/* Footer - Hidden in fullscreen */}
+        {!isFullscreen && (
+          <div className="mt-8 text-center text-gray-500 text-sm">
+            <p>CodeShare • Real-time code collaboration • URLs expire after 5 hours</p>
           </div>
-        </div>
-
-        <div className="mt-8 text-center text-gray-500 text-sm">
-          <p>CodeShare • Real-time code collaboration • URLs expire after 5 hours</p>
-        </div>
+        )}
       </div>
     </div>
   );
