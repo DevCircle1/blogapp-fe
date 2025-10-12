@@ -1,5 +1,5 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async'; // ✅ Import HelmetProvider
+import { HelmetProvider } from 'react-helmet-async'; 
 import Navbar from './components/common/Navbar/Navbar.jsx';
 import RegisterForm from './components/auth/RegisterForm/RegisterForm.jsx';
 import LoginForm from './components/auth/LoginForm/LoginForm.jsx';
@@ -31,12 +31,10 @@ import CreateQuestion from './components/tools/CreateQuestion.jsx';
 import QuestionDetail from './components/tools/QuestionDetail.jsx';
 import MyAnswers from './components/tools/MyAnswers.jsx';
 import 'react-toastify/dist/ReactToastify.css';
-
 function App() {
   const location = useLocation();
-
   return (
-    <HelmetProvider> {/* ✅ Wrap entire app */}
+    <HelmetProvider>
       {shouldShowNavbar(location.pathname) && <Navbar />}
 
       <Routes>
