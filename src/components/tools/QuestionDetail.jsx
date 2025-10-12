@@ -226,6 +226,7 @@ const QuestionDetail = () => {
                 className="flex-1 px-4 py-3 border border-blue-300 rounded-xl text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
               <button
+                type="button"
                 onClick={copyToClipboard}
                 className="flex items-center justify-center space-x-2 px-5 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md"
               >
