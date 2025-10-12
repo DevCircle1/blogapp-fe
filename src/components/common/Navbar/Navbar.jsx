@@ -12,7 +12,6 @@ import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";
 import logo from "../../../assets/logo.png";
-
 const navigation = [
   { name: "Home", href: "/", current: false },
   { name: "Blogs", href: "/blogs", current: false },
@@ -21,7 +20,6 @@ const navigation = [
   { name: "Write Blogs", href: "/write-blogs", current: false, requiresAuth: true },
   { name: "Job Alerts", href: "/job-alert", current: false, requiresAuth: false },
 ];
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -41,7 +39,6 @@ export default function Navbar() {
       toast.info(`Please log in first to access ${item.name.toLowerCase()}`);
     }
   };
-
   return (
     <Disclosure
       as="nav"
@@ -62,18 +59,15 @@ export default function Navbar() {
                     <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
                   )}
                 </DisclosureButton>
-
                 {/* Mobile Logo */}
                 <div className="ml-4 flex items-center">
                   <img alt="Dev Circle" src={logo} className="h-10 w-auto sm:h-10" />
                 </div>
               </div>
-
               {/* Desktop Logo */}
               <div className="hidden sm:flex flex-shrink-0 items-center sm:absolute sm:left-0">
                 <img alt="Dev Circle" src={logo} className="h-8 w-auto sm:h-24" />
               </div>
-
               {/* Center Navigation */}
               <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-center">
                 <div className="flex space-x-4">
@@ -100,7 +94,6 @@ export default function Navbar() {
                   ))}
                 </div>
               </div>
-
               {/* Right Side - Auth Section */}
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 {isAuthenticated ? (
@@ -126,7 +119,6 @@ export default function Navbar() {
                         )}
                         <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400 to-indigo-500 opacity-0 hover:opacity-40 transition-all duration-300"></div>
                       </MenuButton>
-
                       <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-xl bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 border border-gray-200 overflow-hidden">
                         {/* <MenuItem> */}
                           {/* <a
@@ -188,7 +180,6 @@ export default function Navbar() {
               </div>
             </div>
           </div>
-
           {/* Mobile Menu */}
           <DisclosurePanel className="sm:hidden">
             <div className="space-y-1 px-2 pt-2 pb-3 bg-white rounded-b-lg border-b border-gray-200">
