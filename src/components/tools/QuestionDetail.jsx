@@ -198,6 +198,29 @@ const QuestionDetail = () => {
               )}
             </div>
           </div>
+
+          {/* === Submit Button Now Right Under Textarea === */}
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              disabled={submitting || newAnswer.trim().length < 5}
+              className="flex items-center space-x-2 px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 transition-all duration-200 font-medium"
+            >
+              {submitting ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <span>Submitting...</span>
+                </>
+              ) : (
+                <>
+                  <Send className="h-4 w-4" />
+                  <span>Submit Answer</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* === Anonymity Note === */}
           <div className="bg-green-50 border border-green-200 rounded-xl p-4">
             <div className="flex items-start space-x-3">
               <Copy className="h-5 w-5 text-green-600 mt-0.5" />
@@ -212,7 +235,8 @@ const QuestionDetail = () => {
               </div>
             </div>
           </div>
-          {/* Shareable Link Section */}
+
+          {/* === Shareable Link Section === */}
           <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 mb-8">
             <h3 className="text-lg font-semibold text-blue-800 mb-3 flex items-center space-x-2">
               <Share2 className="h-5 w-5 text-blue-600" />
@@ -246,23 +270,6 @@ const QuestionDetail = () => {
             >
               Want to ask your own question?
             </Link>
-            <button
-              type="submit"
-              disabled={submitting || newAnswer.trim().length < 5}
-              className="flex items-center space-x-2 px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 transition-all duration-200 font-medium"
-            >
-              {submitting ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Submitting...</span>
-                </>
-              ) : (
-                <>
-                  <Send className="h-4 w-4" />
-                  <span>Submit Answer</span>
-                </>
-              )}
-            </button>
           </div>
         </form>
       </div>
