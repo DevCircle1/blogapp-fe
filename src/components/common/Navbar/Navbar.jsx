@@ -64,7 +64,7 @@ export default function Navbar() {
 
                 {/* Mobile Logo */}
                 <div className="ml-4 flex items-center">
-                  <img alt="Dev Circle" src="logo.png" className="h-10 w-auto sm:h-10" />
+                  <img alt="Dev Circle" src="/logo.png" className="h-10 w-auto sm:h-10" />
                 </div>
               </div>
 
