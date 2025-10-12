@@ -161,6 +161,14 @@ export default function LoginForm() {
                   Sign up here
                 </Link>
               </p>
+              <p className="text-sm font-light text-gray-500 dark:text-gray-400 text-center mt-4">
+                <Link
+                  to="/"
+                  className="font-medium text-blue-600 hover:underline dark:text-blue-400"
+                >
+                  ← Back to Home Page
+                </Link>
+              </p>
             </form>
           </div>
         </div>
