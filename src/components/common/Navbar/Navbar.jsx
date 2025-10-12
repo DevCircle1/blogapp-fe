@@ -11,6 +11,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";
+import logo from "../../../assets/logo.png";
 
 const navigation = [
   { name: "Home", href: "/", current: false },
@@ -64,7 +65,7 @@ export default function Navbar() {
 
                 {/* Mobile Logo */}
                 <div className="ml-4 flex items-center">
-                  <img alt="Dev Circle" src="/logo.png" className="h-10 w-auto sm:h-10" />
+                  <img alt="Dev Circle" src={logo} className="h-10 w-auto sm:h-10" />
                 </div>
               </div>
 
