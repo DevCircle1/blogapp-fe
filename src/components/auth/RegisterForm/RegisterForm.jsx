@@ -65,7 +65,7 @@ export default function RegisterForm() {
         toast.error(response.message || "Signup failed");
       }
       setLoading(false);
-      return; 
+      return;
     }
     toast.success("Account created successfully. OTP sent to your email");
     localStorage.setItem("signupEmail", formData.email);
@@ -118,7 +118,7 @@ export default function RegisterForm() {
                   <p className="mt-1 text-sm text-red-600">{errors.email}</p>
                 )}
               </div>
-              
+
               <div className="relative">
                 <label
                   htmlFor="password"
@@ -147,7 +147,7 @@ export default function RegisterForm() {
                   <p className="mt-1 text-sm text-red-600">{errors.password}</p>
                 )}
               </div>
-              
+
               <div className="relative">
                 <label
                   htmlFor="confirm_password"
@@ -178,15 +178,13 @@ export default function RegisterForm() {
                   </p>
                 )}
               </div>
-
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 disabled:opacity-50"
+                className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center shadow-md hover:shadow-lg disabled:opacity-50 transition-all duration-200"
               >
                 {loading ? "Creating account..." : "Create an account"}
               </button>
-              
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 Already have an account?{" "}
                 <Link
