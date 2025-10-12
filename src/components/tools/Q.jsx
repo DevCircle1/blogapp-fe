@@ -2,22 +2,18 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Plus, MessageCircle, Share2, Clock } from "lucide-react";
 import { toast } from "react-toastify";
-import { publicRequest, privateRequest } from "../../services/api"; // 👈 userRequest includes token
+import { publicRequest, privateRequest } from "../../services/api"; 
 import { useAuth } from "../../context/AuthContext";
-
 const Q = () => {
   const [questions, setQuestions] = useState([]);
   const [myQuestions, setMyQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("all"); // 'all' | 'mine'
+  const [activeTab, setActiveTab] = useState("all"); 
   const { user, loading: authLoading } = useAuth();
-
   useEffect(() => {
     fetchQuestions();
     if (user) fetchMyQuestions();
   }, [user]);
-
-  // === Fetch All Questions ===
   const fetchQuestions = async () => {
     try {
       const response = await publicRequest.get("/questions/latest/");
@@ -29,8 +25,6 @@ const Q = () => {
       setLoading(false);
     }
   };
-
-  // === Fetch My Questions (Authenticated Only) ===
   const fetchMyQuestions = async () => {
     try {
       const response = await privateRequest.get("/questions/my_questions/");
@@ -39,15 +33,11 @@ const Q = () => {
       console.error("❌ Failed to load your questions:", error);
     }
   };
-
-  // === Copy Link ===
   const copyToClipboard = (questionId) => {
     const url = `${window.location.origin}/q/${questionId}`;
     navigator.clipboard.writeText(url);
     toast.success("Link copied to clipboard!");
   };
-
-  // === Loading Skeleton ===
   if (loading || authLoading) {
     return (
       <div className="max-w-4xl mx-auto py-20">
@@ -65,13 +55,9 @@ const Q = () => {
       </div>
     );
   }
-
-  // === Choose which questions to show ===
   const displayedQuestions = activeTab === "mine" ? myQuestions : questions;
-
   return (
     <div className="max-w-4xl mx-auto">
-      {/* ===== Hero Section ===== */}
       <div className="text-center mb-12 py-12 rounded-2xl bg-gradient-to-b from-gray-900 to-gray-800 text-white shadow-inner">
         <h1 className="text-5xl font-bold mb-4">
           Ask Anything,
@@ -81,7 +67,6 @@ const Q = () => {
         <p className="text-xl mb-8 text-gray-300 max-w-2xl mx-auto">
           Create anonymous Q&A pages and share them with anyone.
         </p>
-
         {user ? (
           <Link
             to="/create"
@@ -105,7 +90,6 @@ const Q = () => {
           </div>
         )}
       </div>
-      {/* ===== Tabs (All / My Questions) ===== */}
       {user && (
         <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:space-x-4 mb-10 px-4">
           <button
@@ -130,8 +114,6 @@ const Q = () => {
           </button>
         </div>
       )}
-
-      {/* ===== Questions List ===== */}
       <div className="space-y-6 mb-20">
         <h2 className="text-2xl font-bold text-gray-900">
           {activeTab === "mine" ? "My Questions" : "Recent Questions"}
@@ -170,9 +152,7 @@ const Q = () => {
                   className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
                 ></button>
               </div>
-              {/* ===== Question Meta (Answers, Date, Author) ===== */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm text-gray-500 mt-4 gap-2 sm:gap-0">
-                {/* Left side: Answers + Date */}
                 <div className="flex flex-wrap items-center gap-3">
                   <span className="flex items-center gap-1">
                     <MessageCircle className="h-4 w-4 text-indigo-500" />
