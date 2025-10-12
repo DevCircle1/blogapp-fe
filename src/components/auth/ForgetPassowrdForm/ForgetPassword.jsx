@@ -1,44 +1,48 @@
-import React, { useState } from 'react';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { authService } from '../../../services/auth';
-import { Link, useNavigate } from 'react-router-dom';
-import logo from '../../../assets/logo.png';
+import React, { useState } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { authService } from "../../../services/auth";
+import { Link, useNavigate } from "react-router-dom";
+import logo from "../../../assets/logo.png";
 export default function ForgotPassword() {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email) {
-      toast.error('Email is required');
+      toast.error("Email is required");
       return;
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      toast.error('Enter a valid email address');
+      toast.error("Enter a valid email address");
       return;
     }
     if (!acceptedTerms) {
-      toast.error('You must accept the Terms and Conditions');
+      toast.error("You must accept the Terms and Conditions");
       return;
     }
     setLoading(true);
     try {
       const result = await authService.forgotPassword(email);
-if (result.success) {
-  toast.success(result.message || 'OTP sent to your email. Please check your inbox.');
-  localStorage.setItem('resetEmail', email);
-  navigate('/verify-otp', { state: { email } });
-} else {
-  toast.error(result.message.error || 'Failed to send OTP. Please try again.');
-}
+      if (result.success) {
+        toast.success(
+          result.message || "OTP sent to your email. Please check your inbox."
+        );
+        localStorage.setItem("resetEmail", email);
+        navigate("/verify-otp", { state: { email } });
+      } else {
+        toast.error(
+          result.message.error || "Failed to send OTP. Please try again."
+        );
+      }
     } catch (error) {
-      console.error('Forgot password error:', error);
-      let backendError = 'An unexpected error occurred. Please try again.';
+      console.error("Forgot password error:", error);
+      let backendError = "An unexpected error occurred. Please try again.";
       if (error.response) {
-        if (typeof error.response.data === 'string') {
+        if (typeof error.response.data === "string") {
           backendError = error.response.data;
-        } else if (typeof error.response.data === 'object') {
+        } else if (typeof error.response.data === "object") {
           backendError =
             error.response.data.error ||
             error.response.data.message ||
@@ -59,11 +63,7 @@ if (result.success) {
           to="/"
           className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
         >
-          <img
-            className="w-24 h-24"
-            src={logo}
-            alt="logo"
-          />
+          <img className="w-24 h-24" src={logo} alt="logo" />
           <span className="-ml-6">Talk and Tool</span>
         </Link>
         <div className="w-full p-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-gray-800 dark:border-gray-700 sm:p-8">
@@ -113,7 +113,7 @@ if (result.success) {
                   htmlFor="terms"
                   className="font-light text-gray-500 dark:text-gray-300"
                 >
-                  I accept the{' '}
+                  I accept the{" "}
                   <Link
                     to="/terms-and-conditions"
                     className="font-medium text-primary-600 hover:underline dark:text-primary-500"
@@ -126,15 +126,16 @@ if (result.success) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 disabled:opacity-50"
+              className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center shadow-md hover:shadow-lg disabled:opacity-50 transition-all duration-200"
             >
-              {loading ? 'Sending OTP...' : 'Reset password'}
+              {loading ? "Sending OTP..." : "Reset password"}
             </button>
+
             <p className="text-sm font-light text-gray-500 dark:text-gray-400 text-center">
-              Remember your password?{' '}
+              Remember your password?{" "}
               <Link
                 to="/login"
-                className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                className="font-medium text-blue-600 hover:underline dark:text-blue-400"
               >
                 Back to login
               </Link>
