@@ -1,30 +1,21 @@
 import { useState, useEffect } from 'react';
 import { publicRequest } from '../../services/api';
 import { Link, useParams, useLocation } from 'react-router-dom';
-
 const CategoryBlogPosts = () => {
   const [posts, setPosts] = useState([]);
   const [category, setCategory] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // ✅ We now always use slug (from URL)
   const { categorySlug } = useParams();
   const location = useLocation();
   const categoryName = location.state?.categoryName;
-
   useEffect(() => {
     const fetchCategoryPosts = async () => {
       try {
         setIsLoading(true);
-
-        // ✅ Fetch by slug
         const response = await publicRequest.get(`/all-categories/${categorySlug}/`);
         const categoryData = response.data;
-
         setCategory(categoryData);
-
-        // ✅ Only approved posts
         const approvedPosts = categoryData.articles.filter(
           (post) => post.status === 'approved'
         );
@@ -36,10 +27,8 @@ const CategoryBlogPosts = () => {
         setIsLoading(false);
       }
     };
-
     fetchCategoryPosts();
   }, [categorySlug]);
-
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-64">
@@ -47,7 +36,6 @@ const CategoryBlogPosts = () => {
       </div>
     );
   }
-
   if (error) {
     return (
       <div className="flex justify-center items-center min-h-64">
@@ -55,7 +43,6 @@ const CategoryBlogPosts = () => {
       </div>
     );
   }
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -85,7 +72,6 @@ const CategoryBlogPosts = () => {
           </div>
         </div>
       </div>
-
       {/* Blog Posts */}
       <div className="container mx-auto px-4 py-8">
         {posts.length === 0 ? (
