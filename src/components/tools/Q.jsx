@@ -105,8 +105,6 @@ const Q = () => {
           </div>
         )}
       </div>
-
-      {/* ===== Tabs (All / My Questions) ===== */}
       {/* ===== Tabs (All / My Questions) ===== */}
       {user && (
         <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:space-x-4 mb-10 px-4">
@@ -172,22 +170,30 @@ const Q = () => {
                   className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
                 ></button>
               </div>
-              <div className="flex items-center justify-between text-sm text-gray-500">
-                <div className="flex items-center space-x-4">
-                  <span className="flex items-center space-x-1">
-                    <MessageCircle className="h-4 w-4" />
-                    <span>{question.answer_count} answers</span>
+              {/* ===== Question Meta (Answers, Date, Author) ===== */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm text-gray-500 mt-4 gap-2 sm:gap-0">
+                {/* Left side: Answers + Date */}
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="flex items-center gap-1">
+                    <MessageCircle className="h-4 w-4 text-indigo-500" />
+                    <span className="text-gray-700 text-sm">
+                      {question.answer_count} answers
+                    </span>
                   </span>
-                  <span className="flex items-center space-x-1">
-                    <Clock className="h-4 w-4" />
-                    <span>
+                  <span className="flex items-center gap-1">
+                    <Clock className="h-4 w-4 text-indigo-500" />
+                    <span className="text-gray-700 text-sm">
                       {new Date(question.created_at).toLocaleDateString()}
                     </span>
                   </span>
                 </div>
-                <span className="text-indigo-600 font-medium">
-                  By {question.user_email || "Anonymous"}
-                </span>
+
+                {/* Right side: Author */}
+                <div className="text-gray-600 sm:text-right text-sm sm:mt-0 mt-1">
+                  <span className="font-medium text-indigo-600">
+                    {question.user_email || "Anonymous"}
+                  </span>
+                </div>
               </div>
             </div>
           ))
