@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Helmet } from "react-helmet-async";
 import {
   FiSearch,
   FiArrowRight,
@@ -176,6 +177,67 @@ export default function HomePage() {
   };
 
   return (
+    <>
+    <Helmet>
+        {/* ===== BASIC SEO ===== */}
+        <title>Talk and Tool - Free Online Tools & Tech Blogs</title>
+        <meta
+          name="description"
+          content="Explore free online tools, coding utilities, and insightful blogs on Talk and Tool. Discover practical guides for developers and creators."
+        />
+        <meta
+          name="keywords"
+          content="free online tools, talkandtool, profit margin calculator, IP checker, coding blog, text to HTML"
+        />
+        <meta name="author" content="Talk and Tool" />
+
+        {/* ===== OPEN GRAPH / SOCIAL SHARE ===== */}
+        <meta property="og:title" content="Talk and Tool - Free Tools & Blogs" />
+        <meta
+          property="og:description"
+          content="Empowering developers and creators with practical tools and tech blogs."
+        />
+        <meta property="og:image" content="https://talkandtool.com/logo.png" />
+        <meta property="og:url" content="https://talkandtool.com/" />
+        <meta property="og:type" content="website" />
+
+        {/* ===== TWITTER CARD ===== */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Talk and Tool" />
+        <meta
+          name="twitter:description"
+          content="Free online tools and technology blogs for creators and developers."
+        />
+        <meta name="twitter:image" content="https://talkandtool.com/logo.png" />
+
+        {/* ===== CANONICAL URL ===== */}
+        <link rel="canonical" href="https://talkandtool.com/" />
+
+        {/* ===== PREFETCH / PRELOAD ===== */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          rel="preload"
+          as="image"
+          href="https://talkandtool.com/assets/hero-banner.webp"
+        />
+        <link rel="prefetch" href="/blogs" />
+
+        {/* ===== STRUCTURED DATA ===== */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "Talk and Tool",
+            "url": "https://talkandtool.com",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://talkandtool.com/search?q={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          })}
+        </script>
+      </Helmet>
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
@@ -448,5 +510,6 @@ export default function HomePage() {
         </div>
       </section>
     </div>
+    </>
   );
 }
