@@ -324,6 +324,7 @@ export default function HomePage() {
                   <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden cursor-pointer">
                     <div className="relative">
                       <img
+                      loading="lazy"
                         src={getBlogImage(blog)}
                         alt={blog.title}
                         className="w-full h-48 object-cover"
