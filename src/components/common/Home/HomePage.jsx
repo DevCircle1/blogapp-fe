@@ -22,8 +22,6 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // Fetch featured blogs from API
   useEffect(() => {
     const fetchFeaturedBlogs = async () => {
       try {
