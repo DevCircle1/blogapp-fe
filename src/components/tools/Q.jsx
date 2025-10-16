@@ -168,9 +168,9 @@ const Q = () => {
                   </span>
                 </div>
                 <div className="text-gray-600 sm:text-right text-sm sm:mt-0 mt-1">
-                  <span className="font-medium text-indigo-600">
+                  {/* <span className="font-medium text-indigo-600">
                     {question.user_email || "Anonymous"}
-                  </span>
+                  </span> */}
                 </div>
               </div>
             </div>
