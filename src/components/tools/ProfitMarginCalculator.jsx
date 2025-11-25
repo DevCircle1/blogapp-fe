@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import { Helmet } from "react-helmet-async";
 const ProfitMarginCalculator = () => {
   const [cost, setCost] = useState('');
   const [price, setPrice] = useState('');
@@ -53,6 +53,11 @@ const ProfitMarginCalculator = () => {
   };
 
   return (
+    <>
+    <Helmet>
+        <title>Profit Margin Calculator | Talk & Tool</title>
+        <meta name="description" content="Calculate your profit margins instantly with our free online calculator." />
+      </Helmet>
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 max-w-md w-full">
         <div className="text-center mb-6">
@@ -149,6 +154,7 @@ const ProfitMarginCalculator = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

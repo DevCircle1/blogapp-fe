@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { publicRequest } from '../../../services/api'; 
-
+import { Helmet } from "react-helmet-async";
 const ContactUs = () => {
   const [contactForm, setContactForm] = useState({
     name: '',
@@ -62,6 +62,11 @@ const ContactUs = () => {
   };
 
   return (
+    <>
+      <Helmet>
+        <title>Contact Us | Talk & Tool</title>
+        <meta name="description" content="Get in touch with Talk & Tool for support, feedback, or inquiries." />
+      </Helmet>
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
       <ToastContainer 
         position="top-right"
@@ -221,6 +226,7 @@ const ContactUs = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

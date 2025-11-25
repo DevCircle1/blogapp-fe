@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-
+import { Helmet } from "react-helmet-async";
 const TextToHtmlTool = () => {
   const [inputText, setInputText] = useState('');
   const [htmlOutput, setHtmlOutput] = useState('');
@@ -117,6 +117,11 @@ const TextToHtmlTool = () => {
   }, [inputText]);
 
   return (
+    <>
+      <Helmet>
+        <title>Text to HTML Converter | Talk & Tool</title>
+        <meta name="description" content="Convert plain text into clean HTML using our free Text to HTML tool." />
+      </Helmet>
     <div className={`min-h-screen transition-colors duration-300 ${
       theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gradient-to-br from-blue-50 to-indigo-100 text-gray-800'
     }`}>
@@ -353,6 +358,7 @@ const TextToHtmlTool = () => {
         `}</style>
       </div>
     </div>
+    </>
   );
 };
 

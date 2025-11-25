@@ -6,6 +6,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import logo from "../../../assets/logo.png";
+import { Helmet } from "react-helmet-async";
 export default function LoginForm() {
   const [formData, setFormData] = useState({
     email: "",
@@ -73,6 +74,14 @@ export default function LoginForm() {
     return `${base} ${errors[field] ? err : normal}`;
   };
   return (
+    <>
+    <Helmet>
+      <title>Login | Talk & Tool</title>
+      <meta
+        name="description"
+        content="Log in to access your Talk & Tool account and tools."
+      />
+    </Helmet>
     <section className="bg-gray-50 dark:bg-gray-900 min-h-screen">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a
@@ -174,5 +183,6 @@ export default function LoginForm() {
         </div>
       </div>
     </section>
+    </>
   );
 }
