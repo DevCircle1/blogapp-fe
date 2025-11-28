@@ -386,7 +386,7 @@ export default function HomePage() {
                       <img
                       loading="lazy"
                         src={getBlogImage(blog)}
-                        alt={blog.title}
+                        alt={`Blog article — ${blog.title}`}
                         className="w-full h-48 object-cover"
                       />
                       <div className="absolute top-4 left-4"></div>
