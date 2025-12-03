@@ -77,9 +77,9 @@ const BlogPostDetail = () => {
       </Link>
 
       <article className="bg-white rounded-xl shadow-lg overflow-hidden">
-        {/* Featured Image */}
+        {/* Featured Image - Made Bigger */}
         {post.featured_image && (
-          <div className="h-64 overflow-hidden">
+          <div className="h-96 overflow-hidden"> {/* Changed from h-64 to h-96 */}
             <img 
               src={post.featured_image} 
               alt={post.title} 

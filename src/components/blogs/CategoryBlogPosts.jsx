@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { publicRequest } from '../../services/api';
 import { Link, useParams, useLocation } from 'react-router-dom';
+
 const CategoryBlogPosts = () => {
   const [posts, setPosts] = useState([]);
   const [category, setCategory] = useState(null);
@@ -9,6 +10,15 @@ const CategoryBlogPosts = () => {
   const { categorySlug } = useParams();
   const location = useLocation();
   const categoryName = location.state?.categoryName;
+
+  // Image size guidelines for upload
+  const IMAGE_GUIDELINES = {
+    recommendedSize: '800px × 400px',
+    aspectRatio: '2:1',
+    maxFileSize: '500KB',
+    formats: 'WebP, JPEG, PNG'
+  };
+
   useEffect(() => {
     const fetchCategoryPosts = async () => {
       try {
@@ -29,6 +39,17 @@ const CategoryBlogPosts = () => {
     };
     fetchCategoryPosts();
   }, [categorySlug]);
+
+  // Function to ensure image covers properly without distortion
+  const getImageStyle = (imageUrl) => {
+    return {
+      backgroundImage: `url(${imageUrl})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    };
+  };
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-64">
@@ -36,6 +57,7 @@ const CategoryBlogPosts = () => {
       </div>
     );
   }
+
   if (error) {
     return (
       <div className="flex justify-center items-center min-h-64">
@@ -43,6 +65,7 @@ const CategoryBlogPosts = () => {
       </div>
     );
   }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -72,6 +95,7 @@ const CategoryBlogPosts = () => {
           </div>
         </div>
       </div>
+
       {/* Blog Posts */}
       <div className="container mx-auto px-4 py-8">
         {posts.length === 0 ? (
@@ -89,56 +113,76 @@ const CategoryBlogPosts = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map((post) => (
-              <Link
+              <div
                 key={post.id}
-                to={`/blogs/article/${post.slug}`}   // ✅ still slug for posts
-                className="bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl border border-gray-100"
+                className="bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl border border-gray-100"
               >
-                {/* Featured Image */}
-                <div className="h-48 overflow-hidden relative">
+                {/* Improved Image Container with Fixed Aspect Ratio */}
+                <div className="relative pb-[56.25%] overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50">
+                  {/* 56.25% = 16:9 aspect ratio, change to 50% for 2:1 */}
                   {post.featured_image ? (
                     <img
                       src={post.featured_image}
                       alt={post.title}
-                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                      loading="lazy"
+                      // Add error handling for broken images
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextElementSibling.style.display = 'flex';
+                      }}
                     />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-r from-blue-50 to-indigo-50 flex items-center justify-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
-                    </div>
-                  )}
+                  ) : null}
+                  
+                  {/* Fallback when no image or image fails to load */}
+                  <div 
+                    className={`absolute inset-0 flex items-center justify-center ${
+                      post.featured_image ? 'hidden' : 'flex'
+                    }`}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+
+                  {/* Date Badge */}
                   <div className="absolute top-4 right-4 bg-white bg-opacity-90 backdrop-blur-sm rounded-full px-3 py-1">
                     <span className="text-sm font-semibold text-gray-700">
                       {new Date(post.created_at).toLocaleDateString()}
                     </span>
                   </div>
+
+                  {/* Aspect Ratio Indicator (for debugging/development) */}
+                  <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
+                    2:1
+                  </div>
                 </div>
 
                 {/* Card Content */}
-                <div className="p-6">
-                  <h2 className="text-xl font-bold mb-3 line-clamp-2 text-gray-800 hover:text-blue-600 transition-colors duration-300">
-                    {post.title}
-                  </h2>
+                <Link to={`/blogs/article/${post.slug}`}>
+                  <div className="p-6 hover:bg-gray-50 transition-colors duration-300">
+                    <h2 className="text-xl font-bold mb-3 line-clamp-2 text-gray-800 hover:text-blue-600 transition-colors duration-300">
+                      {post.title}
+                    </h2>
 
-                  <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                    <span className="flex items-center">
-                      <svg className="w-4 h-4 mr-1 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                      <span className="flex items-center">
+                        <svg className="w-4 h-4 mr-1 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                        Published
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <span className="text-blue-600 font-semibold text-sm">Read More</span>
+                      <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                       </svg>
-                      Published
-                    </span>
+                    </div>
                   </div>
-
-                  <div className="flex items-center justify-between">
-                    <span className="text-blue-600 font-semibold text-sm">Read More</span>
-                    <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                  </div>
-                </div>
-              </Link>
+                </Link>
+              </div>
             ))}
           </div>
         )}
