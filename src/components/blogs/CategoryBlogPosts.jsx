@@ -151,11 +151,6 @@ const CategoryBlogPosts = () => {
                       {new Date(post.created_at).toLocaleDateString()}
                     </span>
                   </div>
-
-                  {/* Aspect Ratio Indicator (for debugging/development) */}
-                  {/* <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
-                    2:1
-                  </div> */}
                 </div>
 
                 {/* Card Content */}
