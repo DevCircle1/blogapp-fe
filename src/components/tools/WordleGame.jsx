@@ -4,8 +4,8 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Share2, Copy, Home, RotateCcw, Settings } from 'lucide-react';
-
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+import { publicRequest } from "../../services/api";
+import { useAuth } from "../../context/AuthContext";
 
 const WordleGame = () => {
   const { gameId } = useParams();
@@ -33,7 +33,7 @@ const WordleGame = () => {
   // Fetch game status
   const fetchGameStatus = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/games/${gameId}/`);
+      const response = await publicRequest.get(`/games/${gameId}/`);
       const data = await response.json();
       setGameState({
         gameId: data.game_id,
