@@ -240,7 +240,7 @@ const WordleGame = () => {
               <Home size={20} />
             </Link>
             <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
-              Custom Wordle
+          Daily Wordle
             </h1>
           </div>
           
