@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -8,127 +8,154 @@ import { publicRequest } from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
 
 const WordleGame = () => {
-  const { gameId } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [gameState, setGameState] = useState({
-    gameId: '',
     secretWordLength: 5,
     maxAttempts: 6,
     attempts: [],
     attemptsMade: 0,
     isComplete: false,
     hasWon: false,
-    isActive: true
+    isActive: true,
+    todayWord: ''
   });
   const [currentGuess, setCurrentGuess] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [newGameData, setNewGameData] = useState({
-    secretWord: '',
-    maxAttempts: 6
-  });
   const [keyboardStatus, setKeyboardStatus] = useState({});
   const inputRefs = useRef([]);
+  const [gameStats, setGameStats] = useState({
+    totalGames: 0,
+    wins: 0,
+    currentStreak: 0,
+    maxStreak: 0
+  });
 
-  // Fetch game status
-  const fetchGameStatus = async () => {
+  // Fetch game stats and today's attempts
+  const fetchGameData = async () => {
     try {
-      const response = await publicRequest.get(`/games/${gameId}/`);
-      const data = await response.json();
-      setGameState({
-        gameId: data.game_id,
-        secretWordLength: data.secret_word_length,
-        maxAttempts: data.max_attempts,
-        attempts: data.attempts || [],
-        attemptsMade: data.attempts_made,
-        isComplete: data.is_complete,
-        hasWon: data.has_won,
-        isActive: data.is_active
+      // Fetch today's attempts
+      const today = new Date().toISOString().split('T')[0];
+      const response = await publicRequest.get(`/daily-word/attempts/?date=${today}`);
+      const attemptsData = response.data;
+      
+      // Fetch game stats
+      const statsResponse = await publicRequest.get('/daily-word/stats/');
+      const statsData = statsResponse.data;
+      
+      setGameState(prev => ({
+        ...prev,
+        attempts: attemptsData.attempts || [],
+        attemptsMade: attemptsData.count || 0,
+        isComplete: attemptsData.count >= 6 || attemptsData.has_won || false,
+        hasWon: attemptsData.has_won || false,
+        isActive: !(attemptsData.count >= 6 || attemptsData.has_won)
+      }));
+      
+      setGameStats({
+        totalGames: statsData.total_games || 0,
+        wins: statsData.wins || 0,
+        currentStreak: statsData.current_streak || 0,
+        maxStreak: statsData.max_streak || 0
       });
       
-      // Update keyboard status based on attempts
       const newKeyboardStatus = {};
-      data.attempts?.forEach(attempt => {
-        attempt.feedback?.forEach((status, index) => {
+      attemptsData.attempts?.forEach(attempt => {
+        attempt.result?.forEach((status, index) => {
           const letter = attempt.guess[index];
           if (!newKeyboardStatus[letter] || 
               (status === 'green' && newKeyboardStatus[letter] !== 'green') ||
-              (status === 'orange' && newKeyboardStatus[letter] === 'black')) {
+              (status === 'yellow' && newKeyboardStatus[letter] === 'black')) {
             newKeyboardStatus[letter] = status;
           }
         });
       });
       setKeyboardStatus(newKeyboardStatus);
     } catch (error) {
-      toast.error('Game not found!');
-      navigate('/');
+      console.error('Error fetching game data:', error);
+      toast.error('Failed to load game data');
     }
   };
 
   useEffect(() => {
-    if (gameId) {
-      fetchGameStatus();
-    }
-  }, [gameId]);
+    fetchGameData();
+  }, []);
 
   // Handle guess submission
   const submitGuess = async () => {
-    if (currentGuess.length !== gameState.secretWordLength) {
-      toast.error(`Guess must be ${gameState.secretWordLength} letters long`);
+    if (currentGuess.length !== 5) {
+      toast.error('Guess must be 5 letters long');
+      return;
+    }
+
+    if (gameState.isComplete) {
+      toast.error('Daily game is already completed!');
       return;
     }
 
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/api/games/${gameId}/guess/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ guess: currentGuess.toUpperCase() })
+      const response = await publicRequest.post('/daily-word/guess/', {
+        guess: currentGuess.toLowerCase()
       });
 
-      const data = await response.json();
+      const data = response.data;
       
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to submit guess');
-      }
+      // Update game state with new attempt
+      const newAttempt = {
+        guess: currentGuess.toUpperCase(),
+        result: data.result,
+        attempt_number: data.attempt
+      };
 
-      // Update game state
       setGameState(prev => ({
         ...prev,
-        attempts: [...prev.attempts, {
-          guess: currentGuess.toUpperCase(),
-          feedback: data.feedback,
-          attempt_number: data.attempt_number
-        }],
-        attemptsMade: prev.attemptsMade + 1,
-        isComplete: data.is_complete,
-        hasWon: data.has_won,
-        isActive: !data.is_complete
+        attempts: [...prev.attempts, newAttempt],
+        attemptsMade: data.attempt,
+        isComplete: data.attempt >= 6 || data.win,
+        hasWon: data.win,
+        isActive: !(data.attempt >= 6 || data.win)
       }));
 
       // Update keyboard status
       const newKeyboardStatus = { ...keyboardStatus };
-      data.feedback.forEach((status, index) => {
+      data.result.forEach((status, index) => {
         const letter = currentGuess[index].toUpperCase();
+        const statusMap = {
+          'green': 'green',
+          'yellow': 'orange',
+          'black': 'black'
+        };
+        const mappedStatus = statusMap[status] || status;
+        
         if (!newKeyboardStatus[letter] || 
-            (status === 'green' && newKeyboardStatus[letter] !== 'green') ||
-            (status === 'orange' && newKeyboardStatus[letter] === 'black')) {
-          newKeyboardStatus[letter] = status;
+            (mappedStatus === 'green' && newKeyboardStatus[letter] !== 'green') ||
+            (mappedStatus === 'orange' && newKeyboardStatus[letter] === 'black')) {
+          newKeyboardStatus[letter] = mappedStatus;
         }
       });
       setKeyboardStatus(newKeyboardStatus);
 
       setCurrentGuess('');
       
-      if (data.has_won) {
-        toast.success('🎉 Congratulations! You guessed the word!');
-      } else if (data.is_complete) {
-        toast.error('Game Over! Try again.');
+      if (data.win) {
+        toast.success(`🎉 Congratulations! You guessed the word in ${data.attempt} attempts!`);
+        // Refresh stats after win
+        setTimeout(() => fetchGameData(), 1000);
+      } else if (data.attempt >= 6) {
+        toast.error('Game Over! Better luck tomorrow!');
       }
     } catch (error) {
-      toast.error(error.message);
+      if (error.response) {
+        const errorMsg = error.response.data?.error || 'Failed to submit guess';
+        toast.error(errorMsg);
+        
+        if (error.response.status === 400 && error.response.data?.error?.includes('Maximum attempts')) {
+          setGameState(prev => ({ ...prev, isComplete: true, isActive: false }));
+        }
+      } else {
+        toast.error('Network error. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -139,12 +166,12 @@ const WordleGame = () => {
     if (gameState.isComplete || !gameState.isActive) return;
 
     if (key === 'ENTER') {
-      if (currentGuess.length === gameState.secretWordLength) {
+      if (currentGuess.length === 5) {
         submitGuess();
       }
     } else if (key === 'BACKSPACE') {
       setCurrentGuess(prev => prev.slice(0, -1));
-    } else if (currentGuess.length < gameState.secretWordLength && /^[A-Za-z]$/.test(key)) {
+    } else if (currentGuess.length < 5 && /^[A-Za-z]$/.test(key)) {
       setCurrentGuess(prev => prev + key.toUpperCase());
     }
   };
@@ -164,43 +191,6 @@ const WordleGame = () => {
     window.addEventListener('keydown', handlePhysicalKeyPress);
     return () => window.removeEventListener('keydown', handlePhysicalKeyPress);
   }, [currentGuess, gameState]);
-
-  // Create new game
-  const createNewGame = async () => {
-    if (!newGameData.secretWord) {
-      toast.error('Please enter a secret word');
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/games/create/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          secret_word: newGameData.secretWord.toUpperCase(),
-          max_attempts: newGameData.maxAttempts
-        })
-      });
-
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error('Failed to create game');
-      }
-
-      navigate(`/game/${data.game_id}`);
-      setShowCreateModal(false);
-      setNewGameData({ secretWord: '', maxAttempts: 6 });
-      toast.success('Game created! Share the link with friends.');
-    } catch (error) {
-      toast.error('Failed to create game');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   // Keyboard rows
   const keyboardRows = [
@@ -230,6 +220,47 @@ const WordleGame = () => {
     }
   };
 
+  // Format date for display
+  const today = new Date();
+  const formattedDate = today.toLocaleDateString('en-US', { 
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+
+  // Share results
+  const shareResults = () => {
+    if (!gameState.attemptsMade) {
+      toast.info('Play the game first to share results!');
+      return;
+    }
+
+    const results = gameState.attempts.map(attempt => 
+      attempt.result.map(status => {
+        switch(status) {
+          case 'green': return '🟩';
+          case 'orange': return '🟨';
+          case 'black': return '⬛';
+          default: return '⬜';
+        }
+      }).join('')
+    ).join('\n');
+
+    const shareText = `Daily Wordle ${formattedDate}\n\n${results}\n\n${gameState.hasWon ? `✅ Solved in ${gameState.attemptsMade}/6` : '❌ Failed'}\n\nPlay at: ${window.location.origin}`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: 'My Daily Wordle Results',
+        text: shareText,
+        url: window.location.href
+      });
+    } else {
+      navigator.clipboard.writeText(shareText);
+      toast.success('Results copied to clipboard!');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4">
       {/* Header */}
@@ -239,56 +270,54 @@ const WordleGame = () => {
             <Link to="/" className="p-2 rounded-lg bg-gray-800 hover:bg-gray-700">
               <Home size={20} />
             </Link>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
-          Daily Wordle
-            </h1>
+            <div>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+                Daily Wordle
+              </h1>
+              <p className="text-sm text-gray-400">{formattedDate}</p>
+            </div>
           </div>
           
           <div className="flex space-x-2">
-            {gameState.gameId && (
-              <CopyToClipboard 
-                text={`${window.location.origin}/game/${gameState.gameId}`}
-                onCopy={() => toast.success('Link copied to clipboard!')}
-              >
-                <button className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition">
-                  <Share2 size={16} />
-                  <span>Share Game</span>
-                </button>
-              </CopyToClipboard>
-            )}
-            
             <button
-              onClick={() => setShowCreateModal(true)}
-              className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 transition"
+              onClick={shareResults}
+              className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition"
             >
-              <Settings size={16} />
-              <span>New Game</span>
+              <Share2 size={16} />
+              <span>Share Results</span>
             </button>
           </div>
         </div>
 
-        {/* Game Info */}
+        {/* Stats Bar */}
+        <div className="mb-6 grid grid-cols-4 gap-4">
+          <div className="bg-gray-800 rounded-lg p-4 text-center">
+            <div className="text-2xl font-bold">{gameStats.totalGames}</div>
+            <div className="text-sm text-gray-400">Played</div>
+          </div>
+          <div className="bg-gray-800 rounded-lg p-4 text-center">
+            <div className="text-2xl font-bold">
+              {gameStats.totalGames > 0 ? Math.round((gameStats.wins / gameStats.totalGames) * 100) : 0}%
+            </div>
+            <div className="text-sm text-gray-400">Win %</div>
+          </div>
+          <div className="bg-gray-800 rounded-lg p-4 text-center">
+            <div className="text-2xl font-bold">{gameStats.currentStreak}</div>
+            <div className="text-sm text-gray-400">Streak</div>
+          </div>
+          <div className="bg-gray-800 rounded-lg p-4 text-center">
+            <div className="text-2xl font-bold">{gameStats.maxStreak}</div>
+            <div className="text-sm text-gray-400">Max</div>
+          </div>
+        </div>
+
+        {/* Game Status */}
         {gameState.gameId && (
           <div className="mb-6 p-4 bg-gray-800 rounded-xl">
             <div className="flex flex-wrap items-center justify-between">
               <div>
-                <div className="flex items-center space-x-2 mb-2">
-                  <span className="text-sm text-gray-400">Game ID:</span>
-                  <span className="font-mono font-bold text-lg bg-gray-900 px-3 py-1 rounded">
-                    {gameState.gameId}
-                  </span>
-                  <CopyToClipboard 
-                    text={gameState.gameId}
-                    onCopy={() => toast.info('Game ID copied!')}
-                  >
-                    <button className="p-1 hover:bg-gray-700 rounded">
-                      <Copy size={14} />
-                    </button>
-                  </CopyToClipboard>
-                </div>
                 <div className="text-sm text-gray-300">
-                  Word length: {gameState.secretWordLength} letters • 
-                  Attempts: {gameState.attemptsMade}/{gameState.maxAttempts}
+                  Daily Challenge • Attempts: {gameState.attemptsMade}/6
                 </div>
               </div>
               
@@ -307,19 +336,19 @@ const WordleGame = () => {
         <div className="mb-8">
           <div className="grid grid-cols-1 gap-2 mb-4">
             {/* Previous attempts */}
-            {Array.from({ length: gameState.maxAttempts }).map((_, attemptIndex) => {
+            {Array.from({ length: 6 }).map((_, attemptIndex) => {
               const attempt = gameState.attempts[attemptIndex];
               const isCurrent = attemptIndex === gameState.attemptsMade && !gameState.isComplete;
               
               return (
                 <div key={attemptIndex} className="flex justify-center space-x-2">
-                  {Array.from({ length: gameState.secretWordLength }).map((_, letterIndex) => {
+                  {Array.from({ length: 5 }).map((_, letterIndex) => {
                     let letter = '';
                     let status = '';
                     
                     if (attempt) {
                       letter = attempt.guess[letterIndex] || '';
-                      status = attempt.feedback?.[letterIndex] || '';
+                      status = attempt.result?.[letterIndex] || '';
                     } else if (isCurrent) {
                       letter = currentGuess[letterIndex] || '';
                     }
@@ -365,7 +394,7 @@ const WordleGame = () => {
                     <button
                       key={key}
                       onClick={() => handleKeyPress(key)}
-                      disabled={isLoading || gameState.isComplete}
+                      disabled={isLoading || gameState.isComplete || !user}
                       className={keyClass}
                     >
                       {key === 'BACKSPACE' ? (
@@ -404,73 +433,11 @@ const WordleGame = () => {
               <span className="text-gray-400">Letter not in word</span>
             </div>
           </div>
+          <p className="mt-4 text-xs text-gray-500 text-center">
+            One word per day • Resets at midnight
+          </p>
         </div>
       </div>
-
-      {/* Create Game Modal */}
-      {showCreateModal && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
-          <div className="bg-gray-800 rounded-2xl max-w-md w-full p-6">
-            <h2 className="text-2xl font-bold mb-4">Create New Game</h2>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Secret Word
-                </label>
-                <input
-                  type="text"
-                  value={newGameData.secretWord}
-                  onChange={(e) => setNewGameData({
-                    ...newGameData,
-                    secretWord: e.target.value.replace(/[^A-Za-z]/gi, '')
-                  })}
-                  className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                  placeholder="Enter your secret word"
-                  maxLength={10}
-                />
-                <p className="text-xs text-gray-400 mt-1">
-                  Word length: {newGameData.secretWord.length} letters (Max: 10)
-                </p>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Number of Attempts
-                </label>
-                <select
-                  value={newGameData.maxAttempts}
-                  onChange={(e) => setNewGameData({
-                    ...newGameData,
-                    maxAttempts: parseInt(e.target.value)
-                  })}
-                  className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                >
-                  {[3, 4, 5, 6, 7, 8, 9, 10].map(num => (
-                    <option key={num} value={num}>{num} attempts</option>
-                  ))}
-                </select>
-              </div>
-              
-              <div className="flex space-x-3 pt-4">
-                <button
-                  onClick={() => setShowCreateModal(false)}
-                  className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={createNewGame}
-                  disabled={!newGameData.secretWord || isLoading}
-                  className="flex-1 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg transition disabled:opacity-50"
-                >
-                  {isLoading ? 'Creating...' : 'Create Game'}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       <ToastContainer
         position="bottom-right"
@@ -479,23 +446,6 @@ const WordleGame = () => {
       />
     </div>
   );
-};
-
-// Add to your tailwind.config.js
-const tailwindConfigAddition = {
-  theme: {
-    extend: {
-      animation: {
-        'fade-in': 'fadeIn 0.5s ease-in-out'
-      },
-      keyframes: {
-        fadeIn: {
-          '0%': { opacity: '0', transform: 'scale(0.9)' },
-          '100%': { opacity: '1', transform: 'scale(1)' }
-        }
-      }
-    }
-  }
 };
 
 export default WordleGame;
