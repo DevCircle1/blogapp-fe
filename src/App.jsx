@@ -66,7 +66,8 @@ function App() {
         <Route path="/create" element={<CreateQuestion />} />
         <Route path="/q/:id" element={<QuestionDetail />} />
         <Route path="/my-answers" element={<MyAnswers />} />
-        <Route path="/game/:gameId" element={<WordleGame />} />
+        {/* <Route path="/game/:gameId" element={<WordleGame />} /> */}
+        <Route path="/word-game" element={<WordleGame />} />
       </Routes>
 
       {shouldShowNavbar(location.pathname) && <Footer />}

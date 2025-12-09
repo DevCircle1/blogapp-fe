@@ -19,6 +19,7 @@ const navigation = [
   { name: "Contact Us", href: "/contact-us", current: false },
   { name: "Write Blogs", href: "/write-blogs", current: false, requiresAuth: true },
   { name: "Job Alerts", href: "/job-alert", current: false, requiresAuth: false },
+  { name: "Game", href: "/word-game", current: false },
 ];
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
