@@ -70,7 +70,7 @@ export default function Navbar() {
                 <img alt="Dev Circle" src={logo} className="h-8 w-auto sm:h-24" />
               </div>
               {/* Center Navigation */}
-              <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-center">
+              <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-center flex-wrap">
                 <div className="flex flex-wrap space-x-4">
                   {updatedNavigation.map((item) => (
                     <NavLink
