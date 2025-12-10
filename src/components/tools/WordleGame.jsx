@@ -96,6 +96,7 @@ const WordleGame = () => {
     setIsLoading(true);
     try {
       const response = await publicRequest.post('/daily-word/guess/', {
+        player_id: user?.id || user?.user_id,     // <-- added player_id
         guess: currentGuess.toLowerCase()
       });
 
@@ -122,11 +123,11 @@ const WordleGame = () => {
       data.result.forEach((status, index) => {
         const letter = currentGuess[index].toUpperCase();
         const statusMap = {
-          'green': 'green',
-          'yellow': 'orange',
-          'black': 'black'
-        };
-        const mappedStatus = statusMap[status] || status;
+  "correct": "green",
+  "wrong_place": "orange",
+  "absent": "black"
+};
+        const mappedStatus = statusMap[status];
         
         if (!newKeyboardStatus[letter] || 
             (mappedStatus === 'green' && newKeyboardStatus[letter] !== 'green') ||
@@ -203,9 +204,9 @@ const WordleGame = () => {
   const getKeyColorClass = (key) => {
     const status = keyboardStatus[key];
     switch (status) {
-      case 'green': return 'bg-green-600 text-white';
-      case 'orange': return 'bg-orange-500 text-white';
-      case 'black': return 'bg-gray-800 text-gray-400';
+      case 'correct': return 'bg-green-600 text-white';
+      case 'wrong_place': return 'bg-orange-500 text-white';
+      case 'absent': return 'bg-gray-800 text-gray-400';
       default: return 'bg-gray-700 hover:bg-gray-600 text-white';
     }
   };
@@ -213,9 +214,9 @@ const WordleGame = () => {
   // Get color for guess box
   const getBoxColorClass = (status) => {
     switch (status) {
-      case 'green': return 'bg-green-600 border-green-600';
-      case 'orange': return 'bg-orange-500 border-orange-500';
-      case 'black': return 'bg-gray-800 border-gray-700';
+      case 'correct': return 'bg-green-600 border-green-600';
+      case 'wrong_place': return 'bg-orange-500 border-orange-500';
+      case 'absent': return 'bg-gray-800 border-gray-700';
       default: return 'bg-gray-900 border-gray-700';
     }
   };
