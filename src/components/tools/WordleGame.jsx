@@ -6,10 +6,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Share2, Copy, Home, RotateCcw, Settings } from 'lucide-react';
 import { publicRequest } from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
-
+import { getPlayerId } from "../../utils/playerId";
 const WordleGame = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const playerId = getPlayerId();
   const [gameState, setGameState] = useState({
     secretWordLength: 5,
     maxAttempts: 6,
@@ -36,11 +37,15 @@ const WordleGame = () => {
     try {
       // Fetch today's attempts
       const today = new Date().toISOString().split('T')[0];
-      const response = await publicRequest.get(`/daily-word/attempts/?date=${today}`);
+      const response = await publicRequest.get(
+        `/daily-word/attempts/?date=${today}&player_id=${playerId}`
+      );
       const attemptsData = response.data;
       
       // Fetch game stats
-      const statsResponse = await publicRequest.get('/daily-word/stats/');
+      const statsResponse = await publicRequest.get(
+        `/daily-word/stats/?player_id=${playerId}`
+      );
       const statsData = statsResponse.data;
       
       setGameState(prev => ({
@@ -96,7 +101,7 @@ const WordleGame = () => {
     setIsLoading(true);
     try {
       const response = await publicRequest.post('/daily-word/guess/', {
-        player_id: user?.id || user?.user_id,     // <-- added player_id
+        player_id: playerId,     
         guess: currentGuess.toLowerCase()
       });
 
@@ -395,7 +400,7 @@ const WordleGame = () => {
                     <button
                       key={key}
                       onClick={() => handleKeyPress(key)}
-                      disabled={isLoading || gameState.isComplete || !user}
+                      disabled={isLoading || gameState.isComplete}
                       className={keyClass}
                     >
                       {key === 'BACKSPACE' ? (
