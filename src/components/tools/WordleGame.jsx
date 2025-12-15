@@ -24,7 +24,8 @@ const WordleGame = () => {
   const [currentGuess, setCurrentGuess] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [keyboardStatus, setKeyboardStatus] = useState({});
-  const inputRefs = useRef([]);
+  const inputRef = useRef(null);
+  const gameGridRef = useRef(null);
   const [gameStats, setGameStats] = useState({
     totalGames: 0,
     wins: 0,
@@ -64,14 +65,25 @@ const WordleGame = () => {
         maxStreak: statsData.max_streak || 0
       });
       
+      console.log('Attempts data:', attemptsData); // Debug log
       const newKeyboardStatus = {};
       attemptsData.attempts?.forEach(attempt => {
         attempt.result?.forEach((status, index) => {
           const letter = attempt.guess[index];
-          if (!newKeyboardStatus[letter] || 
-              (status === 'green' && newKeyboardStatus[letter] !== 'green') ||
-              (status === 'yellow' && newKeyboardStatus[letter] === 'black')) {
-            newKeyboardStatus[letter] = status;
+           // Normalize status
+          const isCorrect = status === 'correct' || status === 'green';
+          const isWrongPlace = status === 'wrong_place' || status === 'orange' || status === 'yellow';
+          const isAbsent = status === 'absent' || status === 'black' || status === 'gray';
+
+          // Semantic status hierarchy: correct > wrong_place > absent
+          const currentStatus = newKeyboardStatus[letter];
+          
+          if (isCorrect) {
+            newKeyboardStatus[letter] = 'correct';
+          } else if (isWrongPlace && currentStatus !== 'correct') {
+            newKeyboardStatus[letter] = 'wrong_place';
+          } else if (isAbsent && !currentStatus) {
+            newKeyboardStatus[letter] = 'absent';
           }
         });
       });
@@ -127,17 +139,19 @@ const WordleGame = () => {
       const newKeyboardStatus = { ...keyboardStatus };
       data.result.forEach((status, index) => {
         const letter = currentGuess[index].toUpperCase();
-        const statusMap = {
-  "correct": "green",
-  "wrong_place": "orange",
-  "absent": "black"
-};
-        const mappedStatus = statusMap[status];
+        const currentStatus = newKeyboardStatus[letter];
         
-        if (!newKeyboardStatus[letter] || 
-            (mappedStatus === 'green' && newKeyboardStatus[letter] !== 'green') ||
-            (mappedStatus === 'orange' && newKeyboardStatus[letter] === 'black')) {
-          newKeyboardStatus[letter] = mappedStatus;
+        // Normalize status to handle potential backend inconsistencies
+        const isCorrect = status === 'correct' || status === 'green';
+        const isWrongPlace = status === 'wrong_place' || status === 'orange' || status === 'yellow';
+        const isAbsent = status === 'absent' || status === 'black' || status === 'gray';
+        
+        if (isCorrect) {
+          newKeyboardStatus[letter] = 'correct';
+        } else if (isWrongPlace && currentStatus !== 'correct') {
+          newKeyboardStatus[letter] = 'wrong_place';
+        } else if (isAbsent && !currentStatus) {
+          newKeyboardStatus[letter] = 'absent';
         }
       });
       setKeyboardStatus(newKeyboardStatus);
@@ -154,7 +168,13 @@ const WordleGame = () => {
     } catch (error) {
       if (error.response) {
         const errorMsg = error.response.data?.error || 'Failed to submit guess';
-        toast.error(errorMsg);
+        
+        // Handle specific "Not a valid word" error
+        if (errorMsg === 'Not a valid word' || errorMsg.toLowerCase().includes('not a valid word')) {
+          toast.error('Not a valid word');
+        } else {
+          toast.error(errorMsg);
+        }
         
         if (error.response.status === 400 && error.response.data?.error?.includes('Maximum attempts')) {
           setGameState(prev => ({ ...prev, isComplete: true, isActive: false }));
@@ -164,7 +184,16 @@ const WordleGame = () => {
       }
     } finally {
       setIsLoading(false);
+      // Keep focus on input after submit
+      setTimeout(() => inputRef.current?.focus(), 100);
     }
+  };
+
+  // Handle input change from hidden input
+  const handleInputChange = (e) => {
+    if (gameState.isComplete || !gameState.isActive) return;
+    const value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 5);
+    setCurrentGuess(value);
   };
 
   // Handle keyboard input
@@ -183,20 +212,40 @@ const WordleGame = () => {
   };
 
   // Handle physical keyboard
+  // Handle physical keyboard (desktop)
   useEffect(() => {
     const handlePhysicalKeyPress = (e) => {
+      // Ignore if typing in the hidden input to avoid double letters
+      if (e.target.tagName === 'INPUT') return;
+
       if (e.key === 'Enter') {
         handleKeyPress('ENTER');
       } else if (e.key === 'Backspace') {
         handleKeyPress('BACKSPACE');
       } else if (/^[A-Za-z]$/.test(e.key) && !e.ctrlKey && !e.metaKey) {
         handleKeyPress(e.key.toUpperCase());
+        // Also update the hidden input value to match
+        if (inputRef.current) {
+           inputRef.current.focus();
+        }
       }
     };
 
     window.addEventListener('keydown', handlePhysicalKeyPress);
     return () => window.removeEventListener('keydown', handlePhysicalKeyPress);
   }, [currentGuess, gameState]);
+  
+  // Focus input on mount
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  // Update input value when currentGuess changes (e.g. via virtual keyboard)
+  useEffect(() => {
+    if (inputRef.current && inputRef.current.value !== currentGuess) {
+      inputRef.current.value = currentGuess;
+    }
+  }, [currentGuess]);
 
   // Keyboard rows
   const keyboardRows = [
@@ -339,7 +388,30 @@ const WordleGame = () => {
         )}
 
         {/* Game Grid */}
-        <div className="mb-8">
+        <div 
+          ref={gameGridRef}
+          className="mb-8 relative cursor-text" 
+          onClick={() => inputRef.current?.focus()}
+        >
+          {/* Hidden Input for Mobile Keyboard */}
+          <input
+            ref={inputRef}
+            type="text"
+            className="opacity-0 absolute top-0 left-0 w-full h-full -z-10"
+            value={currentGuess}
+            onChange={handleInputChange}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                submitGuess();
+              }
+            }}
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="characters"
+            spellCheck="false"
+          />
+          
           <div className="grid grid-cols-1 gap-2 mb-4">
             {/* Previous attempts */}
             {Array.from({ length: 6 }).map((_, attemptIndex) => {
@@ -369,9 +441,9 @@ const WordleGame = () => {
                           ${getBoxColorClass(status)}
                           ${!status && letter ? 'bg-gray-900 border-gray-600' : ''}
                           ${!letter ? 'border-gray-700' : ''}
-                          animate-fade-in
+                          ${attempt ? 'animate-flip' : 'animate-fade-in'}
                         `}
-                        style={{ animationDelay: `${letterIndex * 50}ms` }}
+                        style={{ animationDelay: `${letterIndex * (attempt ? 300 : 50)}ms` }}
                       >
                         {letter}
                       </div>

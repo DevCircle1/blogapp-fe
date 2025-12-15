@@ -1,3 +1,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes flip {
+  0% {
+    transform: rotateX(0);
+    border-color: #374151; /* gray-700 */
+  }
+  45% {
+    transform: rotateX(90deg);
+    border-color: #374151;
+  }
+  55% {
+    transform: rotateX(90deg);
+    border-color: inherit; /* Will inherit the color based on result */
+  }
+  100% {
+    transform: rotateX(0);
+    border-color: inherit;
+  }
+}
+
+.animate-flip {
+  animation: flip 0.6s ease forwards;
+}
