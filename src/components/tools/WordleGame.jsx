@@ -32,23 +32,17 @@ const WordleGame = () => {
     currentStreak: 0,
     maxStreak: 0,
   });
-
-  // Fetch game stats and today's attempts
   const fetchGameData = async () => {
     try {
-      // Fetch today's attempts
       const today = new Date().toISOString().split("T")[0];
       const response = await publicRequest.get(
         `/daily-word/attempts/?date=${today}&player_id=${playerId}`
       );
       const attemptsData = response.data;
-
-      // Fetch game stats
       const statsResponse = await publicRequest.get(
         `/daily-word/stats/?player_id=${playerId}`
       );
       const statsData = statsResponse.data;
-
       setGameState((prev) => ({
         ...prev,
         attempts: attemptsData.attempts || [],
@@ -65,12 +59,11 @@ const WordleGame = () => {
         maxStreak: statsData.max_streak || 0,
       });
 
-      console.log("Attempts data:", attemptsData); // Debug log
+      console.log("Attempts data:", attemptsData); 
       const newKeyboardStatus = {};
       attemptsData.attempts?.forEach((attempt) => {
         attempt.result?.forEach((status, index) => {
           const letter = attempt.guess[index];
-          // Normalize status
           const isCorrect = status === "correct" || status === "green";
           const isWrongPlace =
             status === "wrong_place" ||
@@ -78,8 +71,6 @@ const WordleGame = () => {
             status === "yellow";
           const isAbsent =
             status === "absent" || status === "black" || status === "gray";
-
-          // Semantic status hierarchy: correct > wrong_place > absent
           const currentStatus = newKeyboardStatus[letter];
 
           if (isCorrect) {
@@ -101,8 +92,6 @@ const WordleGame = () => {
   useEffect(() => {
     fetchGameData();
   }, []);
-
-  // Handle guess submission
   const submitGuess = async () => {
     if (currentGuess.length !== 5) {
       toast.error("Guess must be 5 letters long");
@@ -122,8 +111,6 @@ const WordleGame = () => {
       });
 
       const data = response.data;
-
-      // Update game state with new attempt
       const newAttempt = {
         guess: currentGuess.toUpperCase(),
         result: data.result,
@@ -234,12 +221,8 @@ const WordleGame = () => {
     }
   };
 
-  // Handle physical keyboard
-  // Handle physical keyboard (desktop)
   useEffect(() => {
     const handlePhysicalKeyPress = (e) => {
-      // Ignore if typing in the hidden input to avoid double letters
-      if (e.target.tagName === "INPUT") return;
 
       if (e.key === "Enter") {
         handleKeyPress("ENTER");
@@ -247,7 +230,6 @@ const WordleGame = () => {
         handleKeyPress("BACKSPACE");
       } else if (/^[A-Za-z]$/.test(e.key) && !e.ctrlKey && !e.metaKey) {
         handleKeyPress(e.key.toUpperCase());
-        // Also update the hidden input value to match
         if (inputRef.current) {
           inputRef.current.focus();
         }
@@ -257,27 +239,20 @@ const WordleGame = () => {
     window.addEventListener("keydown", handlePhysicalKeyPress);
     return () => window.removeEventListener("keydown", handlePhysicalKeyPress);
   }, [currentGuess, gameState]);
-
-  // Focus input on mount
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
 
-  // Update input value when currentGuess changes (e.g. via virtual keyboard)
   useEffect(() => {
     if (inputRef.current && inputRef.current.value !== currentGuess) {
       inputRef.current.value = currentGuess;
     }
   }, [currentGuess]);
-
-  // Keyboard rows
   const keyboardRows = [
     ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
     ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
     ["ENTER", "Z", "X", "C", "V", "B", "N", "M", "BACKSPACE"],
   ];
-
-  // Get color class for keyboard key
   const getKeyColorClass = (key) => {
     const status = keyboardStatus[key];
     switch (status) {
