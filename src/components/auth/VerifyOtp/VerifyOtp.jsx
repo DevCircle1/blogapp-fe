@@ -10,12 +10,9 @@ export default function VerifyOtp() {
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [resendDisabled, setResendDisabled] = useState(false);
   const [countdown, setCountdown] = useState(0);
-
   const signupEmail = localStorage.getItem("signupEmail");
   const resetEmail = localStorage.getItem("resetEmail");
   const email = signupEmail || resetEmail;
-
-  // Countdown timer effect
   useEffect(() => {
     let timer;
     if (countdown > 0) {
@@ -25,8 +22,6 @@ export default function VerifyOtp() {
     }
     return () => clearTimeout(timer);
   }, [countdown, resendDisabled]);
-
-  // Initialize countdown on component mount
   useEffect(() => {
     const lastResendTime = localStorage.getItem("lastResendTime");
     if (lastResendTime) {
@@ -63,9 +58,7 @@ export default function VerifyOtp() {
         email: email,
       });
 
-      toast.success(res?.data?.message || "OTP has been resent successfully.");
-      
-      // Start countdown (60 seconds)
+      toast.success(res?.data?.message || "OTP has been resent successfully.");S
       setResendDisabled(true);
       setCountdown(60);
       localStorage.setItem("lastResendTime", Date.now().toString());
