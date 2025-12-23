@@ -1,21 +1,15 @@
-// src/context/AuthContext.jsx
 import { createContext, useState, useEffect, useContext } from 'react';
 import { privateRequest } from '../services/api'; 
-
 export const AuthContext = createContext();
-
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) throw new Error('useAuth must be used within an AuthProvider');
   return context;
 };
-
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  // Load user on app start
   useEffect(() => {
     const initializeAuth = async () => {
       try {
@@ -26,22 +20,17 @@ export default function AuthProvider({ children }) {
           setIsAuthenticated(false);
           return;
         }
-
-        // If we already have userData, trust it and finish
         if (storedUser) {
           setUser(JSON.parse(storedUser));
           setIsAuthenticated(true);
           return;
         }
-
-        // No userData, try to fetch profile using the token
         try {
           const { data } = await privateRequest.get('/profile/');
           localStorage.setItem('userData', JSON.stringify(data));
           setUser(data);
           setIsAuthenticated(true);
         } catch (e) {
-          // token may be invalid or request failed
           console.error('Error fetching profile on init:', e);
           localStorage.removeItem('accessToken');
           localStorage.removeItem('refreshToken');
@@ -69,16 +58,12 @@ export default function AuthProvider({ children }) {
       if (tokens.refresh) {
         localStorage.setItem('refreshToken', tokens.refresh);
       }
-
-      // if we already got user from login API, save it
       if (maybeUserData) {
         localStorage.setItem('userData', JSON.stringify(maybeUserData));
         setUser(maybeUserData);
         setIsAuthenticated(true);
         return;
       }
-
-      // otherwise fetch it
       const profileResponse = await privateRequest.get('/profile/');
       const userData = profileResponse.data;
       localStorage.setItem('userData', JSON.stringify(userData));

@@ -1,7 +1,5 @@
 import axios from 'axios';
 const API_BASE_URL = import.meta.env.REACT_APP_API_URL || 'https://api.talkandtool.com/api';
-// const API_BASE_URL = import.meta.env.REACT_APP_API_URL || 'http://localhost:8000/api';
-
 export const publicRequest = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
@@ -39,33 +37,23 @@ privateRequest.interceptors.response.use(
       const refreshToken = localStorage.getItem('refreshToken');
       if (refreshToken) {
         try {
-          // Try to refresh the token
           const response = await publicRequest.post('/auth/refresh/', {
             refresh: refreshToken
           });
 
           const { access } = response.data;
           localStorage.setItem('accessToken', access);
-          
-
-          // Retry the original request with new token
           originalRequest.headers.Authorization = `Bearer ${access}`;
           return privateRequest(originalRequest);
           
         } catch (refreshError) {
           console.error('Token refresh failed:', refreshError);
-          
-          // Refresh failed, clear tokens and redirect to login
           localStorage.removeItem('accessToken');
           localStorage.removeItem('refreshToken');
           localStorage.removeItem('userData');
-          
-          // You might want to trigger a logout action here
-          // or redirect to login page
           window.location.href = '/login';
         }
       } else {
-        // No refresh token, clear storage and redirect
         localStorage.removeItem('accessToken');
         localStorage.removeItem('userData');
         window.location.href = '/login';
@@ -75,8 +63,6 @@ privateRequest.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-// Response interceptor for public requests - handle general errors
 publicRequest.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -89,10 +75,8 @@ publicRequest.interceptors.response.use(
   }
 );
 
-// Utility functions
 export const handleApiError = (error) => {
   if (error.response) {
-    // Server responded with error status
     const { status, data } = error.response;
     
     switch (status) {
@@ -133,7 +117,6 @@ export const handleApiError = (error) => {
         };
     }
   } else if (error.request) {
-    // Network error
     return {
       message: 'Network error. Please check your connection.',
       details: null
