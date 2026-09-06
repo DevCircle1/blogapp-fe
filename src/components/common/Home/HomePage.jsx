@@ -102,6 +102,22 @@ export default function HomePage() {
     },
   ];
 
+  const getArticleCount = (category) => {
+    const count = Number(
+      category?.article_count ??
+      category?.articles_count ??
+      category?.post_count ??
+      0
+    );
+
+    return Number.isFinite(count) && count >= 0 ? count : 0;
+  };
+
+  const totalArticles = categories.reduce(
+    (total, category) => total + getArticleCount(category),
+    0
+  );
+
   // Icon mapping for categories
   const categoryIcons = {
     Technology: "💻",
@@ -303,11 +319,7 @@ export default function HomePage() {
                     activeCategory === "all" ? "text-blue-100" : "text-gray-500"
                   }`}
                 >
-                  {categories.reduce(
-                    (total, cat) => total + cat.article_count,
-                    0
-                  )}{" "}
-                  articles
+                  {totalArticles} {totalArticles === 1 ? "article" : "articles"}
                 </div>
               </button>
 
@@ -333,7 +345,7 @@ export default function HomePage() {
                         : "text-gray-500"
                     }`}
                   >
-                    {category.article_count} articles
+                    {getArticleCount(category)} {getArticleCount(category) === 1 ? "article" : "articles"}
                   </div>
                 </button>
               ))}
