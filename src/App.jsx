@@ -30,6 +30,7 @@ import CreateQuestion from './components/tools/CreateQuestion.jsx';
 import QuestionDetail from './components/tools/QuestionDetail.jsx';
 import MyAnswers from './components/tools/MyAnswers.jsx';
 import WordleGame from './components/tools/WordleGame.jsx';
+import PremiumToolSuite from './components/tools/PremiumToolSuite.jsx';
 import 'react-toastify/dist/ReactToastify.css';
 function App() {
   const location = useLocation();
@@ -48,6 +49,7 @@ function App() {
         <Route path="/blogs/article/:slug" element={<BlogPostDetail />} />
         <Route path="/write-blogs" element={<WriteBlog />} />
         <Route path="/tools" element={<ToolsPage />} />
+        <Route path="/tools/:toolSlug" element={<PremiumToolSuite />} />
         <Route path="/check-ip" element={<IPAddressChecker />} />
         <Route path="/screen-resolution" element={<ScreenResolutionTool />} />
         <Route path="/profit-margin-calculator" element={<ProfitMarginCalculator />} />
