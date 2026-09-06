@@ -1,0 +1,13 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # These Vite values are intentionally compiled into the public browser bundle.
+  # Keep secret scanning enabled for every other environment variable.
+  SECRETS_SCAN_OMIT_KEYS = "VITE_SUPABASE_URL,VITE_SUPABASE_PUBLISHABLE_KEY,VITE_SUPABASE_BLOG_IMAGES_BUCKET"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

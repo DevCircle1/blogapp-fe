@@ -119,7 +119,8 @@ const uploadFeaturedImage = async (file, userId) => {
   if (!(file instanceof File)) return null;
   const extension = file.name.split('.').pop();
   const filePath = `${userId}/${crypto.randomUUID()}.${extension}`;
-  const bucket = import.meta.env.VITE_SUPABASE_BLOG_IMAGES_BUCKET || 'blog-images';
+  const bucket = import.meta.env.VITE_SUPABASE_BLOG_IMAGES_BUCKET;
+  if (!bucket) throw asError({ message: 'VITE_SUPABASE_BLOG_IMAGES_BUCKET is not configured.' });
   await run(supabase.storage.from(bucket).upload(filePath, file, { upsert: false }));
   return supabase.storage.from(bucket).getPublicUrl(filePath).data.publicUrl;
 };
