@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import authService from '../../../services/auth';
 import logo from '../../../assets/logo.png';
 export default function UpdatePassword() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     password: '',
     confirm_password: ''
@@ -18,22 +20,14 @@ export default function UpdatePassword() {
   const handleResetPassword = async (e) => {
     e.preventDefault();
 
-    const email = localStorage.getItem('resetEmail');
-    if (!email) {
-      toast.error('Reset email not found. Please restart reset process.');
-      return;
-    }
-
     const result = await authService.resetPassword({
-      email,
       password: formData.password,
       confirm_password: formData.confirm_password
     });
 
     if (result.success) {
       toast.success(result.message || 'Password reset successful');
-      localStorage.removeItem('resetEmail');
-      navigate('/');
+      navigate('/login');
     } else {
       toast.error(result.message || 'Failed to reset password');
     }
@@ -43,7 +37,7 @@ export default function UpdatePassword() {
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-          <img className="w-24 h-24" src="2.png" alt="logo" />
+          <img className="w-24 h-24" src={logo} alt="logo" />
           <span className="-ml-6">Talk and Tool</span>
         </a>
         <div className="w-full p-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-gray-800 dark:border-gray-700 sm:p-8">

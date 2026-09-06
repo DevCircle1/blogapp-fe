@@ -1,229 +1,109 @@
-// src/services/auth.js
-import { publicRequest, privateRequest, handleApiError } from './api';
-export const signup = async (userData) => {
+import { requireSupabaseConfig, supabase } from './supabase';
+
+const success = (data, message) => ({ success: true, data, message });
+const failure = (error, fallback) => ({ success: false, error, details: null, message: error?.message || fallback });
+const getProfileData = (user) => user ? { id: user.id, email: user.email, ...user.user_metadata } : null;
+
+export const signup = async ({ email, password }) => {
   try {
-    const response = await publicRequest.post('/signup/', userData);
-    return {
-      success: true,
-      data: response.data,
-      message: 'Account created successfully',
-    };
+    requireSupabaseConfig();
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { emailRedirectTo: `${window.location.origin}/` },
+    });
+    if (error) throw error;
+    return success(data, 'Account created. Check your email to verify it.');
   } catch (error) {
-    console.error('Signup error:', error);
-    const errorInfo = handleApiError(error);
-    return {
-      success: false,
-      error: errorInfo.details || errorInfo.message,
-      details: error.response?.data || {},
-      message: errorInfo.message,
-    };
+    return failure(error, 'Unable to create your account.');
   }
 };
-// Authentication API calls
+
 export const authService = {
-
-  // Login user
-  login: async (credentials) => {
+  login: async ({ email, password }) => {
     try {
-      const response = await publicRequest.post('/login/', credentials);
-      return {
-        success: true,
-        data: response.data,
-        message: 'Login successful'
-      };
+      requireSupabaseConfig();
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      return success({ session: data.session, user: getProfileData(data.user) }, 'Login successful');
     } catch (error) {
-      console.error('Login error:', error);
-      const errorInfo = handleApiError(error);
-      return {
-        success: false,
-        error: errorInfo.details || errorInfo.message,
-        message: errorInfo.message
-      };
+      return failure(error, 'Login failed.');
     }
   },
 
-  // Refresh access token
-  refreshToken: async (refreshToken) => {
+  refreshToken: async () => {
     try {
-      const response = await publicRequest.post('/auth/refresh/', {
-        refresh: refreshToken
-      });
-      return {
-        success: true,
-        data: response.data,
-        message: 'Token refreshed successfully'
-      };
+      requireSupabaseConfig();
+      const { data, error } = await supabase.auth.refreshSession();
+      if (error) throw error;
+      return success(data, 'Session refreshed successfully');
     } catch (error) {
-      console.error('Token refresh error:', error);
-      const errorInfo = handleApiError(error);
-      return {
-        success: false,
-        error: errorInfo.details || errorInfo.message,
-        message: errorInfo.message
-      };
+      return failure(error, 'Could not refresh the session.');
     }
   },
 
-  // Logout user (if you have a logout endpoint)
   logout: async () => {
     try {
-      const refreshToken = localStorage.getItem('refreshToken');
-      if (refreshToken) {
-        await privateRequest.post('/logout/', { refresh: refreshToken });
-      }
-      return {
-        success: true,
-        message: 'Logout successful'
-      };
+      requireSupabaseConfig();
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      return success(null, 'Logout successful');
     } catch (error) {
-      console.error('Logout error:', error);
-      // Even if API call fails, we still want to clear local storage
-      return {
-        success: true,
-        message: 'Logged out (local only)'
-      };
+      return failure(error, 'Logout failed.');
     }
   },
 
-  // Get current user profile
   getProfile: async () => {
     try {
-      const response = await privateRequest.get('/profile/');
-      return {
-        success: true,
-        data: response.data,
-        message: 'Profile fetched successfully'
-      };
+      requireSupabaseConfig();
+      const { data, error } = await supabase.auth.getUser();
+      if (error) throw error;
+      return success(getProfileData(data.user), 'Profile fetched successfully');
     } catch (error) {
-      console.error('Get profile error:', error);
-      const errorInfo = handleApiError(error);
-      return {
-        success: false,
-        error: errorInfo.details || errorInfo.message,
-        message: errorInfo.message
-      };
+      return failure(error, 'Could not fetch the profile.');
     }
   },
 
-  // Update user profile
   updateProfile: async (userData) => {
     try {
-      const response = await privateRequest.put('/profile/', userData);
-      return {
-        success: true,
-        data: response.data,
-        message: 'Profile updated successfully'
-      };
+      requireSupabaseConfig();
+      const { data, error } = await supabase.auth.updateUser({ data: userData });
+      if (error) throw error;
+      return success(getProfileData(data.user), 'Profile updated successfully');
     } catch (error) {
-      console.error('Update profile error:', error);
-      const errorInfo = handleApiError(error);
-      return {
-        success: false,
-        error: errorInfo.details || errorInfo.message,
-        message: errorInfo.message
-      };
+      return failure(error, 'Could not update the profile.');
     }
   },
 
-  // Change password
-  changePassword: async (passwordData) => {
+  changePassword: async ({ password }) => {
     try {
-      const response = await privateRequest.post('/change-password/', passwordData);
-      return {
-        success: true,
-        data: response.data,
-        message: 'Password changed successfully'
-      };
+      requireSupabaseConfig();
+      const { data, error } = await supabase.auth.updateUser({ password });
+      if (error) throw error;
+      return success(data, 'Password changed successfully');
     } catch (error) {
-      console.error('Change password error:', error);
-      const errorInfo = handleApiError(error);
-      return {
-        success: false,
-        error: errorInfo.details || errorInfo.message,
-        message: errorInfo.message
-      };
+      return failure(error, 'Could not change the password.');
     }
   },
 
-  // Forgot password
   forgotPassword: async (email) => {
     try {
-      const res = await publicRequest.post(
-        '/forgot-password/',
-        { email },
-        { headers: { 'Content-Type': 'application/json' } }
-      );
-      // expect backend shape like { success: true, message: "OTP sent" }
-      const data = res?.data ?? {};
-      return {
-        success: Boolean(data.success),
-        message: typeof data.message === 'string' ? data.message : 'OTP sent',
-        raw: data,
-      };
+      requireSupabaseConfig();
+      const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/update-password`,
+      });
+      if (error) throw error;
+      return success(data, 'Password recovery link sent. Check your email.');
     } catch (error) {
-      // keep one code path that always returns a string message
-      const api = handleApiError?.(error);
-      const msg = api?.details || api?.message || toErrorString(error?.response?.data);
-      return { success: false, message: msg };
+      return failure(error, 'Could not send the recovery email.');
     }
   },
-  // Reset password
-  resetPassword: async (resetData) => {
-  try {
-    const email = localStorage.getItem('resetEmail');
-    if (!email) {
-      return {
-        success: false,
-        message: 'Reset email not found in local storage'
-      };
-    }
 
-    const payload = {
-      email,
-      password: resetData.password,
-      confirm_password: resetData.confirm_password
-    };
-
-    const response = await publicRequest.post('/update-password/', payload);
-
-    return {
-      success: true,
-      data: response.data,
-      message: 'Password reset successful'
-    };
-  } catch (error) {
-    console.error('Reset password error:', error);
-    const errorInfo = handleApiError(error);
-    return {
-      success: false,
-      error: errorInfo.details || errorInfo.message,
-      message: errorInfo.message
-    };
-  }
-},
-
-  // Verify email
-  verifyEmail: async (email, otp) => {
-    try {
-      const response = await publicRequest.post('/verify-otp/', { email, otp });
-      return {
-        success: true,
-        data: response.data,
-        message: response.data?.message || 'Email verified successfully'
-      };
-    } catch (error) {
-      console.error('Email verification error:', error);
-      const errorInfo = handleApiError(error);
-      return {
-        success: false,
-        error: errorInfo.details || errorInfo.message,
-        message: errorInfo.message
-      };
-    }
-  }
+  resetPassword: async ({ password, confirm_password: confirmation }) => {
+    if (password !== confirmation) return failure(new Error('Passwords do not match.'), 'Passwords do not match.');
+    return authService.changePassword({ password });
+  },
 };
 
-// Backward compatibility exports
 export const login = authService.login;
-
 export default authService;

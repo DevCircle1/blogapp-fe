@@ -2,4 +2,4 @@ User-agent: *
 Disallow: /admin/
 Disallow: /api/
 
-Sitemap: https://api.talkandtool.com/sitemap.xml
+Sitemap: https://talkandtool.com/sitemap.xml

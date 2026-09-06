@@ -43,9 +43,7 @@ export default function LoginForm() {
     const response = await login(formData);
     if (response.success) {
       toast.success("Login successful");
-      const tokens = response.data.tokens;
-      const userData = response.data.user || null;
-      loginUser(tokens, userData);
+      loginUser(response.data.session);
       navigate("/");
     } else {
       if (response.details) {

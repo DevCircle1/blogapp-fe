@@ -67,10 +67,9 @@ export default function RegisterForm() {
       setLoading(false);
       return;
     }
-    toast.success("Account created successfully. OTP sent to your email");
-    localStorage.setItem("signupEmail", formData.email);
+    toast.success(response.message);
     setFormData({ email: "", password: "", confirm_password: "" });
-    navigate("/verify-otp", { state: { email: formData.email } });
+    navigate("/login");
     setLoading(false);
   };
   const getInputClassName = (field) => {

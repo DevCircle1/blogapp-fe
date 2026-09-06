@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { authService } from "../../../services/auth";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import logo from "../../../assets/logo.png";
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
-  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email) {
@@ -27,14 +26,10 @@ export default function ForgotPassword() {
       const result = await authService.forgotPassword(email);
       if (result.success) {
         toast.success(
-          result.message || "OTP sent to your email. Please check your inbox."
+          result.message || "Password recovery link sent. Please check your inbox."
         );
-        localStorage.setItem("resetEmail", email);
-        navigate("/verify-otp", { state: { email } });
       } else {
-        toast.error(
-          result.message.error || "Failed to send OTP. Please try again."
-        );
+        toast.error(result.message || "Failed to send the recovery link.");
       }
     } catch (error) {
       console.error("Forgot password error:", error);
@@ -71,8 +66,7 @@ export default function ForgotPassword() {
             Forgot your password?
           </h1>
           <p className="font-light text-gray-500 dark:text-gray-400">
-            Don't fret! Just type in your email and we will send you a code to
-            reset your password!
+            Enter your email and we will send you a secure password recovery link.
           </p>
           <form
             className="mt-4 space-y-4 lg:mt-5 md:space-y-5"
@@ -128,7 +122,7 @@ export default function ForgotPassword() {
               disabled={loading}
               className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center shadow-md hover:shadow-lg disabled:opacity-50 transition-all duration-200"
             >
-              {loading ? "Sending OTP..." : "Reset password"}
+              {loading ? "Sending link..." : "Send recovery link"}
             </button>
 
             <p className="text-sm font-light text-gray-500 dark:text-gray-400 text-center">

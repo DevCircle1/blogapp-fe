@@ -5,13 +5,13 @@ const IPAddressChecker = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
-  const [isBot, setIsBot] = useState(false);
+  const isBot = false;
 
   useEffect(() => {
     const fetchIPData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('https://api.talkandtool.com/api/ip-checker/', {
+        const response = await fetch('https://ipapi.co/json/', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -25,11 +25,11 @@ const IPAddressChecker = () => {
         
         const result = await response.json();
         
-        if (!result.success) {
-          throw new Error(result.error || 'Failed to get valid IP data');
-        }
-        
-        setIpData(result.data);
+        setIpData({
+          ...result,
+          country: result.country_name || result.country,
+          connection: { org: result.org || 'Unknown' },
+        });
       } catch (err) {
         setError(err.message);
         console.error('IP fetch error:', err);

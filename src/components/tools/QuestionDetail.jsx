@@ -28,7 +28,7 @@ const QuestionDetail = () => {
       const response = await publicRequest.get(`/questions/${id}/`);
       setQuestion(response.data);
       setAnswers(response.data.answers || []);
-    } catch (error) {
+    } catch {
       toast.error("Question not found");
       navigate("/signup");
     } finally {
@@ -112,7 +112,7 @@ const QuestionDetail = () => {
             <div className="flex items-center space-x-4 text-sm text-gray-500">
               <span className="flex items-center space-x-1">
                 <User className="h-4 w-4" />
-                <span>{question.user_email || "Anonymous"}</span>
+                <span>Anonymous</span>
               </span>
               <span>{new Date(question.created_at).toLocaleDateString()}</span>
             </div>
@@ -127,7 +127,7 @@ const QuestionDetail = () => {
           </h2>
         </div>
         {/* ===== Answers Section ===== */}
-        {user && user.email === question.user_email ? (
+        {user && user.id === question.user_id ? (
           answers.length === 0 ? (
             <div className="text-center py-12">
               <MessageCircle className="h-16 w-16 text-gray-300 mx-auto mb-4" />

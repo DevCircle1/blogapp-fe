@@ -1,20 +1,19 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { publicRequest } from '../../services/api';
-import debounce from 'lodash.debounce';
+import { supabase } from '../../services/supabase';
 
 const CodeShare = () => {
   const [content, setContent] = useState('');
   const [language, setLanguage] = useState('javascript');
   const [shareUrl, setShareUrl] = useState('');
-  const [isEditing, setIsEditing] = useState(true);
   const [currentCodeId, setCurrentCodeId] = useState('');
   const [isConnected, setIsConnected] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const socketRef = useRef(null);
   const textareaRef = useRef(null);
   const editorContainerRef = useRef(null);
+  const lastSyncedRef = useRef({ content: '', language: 'javascript' });
 
   const languages = [
     { value: 'javascript', label: 'JavaScript' },
@@ -26,16 +25,6 @@ const CodeShare = () => {
     { value: 'text', label: 'Plain Text' }
   ];
 
-  // ✅ Debounced WebSocket sender (prevents lag while typing)
-  const sendUpdate = useCallback(
-    debounce((updatedContent, lang) => {
-      if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-        socketRef.current.send(JSON.stringify({ content: updatedContent, language: lang }));
-      }
-    }, 400),
-    []
-  );
-
   useEffect(() => {
     const path = window.location.pathname.split('/').filter(Boolean);
     if (path.length === 2 && path[0] === 'codes') {
@@ -45,14 +34,39 @@ const CodeShare = () => {
   }, []);
 
   useEffect(() => {
-    if (currentCodeId) {
-      connectWebSocket();
-    }
+    if (!currentCodeId) return undefined;
+    const channel = supabase
+      .channel(`code-share-${currentCodeId}`)
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'code_shares', filter: `id=eq.${currentCodeId}` },
+        ({ new: updated }) => {
+          lastSyncedRef.current = { content: updated.content, language: updated.language };
+          setContent(updated.content);
+          setLanguage(updated.language);
+        },
+      )
+      .subscribe((status) => setIsConnected(status === 'SUBSCRIBED'));
+
     return () => {
-      if (socketRef.current) socketRef.current.close();
-      sendUpdate.cancel();
+      setIsConnected(false);
+      supabase.removeChannel(channel);
     };
   }, [currentCodeId]);
+
+  useEffect(() => {
+    if (!currentCodeId) return undefined;
+    if (lastSyncedRef.current.content === content && lastSyncedRef.current.language === language) return undefined;
+    const timer = setTimeout(async () => {
+      try {
+        await publicRequest.put(`/codes/${currentCodeId}/`, { content, language });
+        lastSyncedRef.current = { content, language };
+      } catch (error) {
+        console.error('Supabase code sync failed:', error);
+      }
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [content, language, currentCodeId]);
 
   // Handle fullscreen change events
   useEffect(() => {
@@ -66,52 +80,15 @@ const CodeShare = () => {
     };
   }, []);
 
-  const connectWebSocket = () => {
-    if (socketRef.current) socketRef.current.close();
-
-    const backendUrl = 'api.talkandtool.com';
-    const wsUrl = `wss://${backendUrl}/ws/codes/${currentCodeId}/`;
-    console.log('Connecting to WebSocket:', wsUrl);
-
-    socketRef.current = new WebSocket(wsUrl);
-
-    socketRef.current.onopen = () => {
-      console.log('✅ WebSocket connected');
-      setIsConnected(true);
-    };
-
-    socketRef.current.onmessage = (e) => {
-      const data = JSON.parse(e.data);
-      // Avoid re-render loop
-      setContent((prev) => (prev !== data.content ? data.content : prev));
-      setLanguage((prev) => (prev !== data.language ? data.language : prev));
-    };
-
-    socketRef.current.onclose = (e) => {
-      console.log('🔴 WebSocket disconnected:', e.code);
-      setIsConnected(false);
-      if (e.code !== 1000) {
-        setTimeout(() => {
-          if (currentCodeId) connectWebSocket();
-        }, 2000);
-      }
-    };
-
-    socketRef.current.onerror = (error) => {
-      console.error('WebSocket error:', error);
-      toast.error('WebSocket connection failed');
-    };
-  };
-
   const loadSharedCode = async (codeId) => {
     try {
       const response = await publicRequest.get(`/codes/${codeId}/`);
       const data = response.data;
+      lastSyncedRef.current = { content: data.content, language: data.language };
       setContent(data.content);
       setLanguage(data.language);
       const displayCodeId = data.short_code || data.id;
       setCurrentCodeId(displayCodeId);
-      setIsEditing(false);
       toast.success('Code loaded successfully!');
     } catch (error) {
       console.error('Error loading code:', error);
@@ -154,13 +131,11 @@ const CodeShare = () => {
   const handleContentChange = (e) => {
     const newContent = e.target.value;
     setContent(newContent);
-    sendUpdate(newContent, language);
   };
 
   const handleLanguageChange = (e) => {
     const newLang = e.target.value;
     setLanguage(newLang);
-    sendUpdate(content, newLang);
   };
 
   const handleDownload = () => {
@@ -190,9 +165,7 @@ const CodeShare = () => {
     setLanguage('javascript');
     setShareUrl('');
     setCurrentCodeId('');
-    setIsEditing(true);
     window.history.pushState({}, '', '/');
-    if (socketRef.current) socketRef.current.close();
     toast.info('Create a new code share');
   };
 
@@ -213,8 +186,6 @@ const CodeShare = () => {
       document.exitFullscreen();
     }
   };
-
-  const isShortCode = (codeId) => codeId && codeId.length === 6 && /^[A-Za-z0-9]+$/.test(codeId);
 
   // Calculate line numbers
   const lineNumbers = content.split('\n').map((_, index) => index + 1);

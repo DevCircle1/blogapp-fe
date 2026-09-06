@@ -1,121 +1,73 @@
-import { createContext, useState, useEffect, useContext } from 'react';
-import { privateRequest } from '../services/api'; 
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { supabase } from '../services/supabase';
+
 export const AuthContext = createContext();
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) throw new Error('useAuth must be used within an AuthProvider');
   return context;
 };
+
+const toAppUser = (user) => user ? { id: user.id, email: user.email, ...user.user_metadata } : null;
+
 export default function AuthProvider({ children }) {
+  const [session, setSession] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   useEffect(() => {
-    const initializeAuth = async () => {
-      try {
-        const token = localStorage.getItem('accessToken');
-        const storedUser = localStorage.getItem('userData');
+    let mounted = true;
+    supabase.auth.getSession().then(({ data }) => {
+      if (!mounted) return;
+      setSession(data.session);
+      setUser(toAppUser(data.session?.user));
+      setLoading(false);
+    });
 
-        if (!token) {
-          setIsAuthenticated(false);
-          return;
-        }
-        if (storedUser) {
-          setUser(JSON.parse(storedUser));
-          setIsAuthenticated(true);
-          return;
-        }
-        try {
-          const { data } = await privateRequest.get('/profile/');
-          localStorage.setItem('userData', JSON.stringify(data));
-          setUser(data);
-          setIsAuthenticated(true);
-        } catch (e) {
-          console.error('Error fetching profile on init:', e);
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('refreshToken');
-          localStorage.removeItem('userData');
-          setIsAuthenticated(false);
-        }
-      } catch (error) {
-        console.error('Error initializing auth:', error);
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('userData');
-        setIsAuthenticated(false);
-      } finally {
-        setLoading(false);
-      }
+    const { data } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      if (!mounted) return;
+      setSession(nextSession);
+      setUser(toAppUser(nextSession?.user));
+      setLoading(false);
+    });
+
+    return () => {
+      mounted = false;
+      data.subscription.unsubscribe();
     };
-
-    initializeAuth();
   }, []);
 
-  const loginUser = async (tokens, maybeUserData = null) => {
-    try {
-      // store tokens first
-      localStorage.setItem('accessToken', tokens.access);
-      if (tokens.refresh) {
-        localStorage.setItem('refreshToken', tokens.refresh);
-      }
-      if (maybeUserData) {
-        localStorage.setItem('userData', JSON.stringify(maybeUserData));
-        setUser(maybeUserData);
-        setIsAuthenticated(true);
-        return;
-      }
-      const profileResponse = await privateRequest.get('/profile/');
-      const userData = profileResponse.data;
-      localStorage.setItem('userData', JSON.stringify(userData));
-      setUser(userData);
-      setIsAuthenticated(true);
-    } catch (error) {
-      console.error('Error logging in user:', error);
-      // clean up on failure
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('userData');
-      setUser(null);
-      setIsAuthenticated(false);
-      throw error;
-    }
+  useEffect(() => {
+    if (!session?.user?.id) return;
+    supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', session.user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data) setUser((current) => ({ ...current, ...data }));
+      });
+  }, [session?.user?.id]);
+
+  const loginUser = (nextSession) => {
+    const resolvedSession = nextSession?.session || nextSession;
+    setSession(resolvedSession);
+    setUser(toAppUser(resolvedSession?.user));
   };
+  const logoutUser = async () => supabase.auth.signOut();
+  const updateUser = (userData) => setUser((current) => ({ ...current, ...userData }));
 
-  const logoutUser = () => {
-    try {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('userData');
-      setUser(null);
-      setIsAuthenticated(false);
-      console.log('User logged out successfully');
-    } catch (error) {
-      console.error('Error logging out user:', error);
-    }
-  };
-
-  const updateUser = (userData) => {
-    try {
-      localStorage.setItem('userData', JSON.stringify(userData));
-      setUser(userData);
-    } catch (error) {
-      console.error('Error updating user data:', error);
-    }
-  };
-
-  const getToken = () => localStorage.getItem('accessToken');
-  const getRefreshToken = () => localStorage.getItem('refreshToken');
-
-  const value = {
+  const value = useMemo(() => ({
     user,
+    session,
     loading,
-    isAuthenticated,
+    isAuthenticated: Boolean(session),
     loginUser,
     logoutUser,
     updateUser,
-    getToken,
-    getRefreshToken,
-  };
+    getToken: () => session?.access_token || null,
+    getRefreshToken: () => session?.refresh_token || null,
+  }), [user, session, loading]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

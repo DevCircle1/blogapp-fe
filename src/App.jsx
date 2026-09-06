@@ -5,7 +5,6 @@ import RegisterForm from './components/auth/RegisterForm/RegisterForm.jsx';
 import LoginForm from './components/auth/LoginForm/LoginForm.jsx';
 import ForgetPassword from './components/auth/ForgetPassowrdForm/ForgetPassword.jsx';
 import UpdatePassword from './components/auth/UpdatePasswordForm/UpdatePassword.jsx';
-import VerifyOtp from './components/auth/VerifyOtp/VerifyOtp.jsx';
 import { shouldShowNavbar } from './utils/navbarUtils.js';
 import Footer from './components/common/Footer/Footer.jsx';
 import ToolsPage from './components/tools/ToolsPage.jsx';
@@ -44,7 +43,6 @@ function App() {
         <Route path="/signup" element={<RegisterForm />} />
         <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/update-password" element={<UpdatePassword />} />
-        <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/blogs" element={<BlogCategories />} />
         <Route path="/blogs/category/:categorySlug" element={<CategoryBlogPosts />} />
         <Route path="/blogs/article/:slug" element={<BlogPostDetail />} />

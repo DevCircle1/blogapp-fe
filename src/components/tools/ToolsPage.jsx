@@ -48,7 +48,7 @@ const ToolsPage = () => {
   id: 6,
   title: "CodeShare",
   description:
-    "Collaborate on code in real-time. Share short links, edit together, and download instantly with WebSocket-powered sync.",
+    "Collaborate on code in real-time. Share short links, edit together, and download instantly with Supabase-powered sync.",
   icon: "💻",
   link: "/codes",
   category: "Web Tools",
