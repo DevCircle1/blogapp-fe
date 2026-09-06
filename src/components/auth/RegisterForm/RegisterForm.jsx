@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import logo from "../../../assets/logo.png";
+import Seo from '../../common/Seo.jsx';
 export default function RegisterForm() {
   const [formData, setFormData] = useState({
     email: "",
@@ -82,6 +83,7 @@ export default function RegisterForm() {
   };
   return (
     <section className="bg-gray-50 dark:bg-gray-900 min-h-screen">
+      <Seo title="Create an Account" description="Create a free Talk & Tool account to publish articles and save your work." path="/signup" noindex />
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a
           href="#"

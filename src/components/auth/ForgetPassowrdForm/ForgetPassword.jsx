@@ -4,6 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { authService } from "../../../services/auth";
 import { Link } from "react-router-dom";
 import logo from "../../../assets/logo.png";
+import Seo from '../../common/Seo.jsx';
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -53,6 +54,7 @@ export default function ForgotPassword() {
   };
   return (
     <section className="bg-gray-50 dark:bg-gray-900 min-h-screen">
+      <Seo title="Reset Your Password" description="Request a password reset link for your Talk & Tool account." path="/forget-password" noindex />
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <Link
           to="/"

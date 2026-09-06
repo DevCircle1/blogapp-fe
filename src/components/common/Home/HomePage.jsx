@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Helmet } from "react-helmet-async";
+import Seo from "../Seo.jsx";
+import { websiteSchema, organizationSchema } from "../../../seo/siteMeta.js";
 import {
   FiSearch,
   FiArrowRight,
@@ -62,43 +63,73 @@ export default function HomePage() {
     fetchCategories();
   }, []);
 
+  // Internal paths rather than absolute URLs: these render as real anchors that
+  // crawlers can follow, and navigation stays inside the SPA instead of forcing
+  // a full page reload.
   const popularTools = [
     {
       id: 1,
-      name: "Check Ip Address",
-      description: "Quickly find and display your current public IP address.",
-      category: "Development",
-      icon: "🌐",
-      isNew: true,
-      url: "https://talkandtool.com/check-ip",
+      name: "Word Counter",
+      description: "Count words, characters, sentences, and reading time as you type.",
+      category: "Writing",
+      icon: "✍️",
+      path: "/tools/word-counter",
     },
     {
       id: 2,
-      name: "Screen Resolution",
-      description:
-        "Detect and display your device’s current screen resolution.",
-      category: "Design",
-      icon: "🖥️",
-      isNew: false,
-      url: "https://talkandtool.com/screen-resolution",
+      name: "Percentage Calculator",
+      description: "Percentages, percentage change, and what share one number is of another.",
+      category: "Maths",
+      icon: "📊",
+      path: "/tools/percentage-calculator",
     },
     {
       id: 3,
-      name: "Profit Margin Calculator",
-      description: "Easily calculate profit margin, markup, and cost analysis.",
-      category: "Business",
-      icon: "📊",
-      isNew: true,
-      url: "https://talkandtool.com/profit-margin-calculator",
+      name: "Loan & EMI Calculator",
+      description: "Monthly repayments, total interest, and the real cost of a longer term.",
+      category: "Finance",
+      icon: "💰",
+      path: "/tools/loan-calculator",
     },
     {
       id: 4,
-      name: "Text to Html Converter",
-      description: "Easily convert plain text to formatted HTML code.",
-      category: "Development",
-      icon: "📊",
-      isNew: true,
-      url: "https://talkandtool.com/text-to-html",
+      name: "BMI Calculator",
+      description: "Body mass index in metric or imperial, with the healthy range for your height.",
+      category: "Health",
+      icon: "⚕️",
+      path: "/tools/bmi-calculator",
+    },
+    {
+      id: 5,
+      name: "JSON Formatter",
+      description: "Format, validate, and minify JSON with clear syntax error messages.",
+      category: "Developer",
+      icon: "🧩",
+      path: "/tools/json-studio",
+    },
+    {
+      id: 6,
+      name: "Password Generator",
+      description: "Strong random passwords built with your browser’s cryptographic source.",
+      category: "Security",
+      icon: "🔐",
+      path: "/tools/password-generator",
+    },
+    {
+      id: 7,
+      name: "Unit Converter",
+      description: "Length, weight, temperature, area, volume, speed, time, and data.",
+      category: "Converters",
+      icon: "↔️",
+      path: "/tools/unit-converter",
+    },
+    {
+      id: 8,
+      name: "What Is My IP?",
+      description: "Your public IP address, approximate location, and internet provider.",
+      category: "Network",
+      icon: "🌐",
+      path: "/check-ip",
     },
   ];
 
@@ -144,10 +175,6 @@ export default function HomePage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleToolClick = (toolId) => {
-    toast.info(`Opening tool ${toolId}...`);
-  };
-
   // Helper function to strip HTML tags and get plain text
   const stripHtmlTags = (html) => {
     if (!html) return "No description available...";
@@ -192,93 +219,46 @@ export default function HomePage() {
 
   return (
     <>
-    <Helmet>
-        {/* ===== BASIC SEO ===== */}
-        <title>Talk and Tool - Free Online Tools & Tech Blogs</title>
-        <meta
-          name="description"
-          content="Explore free online tools, coding utilities, and insightful blogs on Talk and Tool. Discover practical guides for developers and creators."
-        />
-        <meta
-          name="keywords"
-          content="free online tools, talkandtool, profit margin calculator, IP checker, coding blog, text to HTML"
-        />
-        <meta name="author" content="Talk and Tool" />
-
-        {/* ===== OPEN GRAPH / SOCIAL SHARE ===== */}
-        <meta property="og:title" content="Talk and Tool - Free Tools & Blogs" />
-        <meta
-          property="og:description"
-          content="Empowering developers and creators with practical tools and tech blogs."
-        />
-        <meta property="og:image" content="https://talkandtool.com/logo.png" />
-        <meta property="og:url" content="https://talkandtool.com/" />
-        <meta property="og:type" content="website" />
-
-        {/* ===== TWITTER CARD ===== */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Talk and Tool" />
-        <meta
-          name="twitter:description"
-          content="Free online tools and technology blogs for creators and developers."
-        />
-        <meta name="twitter:image" content="https://talkandtool.com/logo.png" />
-
-        {/* ===== CANONICAL URL ===== */}
-        <link rel="canonical" href="https://talkandtool.com/" />
-
-        {/* ===== PREFETCH / PRELOAD ===== */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link
-          rel="preload"
-          as="image"
-          href="https://talkandtool.com/assets/hero-banner.webp"
-        />
-        <link rel="prefetch" href="/blogs" />
-
-        {/* ===== STRUCTURED DATA ===== */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebSite",
-            "name": "Talk and Tool",
-            "url": "https://talkandtool.com",
-            "potentialAction": {
-              "@type": "SearchAction",
-              "target": "https://talkandtool.com/search?q={search_term_string}",
-              "query-input": "required name=search_term_string"
-            }
-          })}
-        </script>
-      </Helmet>
+    <Seo
+        title="Talk & Tool — 70+ Free Online Tools, Calculators & Guides"
+        description="Free online calculators, unit converters, text utilities, and developer tools that run entirely in your browser, plus practical guides. No sign-up, no downloads."
+        path="/"
+        schemas={[websiteSchema, organizationSchema]}
+      >
+        {/* The ad script is render-blocking on first paint; warming the
+            connection early shaves the TLS handshake off that critical path. */}
+        <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
+        <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
+      </Seo>
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">
+          {/* The h1 leads with what the page is for rather than the brand name.
+              "Talk and Tool" ranks for nothing; "free online tools" is the term
+              people actually search. */}
+          <h1 className="text-4xl md:text-6xl font-bold mb-6">
             <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-              Talk and Tool
+              Free online tools and calculators
             </span>
           </h1>
           <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Discover insightful blogs and powerful tools for developers,
-            designers, and tech enthusiasts. Your ultimate resource for staying
-            ahead in the tech world.
+            Over 70 calculators, converters, text utilities, and developer tools that run entirely
+            in your browser. No sign-up, no downloads, and nothing you type is uploaded.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
-              to="/blogs"
+              to="/tools"
               className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center space-x-2"
             >
-              <span>Explore Blogs</span>
-              <FiArrowRight className="ml-2" />
+              <FiCode className="mr-2" />
+              <span>Browse all tools</span>
             </Link>
             <Link
-              to="/tools"
+              to="/blogs"
               className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-full font-semibold hover:border-blue-500 hover:text-blue-600 transition-all duration-300 transform hover:scale-105 flex items-center space-x-2"
             >
-              <FiCode className="mr-2" />
-              <span>Discover Tools</span>
+              <span>Read the blog</span>
+              <FiArrowRight className="ml-2" />
             </Link>
           </div>
         </div>
@@ -450,35 +430,32 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {popularTools.map((tool) => (
-              <div
+              <Link
                 key={tool.id}
-                onClick={() => (window.location.href = tool.url)}
-                className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 p-6 cursor-pointer group"
+                to={tool.path}
+                className="block bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 p-6 group"
               >
-                <div className="flex items-center justify-between mb-4">
-                  <div className="text-3xl">{tool.icon}</div>
-                  {tool.isNew && (
-                    <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
-                      NEW
-                    </span>
-                  )}
-                </div>
+                <div className="text-3xl mb-4">{tool.icon}</div>
 
                 <h3 className="text-lg font-bold mb-2 group-hover:text-blue-600 transition-colors">
                   {tool.name}
                 </h3>
                 <p className="text-gray-600 text-sm mb-4">{tool.description}</p>
 
-                <div className="flex items-center justify-between">
-                  <span className="text-yellow-500 font-semibold">
-                    ⭐ {tool.rating}
-                  </span>
-                  <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                    {tool.category}
-                  </span>
-                </div>
-              </div>
+                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                  {tool.category}
+                </span>
+              </Link>
             ))}
+          </div>
+
+          <div className="text-center mt-10">
+            <Link
+              to="/tools"
+              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+            >
+              Browse all 70+ free tools
+            </Link>
           </div>
         </div>
       </section>

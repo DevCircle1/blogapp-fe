@@ -1,21 +1,57 @@
-export const SITE_URL = 'https://talkandtool.com';
+import { financeTools } from './data/finance.js';
+import { calculatorTools } from './data/calculators.js';
+import { datetimeTools } from './data/datetime.js';
+import { healthTools } from './data/health.js';
+import { textTools } from './data/text.js';
+import { developerTools } from './data/developer.js';
+import { SITE_URL } from '../../seo/siteMeta.js';
 
+export { SITE_URL };
+
+/**
+ * Every entry here becomes an indexable page at /tools/<slug>.
+ * Slugs are permanent: renaming one breaks an indexed URL, so add a redirect
+ * in netlify.toml instead of editing a slug in place.
+ */
 export const premiumTools = [
-  { slug: 'json-studio', title: 'JSON Formatter & Validator', shortTitle: 'JSON Formatter', description: 'Format, validate, and minify JSON online with clear syntax error messages. Your data is processed privately in your browser.', icon: '{}', category: 'Developer', tags: ['json', 'formatter', 'validator', 'beautifier'] },
-  { slug: 'password-generator', title: 'Strong Password Generator', shortTitle: 'Password Generator', description: 'Generate secure random passwords with custom length, numbers, symbols, and letter options using your browser’s cryptographic generator.', icon: 'PW', category: 'Security', tags: ['password', 'security', 'random', 'generator'] },
-  { slug: 'unit-converter', title: 'Free Online Unit Converter', shortTitle: 'Unit Converter', description: 'Convert length, weight, and digital storage units instantly with an accurate, easy-to-use online unit converter.', icon: '↔', category: 'Calculator', tags: ['unit', 'measurement', 'length', 'weight', 'convert'] },
-  { slug: 'base64-tool', title: 'Base64 Encoder & Decoder', shortTitle: 'Base64 Tool', description: 'Encode text to Base64 or decode Base64 to readable Unicode text instantly and privately in your browser.', icon: '64', category: 'Developer', tags: ['base64', 'encode', 'decode', 'text'] },
-  { slug: 'jwt-inspector', title: 'JWT Decoder & Inspector', shortTitle: 'JWT Decoder', description: 'Decode JWT headers and payload claims locally to inspect token contents and expiration without uploading your token.', icon: 'JWT', category: 'Security', tags: ['jwt', 'token', 'decoder', 'claims'] },
-  { slug: 'timestamp-converter', title: 'Unix Timestamp Converter', shortTitle: 'Timestamp Converter', description: 'Convert Unix timestamps in seconds or milliseconds to local time, UTC, and ISO 8601 dates instantly.', icon: 'UTC', category: 'Developer', tags: ['unix', 'epoch', 'date', 'time'] },
-  { slug: 'case-converter', title: 'Free Text Case Converter', shortTitle: 'Case Converter', description: 'Convert text to uppercase, lowercase, title case, camelCase, snake_case, or kebab-case instantly.', icon: 'Aa', category: 'Text', tags: ['case', 'text', 'camel', 'uppercase', 'lowercase'] },
-  { slug: 'uuid-generator', title: 'Online UUID v4 Generator', shortTitle: 'UUID Generator', description: 'Generate one or many secure RFC 4122 version 4 UUIDs and GUIDs locally in your browser.', icon: '#', category: 'Developer', tags: ['uuid', 'guid', 'v4', 'generator'] },
-  { slug: 'regex-tester', title: 'Online JavaScript Regex Tester', shortTitle: 'Regex Tester', description: 'Test JavaScript regular expressions online and see live matches, positions, flags, and pattern errors.', icon: '.*', category: 'Developer', tags: ['regex', 'regexp', 'javascript', 'pattern'] },
-  { slug: 'word-counter', title: 'Free Word & Character Counter', shortTitle: 'Word Counter', description: 'Count words, characters, sentences, paragraphs, and estimated reading time instantly as you type.', icon: '123', category: 'Text', tags: ['word', 'character', 'sentence', 'reading time', 'counter'] },
-  { slug: 'percentage-calculator', title: 'Free Percentage Calculator', shortTitle: 'Percentage Calculator', description: 'Calculate a percentage of a number, percentage change, increases, and decreases with clear formulas.', icon: '%', category: 'Calculator', tags: ['percentage', 'percent', 'increase', 'decrease', 'math'] },
-  { slug: 'age-calculator', title: 'Exact Age Calculator', shortTitle: 'Age Calculator', description: 'Calculate exact age from a date of birth in years, months, and days, plus total days lived.', icon: 'DOB', category: 'Calculator', tags: ['age', 'birthday', 'date of birth', 'years', 'days'] },
-  { slug: 'loan-calculator', title: 'Loan Payment & EMI Calculator', shortTitle: 'Loan Calculator', description: 'Estimate monthly loan payments, total interest, and total repayment from the loan amount, rate, and term.', icon: '$', category: 'Finance', tags: ['loan', 'emi', 'payment', 'interest', 'finance'] },
-  { slug: 'bmi-calculator', title: 'BMI Calculator for Adults', shortTitle: 'BMI Calculator', description: 'Calculate adult body mass index from metric or US measurements and understand the standard BMI category.', icon: 'BMI', category: 'Health', tags: ['bmi', 'body mass index', 'weight', 'height', 'health'] },
-  { slug: 'url-encoder', title: 'URL Encoder & Decoder', shortTitle: 'URL Encoder', description: 'Encode text for a URL or decode percent-encoded URL components safely and instantly in your browser.', icon: '%2F', category: 'Developer', tags: ['url', 'percent encoding', 'encode', 'decode', 'uri'] },
+  ...developerTools,
+  ...calculatorTools,
+  ...financeTools,
+  ...textTools,
+  ...datetimeTools,
+  ...healthTools,
 ];
 
-export const getToolBySlug = (slug) => premiumTools.find((tool) => tool.slug === slug);
+export const toolCategories = [...new Set(premiumTools.map((tool) => tool.category))].sort();
+
+const bySlug = new Map(premiumTools.map((tool) => [tool.slug, tool]));
+
+export const getToolBySlug = (slug) => bySlug.get(slug);
+
+/** Related tools power internal linking, which is how deep tool pages get crawled. */
+export const getRelatedTools = (slug, limit = 4) => {
+  const tool = bySlug.get(slug);
+  if (!tool) return [];
+  const sameCategory = premiumTools.filter((item) => item.slug !== slug && item.category === tool.category);
+  const sharedTag = premiumTools.filter((item) => (
+    item.slug !== slug
+    && item.category !== tool.category
+    && item.tags.some((tag) => tool.tags.includes(tag))
+  ));
+  return [...sameCategory, ...sharedTag].slice(0, limit);
+};
+
+/** Standalone pages that live outside /tools/<slug> but belong in the directory and sitemap. */
+export const standaloneTools = [
+  { slug: 'check-ip', title: 'IP Address Checker', shortTitle: 'IP Address Checker', link: '/check-ip', description: 'See your public IP address, approximate location, and network details.', icon: 'IP', category: 'Developer', tags: ['ip address', 'network', 'location'] },
+  { slug: 'screen-resolution', title: 'Screen Resolution Checker', shortTitle: 'Screen Resolution', link: '/screen-resolution', description: 'Check your screen resolution, viewport size, pixel ratio, and colour depth.', icon: 'RES', category: 'Developer', tags: ['screen resolution', 'viewport', 'display'] },
+  { slug: 'text-to-html', title: 'Rich Text to HTML Editor', shortTitle: 'Rich Text to HTML', link: '/text-to-html', description: 'Write formatted content in a visual editor and export clean HTML markup.', icon: 'RTE', category: 'Text', tags: ['rich text', 'html', 'editor', 'wysiwyg'] },
+  { slug: 'word-game', title: 'Daily Word Game', shortTitle: 'Word Game', link: '/word-game', description: 'Guess the five-letter word of the day in six tries.', icon: 'WRD', category: 'Games', tags: ['word game', 'puzzle', 'daily'] },
+  { slug: 'codes', title: 'CodeShare', shortTitle: 'CodeShare', link: '/codes', description: 'Share and collaborate on code snippets in real time.', icon: '</>', category: 'Developer', tags: ['code', 'share', 'snippet'] },
+];
+
+/** Single list used by the /tools directory page and the sitemap generator. */
+export const allToolLinks = [
+  ...premiumTools.map((tool) => ({ ...tool, link: `/tools/${tool.slug}`, premium: true })),
+  ...standaloneTools,
+];

@@ -62,12 +62,12 @@ export default function Navbar() {
                 </DisclosureButton>
                 {/* Mobile Logo */}
                 <div className="ml-4 flex items-center">
-                  <img alt="Dev Circle" src={logo} className="h-10 w-auto sm:h-10" />
+                  <img alt="Talk & Tool" src={logo} className="h-10 w-auto sm:h-10" />
                 </div>
               </div>
               {/* Desktop Logo */}
               <div className="hidden sm:flex flex-shrink-0 items-center sm:absolute sm:left-0">
-                <img alt="Dev Circle" src={logo} className="h-8 w-auto sm:h-24" />
+                <img alt="Talk & Tool" src={logo} className="h-8 w-auto sm:h-24" />
               </div>
               {/* Center Navigation */}
               <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-center flex-wrap">

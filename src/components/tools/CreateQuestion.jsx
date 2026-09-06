@@ -4,6 +4,7 @@ import { ArrowLeft, Send } from "lucide-react";
 import { privateRequest, publicRequest } from "../../services/api";
 import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthContext"; 
+import Seo from '../common/Seo.jsx';
 const CreateQuestion = () => {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
@@ -45,6 +46,7 @@ const CreateQuestion = () => {
 
   return (
     <div className="max-w-2xl mx-auto p-4">
+      <Seo title="Ask a Question" description="Post a question to the community." path="/create" noindex />
       {/* Header */}
       <div className="flex items-center space-x-4 mb-8">
         <button

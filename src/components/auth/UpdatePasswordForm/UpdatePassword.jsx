@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import authService from '../../../services/auth';
 import logo from '../../../assets/logo.png';
+import Seo from '../../common/Seo.jsx';
 export default function UpdatePassword() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -35,6 +36,7 @@ export default function UpdatePassword() {
 
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
+      <Seo title="Set a New Password" description="Choose a new password for your Talk & Tool account." path="/update-password" noindex />
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
           <img className="w-24 h-24" src={logo} alt="logo" />

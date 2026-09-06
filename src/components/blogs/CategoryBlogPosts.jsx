@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { publicRequest } from '../../services/api';
 import { Link, useParams, useLocation } from 'react-router-dom';
+import Seo from '../common/Seo.jsx';
+import { SITE_URL, SITE_NAME, breadcrumbSchema } from '../../seo/siteMeta.js';
 
 const CategoryBlogPosts = () => {
   const [posts, setPosts] = useState([]);
@@ -66,8 +68,41 @@ const CategoryBlogPosts = () => {
     );
   }
 
+  const displayName = category?.name || categoryName || 'Category';
+  const path = `/blogs/category/${categorySlug}`;
+
   return (
     <div className="min-h-screen bg-gray-50">
+      <Seo
+        title={`${displayName} Articles`}
+        description={category?.description
+          || `Read ${posts.length} article${posts.length === 1 ? '' : 's'} about ${displayName.toLowerCase()} on ${SITE_NAME}. Practical guides, tutorials, and how-tos.`}
+        path={path}
+        noindex={posts.length === 0}
+        schemas={[
+          breadcrumbSchema([
+            { name: 'Home', path: '/' },
+            { name: 'Blog', path: '/blogs' },
+            { name: displayName, path },
+          ]),
+          posts.length > 0 && {
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: `${displayName} articles`,
+            url: `${SITE_URL}${path}`,
+            mainEntity: {
+              '@type': 'ItemList',
+              numberOfItems: posts.length,
+              itemListElement: posts.map((post, index) => ({
+                '@type': 'ListItem',
+                position: index + 1,
+                name: post.title,
+                url: `${SITE_URL}/blogs/article/${post.slug}`,
+              })),
+            },
+          },
+        ]}
+      />
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="container mx-auto px-4 py-8">

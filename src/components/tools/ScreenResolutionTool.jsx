@@ -1,85 +1,137 @@
 import React, { useState, useEffect } from 'react';
-import { Helmet } from 'react-helmet-async';
+import { StandaloneToolSeo, ToolContentSections } from './StandaloneToolSeo.jsx';
+
+const FAQS = [
+  { q: 'What is the difference between screen resolution and viewport size?', a: 'Screen resolution is the full pixel size of your display. The viewport is the part of the browser actually showing the page, which is smaller because the address bar, bookmarks bar, scrollbars, and any open developer tools all take space. CSS media queries respond to the viewport, not the screen.' },
+  { q: 'Why does my 4K monitor report a smaller resolution?', a: 'Because of device pixel ratio. Operating systems scale the interface on high-density displays, so a 3840-pixel-wide screen at 200% scaling reports 1920 CSS pixels. The pixel ratio figure above shows the multiplier being applied.' },
+  { q: 'What screen sizes should I design for?', a: 'Test the common breakpoints rather than specific devices: around 360–430 px for phones, 768 px for tablets, 1280–1440 px for laptops, and 1920 px for desktop monitors. Resize this page to check how a layout behaves between them.' },
+  { q: 'What is colour depth?', a: 'The number of bits used per pixel to store colour. 24-bit gives roughly 16.7 million colours and is the standard on virtually every modern display; 30-bit and above appears on HDR and professional monitors.' },
+  { q: 'Does this tool send my screen information anywhere?', a: 'No. The values are read from your own browser with JavaScript and displayed on the page. Nothing is transmitted or stored.' },
+];
 
 const ScreenResolutionTool = () => {
-  const [resolution, setResolution] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight
-  });
+  const [info, setInfo] = useState(null);
   const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
-    const handleResize = () => {
-      setResolution({
-        width: window.innerWidth,
-        height: window.innerHeight
-      });
+    const read = () => setInfo({
+      viewportWidth: window.innerWidth,
+      viewportHeight: window.innerHeight,
+      screenWidth: window.screen.width,
+      screenHeight: window.screen.height,
+      availWidth: window.screen.availWidth,
+      availHeight: window.screen.availHeight,
+      pixelRatio: window.devicePixelRatio || 1,
+      colorDepth: window.screen.colorDepth,
+      orientation: window.innerWidth >= window.innerHeight ? 'Landscape' : 'Portrait',
+    });
+    read();
+    window.addEventListener('resize', read);
+    window.addEventListener('orientationchange', read);
+    return () => {
+      window.removeEventListener('resize', read);
+      window.removeEventListener('orientationchange', read);
     };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(`${resolution.width} × ${resolution.height}`);
-    setIsCopied(true);
-    setTimeout(() => setIsCopied(false), 2000);
+  const copy = async () => {
+    if (!info) return;
+    try {
+      await navigator.clipboard.writeText(`Viewport: ${info.viewportWidth}x${info.viewportHeight}, Screen: ${info.screenWidth}x${info.screenHeight}, DPR: ${info.pixelRatio}`);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 1800);
+    } catch { /* clipboard unavailable */ }
   };
 
+  const breakpoint = !info ? '' : info.viewportWidth < 640 ? 'Mobile (below sm)'
+    : info.viewportWidth < 768 ? 'Small (sm)'
+      : info.viewportWidth < 1024 ? 'Tablet (md)'
+        : info.viewportWidth < 1280 ? 'Laptop (lg)'
+          : info.viewportWidth < 1536 ? 'Desktop (xl)' : 'Large desktop (2xl)';
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <Helmet><title>What Is My Screen Resolution? | Talk & Tool</title><meta name="description" content="Check your current browser viewport width and height in pixels instantly with this free screen resolution tool." /><link rel="canonical" href="https://talkandtool.com/screen-resolution" /><meta property="og:title" content="What Is My Screen Resolution?" /><meta property="og:url" content="https://talkandtool.com/screen-resolution" /></Helmet>
-      <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 max-w-md w-full">
-        <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Screen Resolution Tool</h1>
-          <p className="text-gray-600 mt-2">Real-time display of your current screen resolution</p>
-        </div>
-        
-        <div className="bg-gray-50 rounded-xl p-6 mb-6">
-          <div className="text-center">
-            <div className="text-4xl font-bold text-gray-800 mb-2">
-              {resolution.width} <span className="text-gray-400">×</span> {resolution.height}
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12">
+      <StandaloneToolSeo
+        title="What Is My Screen Resolution? Free Screen Size Checker"
+        description="Check your screen resolution, browser viewport size, device pixel ratio, colour depth, and current CSS breakpoint instantly. Free and updates live as you resize."
+        path="/screen-resolution"
+        category="Screen Resolution Checker"
+        intro="Instantly see your display resolution, browser viewport size, and pixel ratio."
+        steps={[
+          'The values below are read from your browser as soon as the page loads.',
+          'Resize the window and watch the viewport figures update live.',
+          'Compare viewport width against screen width to see how much space the browser chrome takes.',
+          'Copy the full summary in one click when reporting a bug or a layout issue.',
+        ]}
+        faqs={FAQS}
+      />
+
+      <div className="mx-auto max-w-2xl px-4">
+        <div className="rounded-2xl bg-white p-6 shadow-xl md:p-8">
+          <div className="mb-6 text-center">
+            <h1 className="text-2xl font-bold text-gray-800">What is my screen resolution?</h1>
+            <p className="mt-2 text-gray-600">Live viewport, display, and pixel ratio information from your browser</p>
+          </div>
+
+          <div className="mb-6 rounded-xl bg-gray-50 p-6 text-center">
+            <p className="text-sm font-medium uppercase tracking-wider text-gray-500">Browser viewport</p>
+            <div className="mt-2 text-4xl font-bold text-gray-800">
+              {info ? <>{info.viewportWidth} <span className="text-gray-400">×</span> {info.viewportHeight}</> : '—'}
             </div>
             <p className="text-gray-600">pixels</p>
           </div>
-        </div>
 
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="bg-blue-50 rounded-lg p-4 text-center">
-            <div className="text-blue-600 font-semibold">Width</div>
-            <div className="text-lg font-medium">{resolution.width}px</div>
-          </div>
-          <div className="bg-purple-50 rounded-lg p-4 text-center">
-            <div className="text-purple-600 font-semibold">Height</div>
-            <div className="text-lg font-medium">{resolution.height}px</div>
-          </div>
-        </div>
+          <dl className="grid grid-cols-2 gap-4">
+            {[
+              ['Screen width', info && `${info.screenWidth}px`, 'bg-blue-50 text-blue-600'],
+              ['Screen height', info && `${info.screenHeight}px`, 'bg-purple-50 text-purple-600'],
+              ['Available width', info && `${info.availWidth}px`, 'bg-emerald-50 text-emerald-600'],
+              ['Available height', info && `${info.availHeight}px`, 'bg-amber-50 text-amber-600'],
+              ['Device pixel ratio', info && `${info.pixelRatio}×`, 'bg-cyan-50 text-cyan-600'],
+              ['Colour depth', info && `${info.colorDepth}-bit`, 'bg-rose-50 text-rose-600'],
+              ['Orientation', info && info.orientation, 'bg-indigo-50 text-indigo-600'],
+              ['CSS breakpoint', breakpoint, 'bg-slate-100 text-slate-700'],
+            ].map(([label, value, tone]) => (
+              <div key={label} className={`rounded-lg p-4 text-center ${tone.split(' ')[0]}`}>
+                <dt className={`text-sm font-semibold ${tone.split(' ')[1]}`}>{label}</dt>
+                <dd className="mt-1 text-lg font-medium text-gray-800">{value || '—'}</dd>
+              </div>
+            ))}
+          </dl>
 
-        <button
-          onClick={copyToClipboard}
-          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center"
-        >
-          {isCopied ? (
-            <>
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              Copied!
-            </>
-          ) : (
-            <>
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-              </svg>
-              Copy Resolution
-            </>
-          )}
-        </button>
+          <button
+            type="button"
+            onClick={copy}
+            className="mt-6 w-full rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white transition hover:bg-blue-700"
+          >
+            {isCopied ? 'Copied to clipboard' : 'Copy all values'}
+          </button>
 
-        <div className="mt-6 text-center text-sm text-gray-500">
-          <p>Resize your browser window to see changes in real-time</p>
+          <p className="mt-6 text-center text-sm text-gray-500">Resize your browser window to see the viewport figures change in real time.</p>
         </div>
       </div>
+
+      <ToolContentSections
+        light
+        heading="About this screen resolution checker"
+        intro="Your display has a fixed resolution, but the number that actually matters for web design is the viewport — the area inside the browser where the page is drawn. Those two figures are rarely the same, and on a high-density screen neither matches the physical pixel count, because the operating system scales the interface."
+        extraParagraphs={[
+          'This checker reports all of them side by side: viewport size, full screen resolution, the space available after the taskbar or dock, device pixel ratio, colour depth, and which CSS breakpoint your current width falls into. It is the fastest way to answer "what size is this screen" when filing a bug report or checking a responsive layout.',
+        ]}
+        steps={[
+          'Read your live viewport size at the top of the page.',
+          'Compare it with the full screen resolution to see how much space browser chrome takes.',
+          'Check the device pixel ratio if images look soft on a high-density display.',
+          'Resize the window to watch the CSS breakpoint change as the layout would.',
+        ]}
+        faqs={FAQS}
+        related={[
+          { to: '/check-ip', label: 'IP Address Checker', description: 'See your public IP address and network details.' },
+          { to: '/tools/color-converter', label: 'Colour Converter', description: 'Convert between HEX, RGB, and HSL with contrast checks.' },
+          { to: '/tools/css-gradient-generator', label: 'CSS Gradient Generator', description: 'Build linear and radial gradients visually.' },
+          { to: '/tools/user-agent-parser', label: 'User Agent Parser', description: 'Identify the browser, engine, and device from a user agent string.' },
+        ]}
+      />
     </div>
   );
 };

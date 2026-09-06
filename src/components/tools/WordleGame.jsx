@@ -7,6 +7,7 @@ import { Share2, Copy, Home, RotateCcw, Settings } from "lucide-react";
 import { publicRequest } from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
 import { getPlayerId } from "../../utils/playerId";
+import Seo from '../common/Seo.jsx';
 const WordleGame = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -336,6 +337,20 @@ const WordleGame = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4">
+      <Seo
+        title="Daily Word Game — Guess the 5-Letter Word"
+        description="Play the free daily word game. Guess the five-letter word of the day in six tries, with colour hints after every guess. New word every day, no sign-up."
+        path="/word-game"
+        schemas={[{
+          '@context': 'https://schema.org',
+          '@type': 'Game',
+          name: 'Daily Word Game',
+          url: 'https://talkandtool.com/word-game',
+          description: 'Guess the five-letter word of the day in six attempts.',
+          gamePlatform: 'Web browser',
+          numberOfPlayers: { '@type': 'QuantitativeValue', value: 1 },
+        }]}
+      />
       {/* Header */}
       <div className="max-w-2xl mx-auto">
         <div className="flex justify-between items-center mb-8">

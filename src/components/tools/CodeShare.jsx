@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { publicRequest } from '../../services/api';
 import { supabase } from '../../services/supabase';
+import Seo from '../common/Seo.jsx';
 
 const CodeShare = () => {
   const [content, setContent] = useState('');
@@ -196,6 +197,7 @@ const CodeShare = () => {
       isFullscreen ? 'fixed inset-0 z-50 bg-white' : ''
     }`}
   >
+      <Seo title="CodeShare" description="Share and collaborate on code snippets in real time." path="/codes" noindex />
     <div className={`${isFullscreen ? 'h-full' : 'max-w-6xl mx-auto'}`}>
       {/* Header */}
       {!isFullscreen && (

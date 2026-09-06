@@ -5,6 +5,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../context/AuthContext';
 import { publicRequest, privateRequest } from '../../services/api';
+import Seo from '../common/Seo.jsx';
 
 const WriteBlog = ({ onPostCreated }) => {
   const { user } = useAuth();
@@ -114,6 +115,7 @@ const WriteBlog = ({ onPostCreated }) => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <Seo title="Write an Article" description="Write and submit an article for publication on Talk & Tool." path="/write-blogs" noindex />
       <ToastContainer position="top-right" autoClose={3000} />
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">

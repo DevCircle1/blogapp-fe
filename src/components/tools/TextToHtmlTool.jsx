@@ -1,7 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { Helmet } from "react-helmet-async";
+import { StandaloneToolSeo, ToolContentSections } from "./StandaloneToolSeo.jsx";
+const TEXT_HTML_FAQS = [
+  { q: 'What does a WYSIWYG editor actually produce?', a: 'HTML. Every formatting action in the toolbar maps to a tag: bold becomes <strong>, a bullet list becomes <ul> and <li>, a heading becomes <h2>. The editor hides the markup while you write and hands it back when you are done.' },
+  { q: 'Is the exported HTML clean?', a: 'It uses semantic tags rather than inline style attributes wherever possible, so your own stylesheet controls the appearance. Pasting from Word or Google Docs can still drag in extra markup — paste as plain text first if you want a clean start.' },
+  { q: 'Can I paste content from Word or Google Docs?', a: 'Yes, but paste as plain text with Ctrl+Shift+V and reformat here. A direct paste carries a large amount of proprietary styling that bloats the HTML and often overrides your site design.' },
+  { q: 'Where can I use the generated HTML?', a: 'Anywhere HTML is accepted: a CMS raw-HTML block, a WordPress custom HTML block, an email template, a static site, or a React component using dangerouslySetInnerHTML — though for user-supplied content you should sanitise it server-side first.' },
+  { q: 'Is my content uploaded anywhere?', a: 'No. The editor runs entirely in your browser and nothing you type is transmitted to a server.' },
+];
+
 const TextToHtmlTool = () => {
   const [inputText, setInputText] = useState('');
   const [htmlOutput, setHtmlOutput] = useState('');
@@ -118,14 +126,20 @@ const TextToHtmlTool = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Text to HTML Converter | Talk & Tool</title>
-        <meta name="description" content="Convert plain text into clean HTML using our free Text to HTML tool." />
-        <link rel="canonical" href="https://talkandtool.com/text-to-html" />
-        <meta property="og:title" content="Free Text to HTML Converter" />
-        <meta property="og:description" content="Write formatted content and convert it to clean HTML online." />
-        <meta property="og:url" content="https://talkandtool.com/text-to-html" />
-      </Helmet>
+      <StandaloneToolSeo
+        title="Rich Text to HTML Converter — Free WYSIWYG Editor"
+        description="Write formatted content in a visual editor and export clean, valid HTML instantly. Headings, lists, links, and styling with no markup knowledge required."
+        path="/text-to-html"
+        category="Rich Text to HTML Converter"
+        intro="Compose content visually and get the HTML markup out the other side."
+        steps={[
+          'Type or paste your content into the visual editor.',
+          'Format it with the toolbar — headings, bold, lists, and links.',
+          'Watch the HTML panel update as you edit.',
+          'Copy the generated markup into your CMS, email template, or page.',
+        ]}
+        faqs={TEXT_HTML_FAQS}
+      />
     <div className={`min-h-screen transition-colors duration-300 ${
       theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gradient-to-br from-blue-50 to-indigo-100 text-gray-800'
     }`}>
@@ -362,6 +376,28 @@ const TextToHtmlTool = () => {
         `}</style>
       </div>
     </div>
+      <ToolContentSections
+        light={theme !== 'dark'}
+        heading="About this rich text to HTML converter"
+        intro="Most people who need HTML do not want to write HTML. They want a heading that looks like a heading, a bulleted list, a couple of links, and markup they can paste into a CMS without it breaking the page. That is exactly what this editor does: you format visually, and it produces the corresponding semantic markup."
+        extraParagraphs={[
+          'The output favours structural tags over inline styles, which matters more than it sounds. Markup built from <h2>, <p>, <ul> and <strong> inherits your site design and is readable by screen readers and search engines; markup built from styled <div> and <span> elements looks right in one place and wrong everywhere else.',
+          'Everything runs locally in your browser. Drafts, client copy, and unpublished content never leave your device.',
+        ]}
+        steps={[
+          'Write or paste your content into the editor.',
+          'Format it with the toolbar controls.',
+          'Review the live HTML output panel.',
+          'Copy the markup into your site, CMS, or email template.',
+        ]}
+        faqs={TEXT_HTML_FAQS}
+        related={[
+          { to: '/tools/markdown-to-html', label: 'Markdown to HTML', description: 'Convert Markdown into clean HTML with a live preview.' },
+          { to: '/tools/html-encoder', label: 'HTML Entity Encoder', description: 'Escape characters that would otherwise break your markup.' },
+          { to: '/tools/word-counter', label: 'Word Counter', description: 'Count words, characters, and reading time as you write.' },
+          { to: '/tools/meta-tag-generator', label: 'Meta Tag Generator', description: 'Generate title, description, and Open Graph tags.' },
+        ]}
+      />
     </>
   );
 };

@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { publicRequest } from '../../../services/api'; 
-import { Helmet } from "react-helmet-async";
+import Seo from "../Seo.jsx";
+import { breadcrumbSchema } from "../../../seo/siteMeta.js";
 const ContactUs = () => {
   const [contactForm, setContactForm] = useState({
     name: '',
@@ -63,10 +64,15 @@ const ContactUs = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Contact Us | Talk & Tool</title>
-        <meta name="description" content="Get in touch with Talk & Tool for support, feedback, or inquiries." />
-      </Helmet>
+      <Seo
+        title="Contact Us"
+        description="Get in touch with Talk & Tool for support, feedback, tool suggestions, or business enquiries. We read every message."
+        path="/contact-us"
+        schemas={[
+          breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Contact Us', path: '/contact-us' }]),
+          { '@context': 'https://schema.org', '@type': 'ContactPage', name: 'Contact Talk & Tool', url: 'https://talkandtool.com/contact-us' },
+        ]}
+      />
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
       <ToastContainer 
         position="top-right"

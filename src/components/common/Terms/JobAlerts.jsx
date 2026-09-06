@@ -3,6 +3,7 @@ import { useAuth } from "../../../context/AuthContext";
 import { publicRequest } from '../../../services/api';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Seo from '../Seo.jsx';
 
 // Icons
 const BellIcon = () => (
@@ -135,6 +136,7 @@ const JobAlerts = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4 sm:px-6 lg:px-8">
+      <Seo title={"Job Alerts"} description={"Browse the latest job alerts and openings shared on Talk & Tool."} path={"/job-alert"} />
       <ToastContainer position="top-right" autoClose={3000} />
       
       {/* Message Modal */}

@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { publicRequest } from '../../services/api';
 import { Link } from 'react-router-dom';
+import Seo from '../common/Seo.jsx';
+import { SITE_NAME, breadcrumbSchema } from '../../seo/siteMeta.js';
 
 const BlogCategories = () => {
   const [categories, setCategories] = useState([]);
@@ -42,10 +44,16 @@ const BlogCategories = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 py-12">
+      <Seo
+        title="Blog — Guides, Tutorials and Practical How-Tos"
+        description={`Browse articles and guides from ${SITE_NAME}, organised by topic. Practical tutorials on tools, calculations, development, and productivity.`}
+        path="/blogs"
+        schemas={[breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Blog', path: '/blogs' }])]}
+      />
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">Blog Categories</h1>
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">Blog categories</h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
             Explore our collection of articles organized by topics
           </p>

@@ -11,6 +11,7 @@ import {
 import { publicRequest } from "../../services/api";
 import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthContext";
+import Seo from '../common/Seo.jsx';
 const QuestionDetail = () => {
   const { id } = useParams();
   const [question, setQuestion] = useState(null);
@@ -83,6 +84,7 @@ const QuestionDetail = () => {
   if (!question) return null;
   return (
     <div className="max-w-4xl mx-auto p-4 pt-24 sm:pt-28">
+      <Seo title="Question" description="A community question and its answers." path="/ask-anything" noindex />
       <div className="flex items-center justify-between mb-8">
         <button
           onClick={() => navigate("/ask-anything")}

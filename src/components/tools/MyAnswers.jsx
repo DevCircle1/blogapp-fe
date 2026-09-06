@@ -4,6 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import { MessageCircle, Clock, ArrowLeft } from "lucide-react";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
+import Seo from '../common/Seo.jsx';
 
 const MyAnswers = () => {
   const { user } = useAuth();
@@ -45,6 +46,7 @@ const MyAnswers = () => {
 
   return (
     <div className="max-w-4xl mx-auto py-12">
+      <Seo title="My Answers" description="The answers you have posted." path="/my-answers" noindex />
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <button

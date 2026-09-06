@@ -1,5 +1,36 @@
+# https://talkandtool.com/robots.txt
 User-agent: *
+Allow: /
+
+# Private, transactional, and user-specific pages: no ranking value and they
+# waste crawl budget. These also carry a noindex tag as the real safeguard,
+# because robots.txt blocks crawling, not indexing.
+Disallow: /login
+Disallow: /signup
+Disallow: /forget-password
+Disallow: /update-password
+Disallow: /write-blogs
+Disallow: /my-answers
+Disallow: /create
+Disallow: /q/
+Disallow: /codes/
 Disallow: /admin/
 Disallow: /api/
+
+# Strip common tracking parameters so campaign URLs are not crawled as
+# duplicates of the clean page.
+Disallow: /*?utm_
+Disallow: /*?fbclid=
+Disallow: /*?gclid=
+
+# AdSense needs to read pages to serve relevant ads.
+User-agent: Mediapartners-Google
+Allow: /
+
+User-agent: AdsBot-Google
+Allow: /
+
+User-agent: AdsBot-Google-Mobile
+Allow: /
 
 Sitemap: https://talkandtool.com/sitemap.xml

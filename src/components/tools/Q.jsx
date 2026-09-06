@@ -4,6 +4,7 @@ import { Plus, MessageCircle, Share2, Clock } from "lucide-react";
 import { toast } from "react-toastify";
 import { publicRequest, privateRequest } from "../../services/api"; 
 import { useAuth } from "../../context/AuthContext";
+import Seo from '../common/Seo.jsx';
 const Q = () => {
   const [questions, setQuestions] = useState([]);
   const [myQuestions, setMyQuestions] = useState([]);
@@ -58,6 +59,7 @@ const Q = () => {
   const displayedQuestions = activeTab === "mine" ? myQuestions : questions;
   return (
     <div className="max-w-4xl mx-auto">
+      <Seo title="Ask Anything" description="Community questions and answers on Talk & Tool." path="/ask-anything" noindex />
       <div className="text-center mb-12 py-12 rounded-2xl bg-gradient-to-b from-gray-900 to-gray-800 text-white shadow-inner">
         <h1 className="text-5xl font-bold mb-4">
           Ask Anything,

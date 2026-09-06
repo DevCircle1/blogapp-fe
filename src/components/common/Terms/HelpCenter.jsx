@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Seo from '../Seo.jsx';
 
 const HelpCenter = () => {
   const [activeCategory, setActiveCategory] = useState("general");
@@ -232,6 +233,7 @@ const HelpCenter = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-8 px-4">
+      <Seo title={"Help Center"} description={"Answers to common questions about using Talk & Tool: the free online tools, publishing articles, accounts, and getting in touch."} path={"/help-center"} />
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">

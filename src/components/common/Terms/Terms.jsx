@@ -1,8 +1,10 @@
 import React from 'react';
+import Seo from '../Seo.jsx';
 
 const TermsAndConditions = () => {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <Seo title={"Terms and Conditions"} description={"The terms and conditions governing use of Talk & Tool, including acceptable use, disclaimers, and limitation of liability."} path={"/terms-and-conditions"} />
       <h1 className="text-3xl font-bold text-center mb-8">Terms and Conditions</h1>
       
       <div className="bg-white rounded-lg shadow-md p-6 md:p-8">

@@ -1,9 +1,10 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async'; 
 import Navbar from './components/common/Navbar/Navbar.jsx';
 import { shouldShowNavbar } from './utils/navbarUtils.js';
 import Footer from './components/common/Footer/Footer.jsx';
+import ScrollToTop from './components/common/ScrollToTop.jsx';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -14,7 +15,6 @@ const UpdatePassword = lazy(() => import('./components/auth/UpdatePasswordForm/U
 const ToolsPage = lazy(() => import('./components/tools/ToolsPage.jsx'));
 const IPAddressChecker = lazy(() => import('./components/tools/ip.jsx'));
 const ScreenResolutionTool = lazy(() => import('./components/tools/ScreenResolutionTool.jsx'));
-const ProfitMarginCalculator = lazy(() => import('./components/tools/ProfitMarginCalculator.jsx'));
 const TextToHtmlTool = lazy(() => import('./components/tools/TextToHtmlTool.jsx'));
 const WriteBlog = lazy(() => import('./components/blogs/WriteBlogs.jsx'));
 const BlogPostDetail = lazy(() => import('./components/blogs/BlogPostDetail.jsx'));
@@ -37,8 +37,19 @@ const PremiumToolSuite = lazy(() => import('./components/tools/PremiumToolSuite.
 const NotFound = lazy(() => import('./components/common/NotFound.jsx'));
 function App() {
   const location = useLocation();
+
+  // The prerendered HTML ships this route's structured data so crawlers get it
+  // without running JavaScript. Once React mounts, the page's own <Seo> supplies
+  // the live equivalent — leaving both in place would duplicate every schema.
+  useEffect(() => {
+    document
+      .querySelectorAll('script[type="application/ld+json"][data-prerendered="true"]')
+      .forEach((node) => node.remove());
+  }, []);
+
   return (
     <HelmetProvider>
+      <ScrollToTop />
       {shouldShowNavbar(location.pathname) && <Navbar />}
 
       <Suspense fallback={<div className="min-h-[60vh] bg-slate-950" aria-label="Loading page" />}><Routes>
@@ -55,7 +66,6 @@ function App() {
         <Route path="/tools/:toolSlug" element={<PremiumToolSuite />} />
         <Route path="/check-ip" element={<IPAddressChecker />} />
         <Route path="/screen-resolution" element={<ScreenResolutionTool />} />
-        <Route path="/profit-margin-calculator" element={<ProfitMarginCalculator />} />
         <Route path="/text-to-html" element={<TextToHtmlTool />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
         <Route path="/about-us" element={<AboutUs />} />

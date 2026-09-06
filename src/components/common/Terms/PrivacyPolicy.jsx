@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Seo from '../Seo.jsx';
 const PrivacyPolicy = () => {
   const [activeSection, setActiveSection] = useState('introduction');
   useEffect(() => {
@@ -34,6 +35,8 @@ const PrivacyPolicy = () => {
     { id: 'data-collection', title: 'Data Collection' },
     { id: 'data-usage', title: 'Data Usage' },
     { id: 'cookies', title: 'Cookies' },
+    { id: 'advertising', title: 'Advertising' },
+    { id: 'analytics', title: 'Analytics' },
     { id: 'third-party', title: 'Third-Party Services' },
     { id: 'data-security', title: 'Data Security' },
     { id: 'user-rights', title: 'Your Rights' },
@@ -43,6 +46,7 @@ const PrivacyPolicy = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-8 px-4">
+      <Seo title={"Privacy Policy"} description={"How Talk & Tool collects, uses, and protects your information, including cookies, analytics, and third-party advertising by Google AdSense."} path={"/privacy-policy"} />
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <header className="text-center mb-12">
@@ -165,6 +169,70 @@ const PrivacyPolicy = () => {
                   You can instruct your browser to refuse all cookies or to indicate when a cookie
                   is being sent. However, if you do not accept cookies, you may not be able to use
                   some portions of our website.
+                </p>
+              </section>
+
+              {/* Advertising — required disclosure for Google AdSense */}
+              <section id="advertising" className="mb-12">
+                <h2 className="text-2xl font-semibold text-gray-800 mb-4">Advertising and Google AdSense</h2>
+                <p className="text-gray-700 mb-4">
+                  This website is funded by advertising. We use Google AdSense to display adverts,
+                  which allows us to keep every tool on the site free to use.
+                </p>
+                <ul className="list-disc space-y-3 pl-6 text-gray-700 mb-4">
+                  <li>
+                    Third-party vendors, including Google, use cookies to serve adverts based on your
+                    prior visits to this website or other websites.
+                  </li>
+                  <li>
+                    Google&apos;s use of advertising cookies enables it and its partners to serve adverts
+                    to you based on your visit to this site and/or other sites on the internet.
+                  </li>
+                  <li>
+                    You may opt out of personalised advertising by visiting{' '}
+                    <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                      Google Ads Settings
+                    </a>.
+                  </li>
+                  <li>
+                    You can opt out of a third-party vendor&apos;s use of cookies for personalised advertising
+                    at{' '}
+                    <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                      aboutads.info/choices
+                    </a>{' '}
+                    or{' '}
+                    <a href="https://www.youronlinechoices.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                      youronlinechoices.com
+                    </a>.
+                  </li>
+                  <li>
+                    Where required by law, including for visitors in the European Economic Area, the United
+                    Kingdom, and Switzerland, consent for personalised advertising is collected before
+                    such cookies are set.
+                  </li>
+                </ul>
+                <p className="text-gray-700">
+                  We do not control the adverts shown and we do not share the information you enter into
+                  the tools on this site with advertisers. Calculations, text, and other input you type
+                  into our tools are processed in your own browser and are not transmitted to us or to
+                  any advertising partner.
+                </p>
+              </section>
+
+              {/* Analytics */}
+              <section id="analytics" className="mb-12">
+                <h2 className="text-2xl font-semibold text-gray-800 mb-4">Analytics</h2>
+                <p className="text-gray-700 mb-4">
+                  We use Google Analytics to understand which pages are visited and how the site is used.
+                  Google Analytics collects information such as pages viewed, approximate location derived
+                  from IP address, device type, and referring website. This is used in aggregate to improve
+                  the site.
+                </p>
+                <p className="text-gray-700">
+                  You can prevent Google Analytics from collecting your data by installing the{' '}
+                  <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                    Google Analytics opt-out browser add-on
+                  </a>.
                 </p>
               </section>
 

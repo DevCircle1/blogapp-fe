@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 import { publicRequest } from '../../../services/api'; 
+
+const POPULAR_TOOLS = [
+  ['/tools/word-counter', 'Word Counter'],
+  ['/tools/percentage-calculator', 'Percentage Calculator'],
+  ['/tools/loan-calculator', 'Loan Calculator'],
+  ['/tools/bmi-calculator', 'BMI Calculator'],
+  ['/tools/json-studio', 'JSON Formatter'],
+  ['/tools/password-generator', 'Password Generator'],
+];
 
 export default function Footer() {
   const [email, setEmail] = useState('');
@@ -24,7 +34,7 @@ export default function Footer() {
     setIsSubmitting(true);
 
     try {
-      const res = await publicRequest.post('/subscribe/', {
+      await publicRequest.post('/subscribe/', {
         email: email.trim()
       });
 
@@ -49,28 +59,33 @@ export default function Footer() {
         
         {/* Logo / Brand */}
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">TalkandTool</h2>
+          <h2 className="text-2xl font-bold text-gray-900">Talk &amp; Tool</h2>
           <p className="mt-4 text-sm text-gray-600">
-            Building modern solutions for the future of web and mobile.
+            Free online calculators, converters, and developer tools that run entirely in your browser, plus practical guides.
           </p>
         </div>
 
-        {/* Links */}
+        {/* Popular tools — internal links from every page keep the deeper
+            tool pages discoverable and spread link equity across the site. */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Company</h3>
+          <h3 className="text-lg font-semibold text-gray-900">Popular tools</h3>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><a href="/about-us" className="hover:text-gray-900 transition">About Us</a></li>
-            <li><a href="/blogs" className="hover:text-gray-900 transition">Blogs</a></li>
+            {POPULAR_TOOLS.map(([to, label]) => (
+              <li key={to}><Link to={to} className="hover:text-gray-900 transition">{label}</Link></li>
+            ))}
+            <li><Link to="/tools" className="font-semibold text-blue-600 hover:underline">All tools →</Link></li>
           </ul>
         </div>
 
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Support</h3>
+          <h3 className="text-lg font-semibold text-gray-900">Company</h3>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><a href="/help-center" className="hover:text-gray-900 transition">Help Center</a></li>
-            <li><a href="/terms-and-conditions" className="hover:text-gray-900 transition">Terms of Service</a></li>
-            <li><a href="/privacy-policy" className="hover:text-gray-900 transition">Privacy Policy</a></li>
-            <li><a href="/contact-us" className="hover:text-gray-900 transition">Contact Us</a></li>
+            <li><Link to="/about-us" className="hover:text-gray-900 transition">About Us</Link></li>
+            <li><Link to="/blogs" className="hover:text-gray-900 transition">Blog</Link></li>
+            <li><Link to="/help-center" className="hover:text-gray-900 transition">Help Center</Link></li>
+            <li><Link to="/contact-us" className="hover:text-gray-900 transition">Contact Us</Link></li>
+            <li><Link to="/terms-and-conditions" className="hover:text-gray-900 transition">Terms of Service</Link></li>
+            <li><Link to="/privacy-policy" className="hover:text-gray-900 transition">Privacy Policy</Link></li>
           </ul>
         </div>
 
@@ -108,7 +123,10 @@ export default function Footer() {
 
       {/* Bottom */}
       <div className="mt-10 border-t border-gray-300 pt-6 text-center text-sm text-gray-600">
-        © {new Date().getFullYear()} TalkandTool. All rights reserved.
+        <p>© {new Date().getFullYear()} Talk &amp; Tool. All rights reserved.</p>
+        <p className="mt-2 text-xs text-gray-500">
+          The calculators on this site are provided for general information only and are not financial, medical, or legal advice.
+        </p>
       </div>
     </footer>
   );

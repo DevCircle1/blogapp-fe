@@ -5,9 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && npm run sitemap && npm run prerender",
+    "sitemap": "node scripts/generate-sitemap.mjs",
+    "prerender": "node scripts/prerender.mjs",
+    "og:image": "node scripts/make-og-image.mjs",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "smoke": "node scripts/smoke-tools.mjs"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.7",
