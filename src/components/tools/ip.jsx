@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 
 const IPAddressChecker = () => {
   const [ipData, setIpData] = useState(null);
@@ -6,6 +7,7 @@ const IPAddressChecker = () => {
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
   const isBot = false;
+  const seo = <Helmet><title>What Is My IP Address? Free IP Checker | Talk & Tool</title><meta name="description" content="Find your public IP address, approximate city, region, country, and ISP instantly with this free IP address checker." /><link rel="canonical" href="https://talkandtool.com/check-ip" /><meta property="og:title" content="What Is My IP Address?" /><meta property="og:description" content="Check your public IP address and network information instantly." /><meta property="og:url" content="https://talkandtool.com/check-ip" /></Helmet>;
 
   useEffect(() => {
     const fetchIPData = async () => {
@@ -97,6 +99,7 @@ const IPAddressChecker = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+        {seo}
         <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl w-full text-center">
           <div className="animate-pulse flex flex-col items-center">
             <div className="rounded-full bg-blue-100 p-4 mb-6">
@@ -114,6 +117,7 @@ const IPAddressChecker = () => {
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+        {seo}
         <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl w-full text-center">
           <div className="text-red-500 text-6xl mb-6">⚠️</div>
           <h1 className="text-2xl font-bold text-gray-800 mb-4">Error Loading IP Information</h1>
@@ -132,6 +136,7 @@ const IPAddressChecker = () => {
   // ✅ Main UI for humans
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+      {seo}
       <div className="max-w-4xl mx-auto">
         {/* Structured Data */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 
 const ScreenResolutionTool = () => {
   const [resolution, setResolution] = useState({
@@ -27,6 +28,7 @@ const ScreenResolutionTool = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <Helmet><title>What Is My Screen Resolution? | Talk & Tool</title><meta name="description" content="Check your current browser viewport width and height in pixels instantly with this free screen resolution tool." /><link rel="canonical" href="https://talkandtool.com/screen-resolution" /><meta property="og:title" content="What Is My Screen Resolution?" /><meta property="og:url" content="https://talkandtool.com/screen-resolution" /></Helmet>
       <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 max-w-md w-full">
         <div className="text-center mb-6">
           <h1 className="text-2xl font-bold text-gray-800">Screen Resolution Tool</h1>

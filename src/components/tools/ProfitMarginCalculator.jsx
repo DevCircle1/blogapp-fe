@@ -56,7 +56,11 @@ const ProfitMarginCalculator = () => {
     <>
     <Helmet>
         <title>Profit Margin Calculator | Talk & Tool</title>
-        <meta name="description" content="Calculate your profit margins instantly with our free online calculator." />
+        <meta name="description" content="Calculate profit, gross margin percentage, and markup from cost and selling price with this free profit margin calculator." />
+        <link rel="canonical" href="https://talkandtool.com/profit-margin-calculator" />
+        <meta property="og:title" content="Free Profit Margin Calculator" />
+        <meta property="og:description" content="Calculate profit and gross margin instantly from cost and selling price." />
+        <meta property="og:url" content="https://talkandtool.com/profit-margin-calculator" />
       </Helmet>
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 max-w-md w-full">

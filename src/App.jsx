@@ -1,44 +1,47 @@
+import { lazy, Suspense } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async'; 
 import Navbar from './components/common/Navbar/Navbar.jsx';
-import RegisterForm from './components/auth/RegisterForm/RegisterForm.jsx';
-import LoginForm from './components/auth/LoginForm/LoginForm.jsx';
-import ForgetPassword from './components/auth/ForgetPassowrdForm/ForgetPassword.jsx';
-import UpdatePassword from './components/auth/UpdatePasswordForm/UpdatePassword.jsx';
 import { shouldShowNavbar } from './utils/navbarUtils.js';
 import Footer from './components/common/Footer/Footer.jsx';
-import ToolsPage from './components/tools/ToolsPage.jsx';
-import IPAddressChecker from './components/tools/ip.jsx';
-import ScreenResolutionTool from './components/tools/ScreenResolutionTool.jsx';
-import ProfitMarginCalculator from './components/tools/ProfitMarginCalculator.jsx';
-import TextToHtmlTool from './components/tools/TextToHtmlTool.jsx';
 import { ToastContainer } from 'react-toastify';
-import WriteBlog from './components/blogs/WriteBlogs.jsx';
-import BlogPostDetail from './components/blogs/BlogPostDetail.jsx';
-import BlogCategories from './components/blogs/BlogCategories.jsx';
-import CategoryBlogPosts from './components/blogs/CategoryBlogPosts.jsx';
-import TermsAndConditions from './components/common/Terms/Terms.jsx';
-import AboutUs from './components/common/Terms/AboutUs.jsx';
-import ContactUs from './components/common/Terms/ContactUs.jsx';
-import HelpCenter from './components/common/Terms/HelpCenter.jsx';
-import PrivacyPolicy from './components/common/Terms/PrivacyPolicy.jsx';
-import JobAlert from './components/common/Terms/JobAlerts.jsx';
-import HomePage from './components/common/Home/HomePage.jsx';
-import CodeShare from './components/tools/CodeShare.jsx';
-import Q from './components/tools/Q.jsx';
-import CreateQuestion from './components/tools/CreateQuestion.jsx';
-import QuestionDetail from './components/tools/QuestionDetail.jsx';
-import MyAnswers from './components/tools/MyAnswers.jsx';
-import WordleGame from './components/tools/WordleGame.jsx';
-import PremiumToolSuite from './components/tools/PremiumToolSuite.jsx';
 import 'react-toastify/dist/ReactToastify.css';
+
+const RegisterForm = lazy(() => import('./components/auth/RegisterForm/RegisterForm.jsx'));
+const LoginForm = lazy(() => import('./components/auth/LoginForm/LoginForm.jsx'));
+const ForgetPassword = lazy(() => import('./components/auth/ForgetPassowrdForm/ForgetPassword.jsx'));
+const UpdatePassword = lazy(() => import('./components/auth/UpdatePasswordForm/UpdatePassword.jsx'));
+const ToolsPage = lazy(() => import('./components/tools/ToolsPage.jsx'));
+const IPAddressChecker = lazy(() => import('./components/tools/ip.jsx'));
+const ScreenResolutionTool = lazy(() => import('./components/tools/ScreenResolutionTool.jsx'));
+const ProfitMarginCalculator = lazy(() => import('./components/tools/ProfitMarginCalculator.jsx'));
+const TextToHtmlTool = lazy(() => import('./components/tools/TextToHtmlTool.jsx'));
+const WriteBlog = lazy(() => import('./components/blogs/WriteBlogs.jsx'));
+const BlogPostDetail = lazy(() => import('./components/blogs/BlogPostDetail.jsx'));
+const BlogCategories = lazy(() => import('./components/blogs/BlogCategories.jsx'));
+const CategoryBlogPosts = lazy(() => import('./components/blogs/CategoryBlogPosts.jsx'));
+const TermsAndConditions = lazy(() => import('./components/common/Terms/Terms.jsx'));
+const AboutUs = lazy(() => import('./components/common/Terms/AboutUs.jsx'));
+const ContactUs = lazy(() => import('./components/common/Terms/ContactUs.jsx'));
+const HelpCenter = lazy(() => import('./components/common/Terms/HelpCenter.jsx'));
+const PrivacyPolicy = lazy(() => import('./components/common/Terms/PrivacyPolicy.jsx'));
+const JobAlert = lazy(() => import('./components/common/Terms/JobAlerts.jsx'));
+const HomePage = lazy(() => import('./components/common/Home/HomePage.jsx'));
+const CodeShare = lazy(() => import('./components/tools/CodeShare.jsx'));
+const Q = lazy(() => import('./components/tools/Q.jsx'));
+const CreateQuestion = lazy(() => import('./components/tools/CreateQuestion.jsx'));
+const QuestionDetail = lazy(() => import('./components/tools/QuestionDetail.jsx'));
+const MyAnswers = lazy(() => import('./components/tools/MyAnswers.jsx'));
+const WordleGame = lazy(() => import('./components/tools/WordleGame.jsx'));
+const PremiumToolSuite = lazy(() => import('./components/tools/PremiumToolSuite.jsx'));
+const NotFound = lazy(() => import('./components/common/NotFound.jsx'));
 function App() {
   const location = useLocation();
   return (
     <HelmetProvider>
       {shouldShowNavbar(location.pathname) && <Navbar />}
 
-      <Routes>
+      <Suspense fallback={<div className="min-h-[60vh] bg-slate-950" aria-label="Loading page" />}><Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<RegisterForm />} />
@@ -67,7 +70,8 @@ function App() {
         <Route path="/q/:id" element={<QuestionDetail />} />
         <Route path="/my-answers" element={<MyAnswers />} />
         <Route path="/word-game" element={<WordleGame />} />
-      </Routes>
+        <Route path="*" element={<NotFound />} />
+      </Routes></Suspense>
 
       {shouldShowNavbar(location.pathname) && <Footer />}
 

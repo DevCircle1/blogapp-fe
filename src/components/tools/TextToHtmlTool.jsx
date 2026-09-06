@@ -121,6 +121,10 @@ const TextToHtmlTool = () => {
       <Helmet>
         <title>Text to HTML Converter | Talk & Tool</title>
         <meta name="description" content="Convert plain text into clean HTML using our free Text to HTML tool." />
+        <link rel="canonical" href="https://talkandtool.com/text-to-html" />
+        <meta property="og:title" content="Free Text to HTML Converter" />
+        <meta property="og:description" content="Write formatted content and convert it to clean HTML online." />
+        <meta property="og:url" content="https://talkandtool.com/text-to-html" />
       </Helmet>
     <div className={`min-h-screen transition-colors duration-300 ${
       theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gradient-to-br from-blue-50 to-indigo-100 text-gray-800'
