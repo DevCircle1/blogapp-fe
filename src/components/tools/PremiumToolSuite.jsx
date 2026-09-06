@@ -12,6 +12,7 @@ import * as finance from './impl/financeTools.jsx';
 import * as text from './impl/textTools.jsx';
 import * as date from './impl/dateTools.jsx';
 import * as health from './impl/healthTools.jsx';
+import * as seo from './impl/seoTools.jsx';
 
 const TOOL_COMPONENTS = {
   // Developer
@@ -90,6 +91,14 @@ const TOOL_COMPONENTS = {
   'water-intake-calculator': health.WaterIntakeCalculator,
   'macro-calculator': health.MacroCalculator,
   'pregnancy-due-date-calculator': health.PregnancyDueDateCalculator,
+  // SEO
+  'low-competition-keyword-finder': seo.LowCompetitionKeywordFinder,
+  'long-tail-keyword-generator': seo.LongTailKeywordGenerator,
+  'keyword-clustering-tool': seo.KeywordClusteringTool,
+  'search-intent-classifier': seo.SearchIntentClassifier,
+  'seo-content-brief-generator': seo.SeoContentBriefGenerator,
+  'keyword-cannibalization-checker': seo.KeywordCannibalizationChecker,
+  'seo-title-meta-checker': seo.SeoTitleMetaChecker,
 };
 
 const APPLICATION_CATEGORY = {
@@ -100,6 +109,7 @@ const APPLICATION_CATEGORY = {
   Security: 'SecurityApplication',
   Text: 'UtilitiesApplication',
   'Date & Time': 'UtilitiesApplication',
+  SEO: 'BusinessApplication',
 };
 
 function ToolNotFound() {

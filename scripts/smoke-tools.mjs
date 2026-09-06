@@ -21,8 +21,9 @@ import * as finance from '<ROOT>/src/components/tools/impl/financeTools.jsx';
 import * as text from '<ROOT>/src/components/tools/impl/textTools.jsx';
 import * as dates from '<ROOT>/src/components/tools/impl/dateTools.jsx';
 import * as health from '<ROOT>/src/components/tools/impl/healthTools.jsx';
+import * as seo from '<ROOT>/src/components/tools/impl/seoTools.jsx';
 
-const modules = { dev, security, calc, finance, text, dates, health };
+const modules = { dev, security, calc, finance, text, dates, health, seo };
 let failures = 0;
 let passed = 0;
 

@@ -15,6 +15,7 @@ const CATEGORY_BLURB = {
   Text: 'Counting, casing, sorting, deduplicating, diffing, and cleaning up text before it goes anywhere.',
   'Date & Time': 'Date differences, deadlines, business days, durations, countdowns, and Unix timestamps.',
   Games: 'A short daily puzzle for when the work is done.',
+  SEO: 'Keyword discovery, long-tail research, content planning, and topic clustering with transparent browser-based methods.',
 };
 
 const PAGE_FAQS = [

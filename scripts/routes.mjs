@@ -141,6 +141,7 @@ const APPLICATION_CATEGORY = {
   Health: 'HealthApplication',
   Developer: 'DeveloperApplication',
   Security: 'SecurityApplication',
+  SEO: 'BusinessApplication',
 };
 
 /**
