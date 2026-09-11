@@ -5,6 +5,7 @@ import Seo from '../common/Seo.jsx';
 import AdSlot from '../common/AdSlot.jsx';
 import { allToolLinks } from './toolCatalog.js';
 import { SITE_URL, SITE_NAME, breadcrumbSchema, faqSchema } from '../../seo/siteMeta.js';
+import { LOCALES, LOCALIZED_LANGS, hubAlternates, hubPath } from '../../i18n/locales.js';
 
 const CATEGORY_BLURB = {
   Calculator: 'Everyday maths: percentages, averages, ratios, fractions, ages, and unit conversions.',
@@ -76,6 +77,7 @@ export default function ToolsPage() {
         description={`Browse ${allToolLinks.length} free online tools: calculators, unit converters, text utilities, and developer tools. Fast, mobile-friendly, and private — everything runs in your browser.`}
         path="/tools"
         schemas={schemas}
+        alternates={hubAlternates()}
       />
 
       <section className="relative overflow-hidden border-b border-white/10 px-4 py-20">
@@ -90,6 +92,15 @@ export default function ToolsPage() {
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-400">
             Calculators, converters, text utilities, and developer tools. No installation, no sign-up, and your data never leaves your browser.
+          </p>
+          <p className="mt-4 text-sm text-slate-500">
+            Also available in{' '}
+            {LOCALIZED_LANGS.map((lang, index) => (
+              <span key={lang}>
+                {index ? ' · ' : ''}
+                <Link to={hubPath(lang)} hrefLang={LOCALES[lang].hreflang} lang={LOCALES[lang].htmlLang} className="font-semibold text-indigo-300 hover:text-white">{LOCALES[lang].name}</Link>
+              </span>
+            ))}
           </p>
           <div className="relative mx-auto mt-10 max-w-2xl">
             <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500" size={21} aria-hidden="true" />

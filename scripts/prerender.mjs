@@ -6,10 +6,10 @@
  * unfurlers, most link previewers, and search engines on their first pass) see
  * one identical title and description for the whole site.
  *
- * Each generated file carries that route's real title, description, canonical
- * and Open Graph tags, plus a plain-HTML copy of the page's opening content.
- * React replaces the #root contents on mount, so what a visitor sees and what
- * a crawler reads describe the same page.
+ * Each generated file carries that route's real title, description, canonical,
+ * hreflang cluster, language, and Open Graph tags, plus a plain-HTML copy of
+ * the page's opening content. React replaces the #root contents on mount, so
+ * what a visitor sees and what a crawler reads describe the same page.
  *
  * Netlify serves an existing static file before applying the SPA fallback
  * redirect, so /tools/word-counter/index.html wins over /* -> /index.html.
@@ -17,24 +17,43 @@
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { allRoutes, SITE_URL, SITE_NAME } from './routes.mjs';
+import { LOCALES } from '../src/i18n/locales.js';
 
 const DIST = 'dist';
 const OG_IMAGE = `${SITE_URL}/og-cover.png`;
+
+const HREFLANG_NAMES = Object.fromEntries(Object.values(LOCALES).map((locale) => [locale.hreflang, locale]));
+
+const DEFAULT_LINKS = [
+  { href: '/tools', label: 'All free tools' },
+  { href: '/blogs', label: 'Blog' },
+  { href: '/about-us', label: 'About' },
+  { href: '/contact-us', label: 'Contact' },
+];
 
 const escapeHtml = (value) => String(value)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
+const absolute = (routePath) => `${SITE_URL}${routePath === '/' ? '/' : routePath}`;
+
 const headFor = (route) => {
-  const canonical = `${SITE_URL}${route.path === '/' ? '/' : route.path}`;
+  const canonical = absolute(route.path);
   const title = escapeHtml(route.title);
   const description = escapeHtml(route.description);
+  const locale = LOCALES[route.lang || 'en'];
   return [
     `<title>${title}</title>`,
     `<meta name="description" content="${description}">`,
     `<link rel="canonical" href="${canonical}">`,
+    // Every version of the page lists every other, plus itself and
+    // x-default — the same cluster the page's <Seo> emits at runtime.
+    ...(route.alternates || []).map((alternate) => (
+      `<link rel="alternate" hreflang="${alternate.hreflang}" href="${absolute(alternate.path)}">`
+    )),
     '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">',
     `<meta property="og:site_name" content="${escapeHtml(SITE_NAME)}">`,
+    `<meta property="og:locale" content="${locale.ogLocale}">`,
     `<meta property="og:title" content="${title}">`,
     `<meta property="og:description" content="${description}">`,
     `<meta property="og:url" content="${canonical}">`,
@@ -53,21 +72,39 @@ const headFor = (route) => {
   ].join('\n    ');
 };
 
+const linkList = (links) => links
+  .map((link) => `<a href="${escapeHtml(link.href)}">${escapeHtml(link.label)}</a>`)
+  .join(' &middot; ');
+
 /** Mirrors the top of the rendered page so a non-JS crawler reads the same thing. */
 const bodyFor = (route) => {
   const parts = [
     `<h1>${escapeHtml(route.heading || route.title)}</h1>`,
     `<p>${escapeHtml(route.body || route.description)}</p>`,
   ];
+  if (route.list?.length) {
+    parts.push(`<ul>${route.list.map((item) => `<li><a href="${escapeHtml(item.path)}">${escapeHtml(item.name)}</a></li>`).join('')}</ul>`);
+  }
   if (route.steps?.length) {
-    parts.push('<h2>How to use it</h2>');
+    parts.push(`<h2>${escapeHtml(route.howToHeading || 'How to use it')}</h2>`);
     parts.push(`<ol>${route.steps.map((step) => `<li>${escapeHtml(step)}</li>`).join('')}</ol>`);
   }
   if (route.faqs?.length) {
-    parts.push('<h2>Frequently asked questions</h2>');
+    parts.push(`<h2>${escapeHtml(route.faqHeading || 'Frequently asked questions')}</h2>`);
     parts.push(route.faqs.map((item) => `<h3>${escapeHtml(item.q)}</h3><p>${escapeHtml(item.a)}</p>`).join(''));
   }
-  parts.push('<p><a href="/tools">All free tools</a> &middot; <a href="/blogs">Blog</a> &middot; <a href="/about-us">About</a> &middot; <a href="/contact-us">Contact</a></p>');
+  parts.push(`<p>${linkList(route.links || DEFAULT_LINKS)}</p>`);
+
+  // Visible links to the other language versions, matching the rendered
+  // "Also available in" line and giving crawlers a plain <a> path to each.
+  const selfLang = LOCALES[route.lang || 'en'].hreflang;
+  const others = (route.alternates || []).filter((alternate) => alternate.hreflang !== 'x-default' && alternate.hreflang !== selfLang);
+  if (others.length) {
+    parts.push(`<p>${escapeHtml(route.alsoAvailable || 'Also available in:')} ${others.map((alternate) => {
+      const locale = HREFLANG_NAMES[alternate.hreflang];
+      return `<a href="${escapeHtml(alternate.path)}" hreflang="${alternate.hreflang}" lang="${locale.htmlLang}">${escapeHtml(locale.name)}</a>`;
+    }).join(' &middot; ')}</p>`);
+  }
   return parts.join('\n      ');
 };
 
@@ -89,9 +126,14 @@ const run = async () => {
     .replace(/<meta\s+property="og:site_name"[^>]*>\s*/i, '')
     .replace(/<meta\s+name="twitter:card"[^>]*>\s*/i, '');
 
+  if (!base.includes('<html lang="en">')) {
+    throw new Error('index.html no longer contains <html lang="en">; update the language substitution below.');
+  }
+
   let written = 0;
   for (const route of allRoutes) {
     const html = base
+      .replace('<html lang="en">', `<html lang="${LOCALES[route.lang || 'en'].htmlLang}">`)
       .replace('</head>', `  ${headFor(route)}\n  </head>`)
       .replace('<div id="root"></div>', `<div id="root">\n      ${bodyFor(route)}\n    </div>`);
 

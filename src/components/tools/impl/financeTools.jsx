@@ -4,13 +4,17 @@ import {
   Segmented, Select, Stat, StatGrid, Toggle,
 } from './uiKit.jsx';
 import { money, num, toNumber } from './toolFormat.js';
+import { useExtras, useI18n, useT } from '../../../i18n/i18n.js';
 
-const CURRENCIES = ['USD', 'EUR', 'GBP', 'INR', 'PKR', 'AUD', 'CAD', 'AED', 'NGN', 'ZAR'];
+const CURRENCIES = ['USD', 'EUR', 'GBP', 'INR', 'PKR', 'AUD', 'CAD', 'AED', 'NGN', 'ZAR', 'BRL', 'MXN', 'ARS', 'COP', 'CLP', 'PEN', 'CHF'];
 
+/** Starts on the currency of the visitor's market: USD on the English pages, EUR/BRL/MXN… on the others. */
 const useCurrency = () => {
-  const [currency, setCurrency] = useState('USD');
+  const t = useT();
+  const { currency: preferred } = useI18n();
+  const [currency, setCurrency] = useState(CURRENCIES.includes(preferred) ? preferred : 'USD');
   const picker = (
-    <LabelledSelect label="Currency" id="currency" value={currency} onChange={(e) => setCurrency(e.target.value)}>
+    <LabelledSelect label={t('Currency')} id="currency" value={currency} onChange={(e) => setCurrency(e.target.value)}>
       {CURRENCIES.map((code) => <option key={code} value={code}>{code}</option>)}
     </LabelledSelect>
   );
@@ -29,6 +33,7 @@ const amortise = (principal, annualRate, months) => {
 
 /* ------------------------------------------------------------------ Loan */
 export function LoanCalculator() {
+  const t = useT();
   const [currency, picker] = useCurrency();
   const [amount, setAmount] = useState('15000');
   const [rate, setRate] = useState('7.5');
@@ -38,29 +43,30 @@ export function LoanCalculator() {
   return (
     <>
       <Grid className="md:grid-cols-4">
-        <LabelledField label="Loan amount" id="loan-amount" type="number" min="0" value={amount} onChange={(e) => setAmount(e.target.value)} />
-        <LabelledField label="Annual interest rate (%)" id="loan-rate" type="number" min="0" step="0.01" value={rate} onChange={(e) => setRate(e.target.value)} />
-        <LabelledField label="Term (years)" id="loan-years" type="number" min="0.1" step="0.5" value={years} onChange={(e) => setYears(e.target.value)} />
+        <LabelledField label={t('Loan amount')} id="loan-amount" type="number" min="0" value={amount} onChange={(e) => setAmount(e.target.value)} />
+        <LabelledField label={t('Annual interest rate (%)')} id="loan-rate" type="number" min="0" step="0.01" value={rate} onChange={(e) => setRate(e.target.value)} />
+        <LabelledField label={t('Term (years)')} id="loan-years" type="number" min="0.1" step="0.5" value={years} onChange={(e) => setYears(e.target.value)} />
         {picker}
       </Grid>
       {result ? (
         <>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
-            <Result label="Monthly payment" value={money(result.payment, currency)} />
-            <Result label="Total interest" value={money(result.interest, currency)} accent="cyan" />
-            <Result label="Total repaid" value={money(result.total, currency)} accent="indigo" />
+            <Result label={t('Monthly payment')} value={money(result.payment, currency)} />
+            <Result label={t('Total interest')} value={money(result.interest, currency)} accent="cyan" />
+            <Result label={t('Total repaid')} value={money(result.total, currency)} accent="indigo" />
           </div>
           <p className="mt-4 text-sm text-slate-500">
-            Over {num(toNumber(years) * 12, 0)} payments, interest adds {num((result.interest / toNumber(amount)) * 100, 1)}% to the amount borrowed.
+            {t('Over {count} payments, interest adds {pct}% to the amount borrowed.', { count: num(toNumber(years) * 12, 0), pct: num((result.interest / toNumber(amount)) * 100, 1) })}
           </p>
         </>
-      ) : <ErrorNote>Enter a loan amount and a term greater than zero.</ErrorNote>}
+      ) : <ErrorNote>{t('Enter a loan amount and a term greater than zero.')}</ErrorNote>}
     </>
   );
 }
 
 /* -------------------------------------------------------------- Mortgage */
 export function MortgageCalculator() {
+  const t = useT();
   const [currency, picker] = useCurrency();
   const [price, setPrice] = useState('350000');
   const [deposit, setDeposit] = useState('70000');
@@ -77,35 +83,36 @@ export function MortgageCalculator() {
   return (
     <>
       <Grid className="md:grid-cols-3">
-        <LabelledField label="Property price" id="mg-price" type="number" min="0" value={price} onChange={(e) => setPrice(e.target.value)} />
-        <LabelledField label="Deposit" hint={`${num(depositPercent, 1)}%`} id="mg-deposit" type="number" min="0" value={deposit} onChange={(e) => setDeposit(e.target.value)} />
+        <LabelledField label={t('Property price')} id="mg-price" type="number" min="0" value={price} onChange={(e) => setPrice(e.target.value)} />
+        <LabelledField label={t('Deposit')} hint={`${num(depositPercent, 1)}%`} id="mg-deposit" type="number" min="0" value={deposit} onChange={(e) => setDeposit(e.target.value)} />
         {picker}
-        <LabelledField label="Interest rate (%)" id="mg-rate" type="number" min="0" step="0.01" value={rate} onChange={(e) => setRate(e.target.value)} />
-        <LabelledField label="Term (years)" id="mg-years" type="number" min="1" value={years} onChange={(e) => setYears(e.target.value)} />
-        <LabelledField label="Annual property tax" id="mg-tax" type="number" min="0" value={tax} onChange={(e) => setTax(e.target.value)} />
-        <LabelledField label="Annual home insurance" id="mg-ins" type="number" min="0" value={insurance} onChange={(e) => setInsurance(e.target.value)} />
+        <LabelledField label={t('Interest rate (%)')} id="mg-rate" type="number" min="0" step="0.01" value={rate} onChange={(e) => setRate(e.target.value)} />
+        <LabelledField label={t('Term (years)')} id="mg-years" type="number" min="1" value={years} onChange={(e) => setYears(e.target.value)} />
+        <LabelledField label={t('Annual property tax')} id="mg-tax" type="number" min="0" value={tax} onChange={(e) => setTax(e.target.value)} />
+        <LabelledField label={t('Annual home insurance')} id="mg-ins" type="number" min="0" value={insurance} onChange={(e) => setInsurance(e.target.value)} />
       </Grid>
       {result ? (
         <>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
-            <Result label="Total monthly payment" value={money(result.payment + monthlyExtras, currency)} note="Principal, interest, tax and insurance" />
-            <Result label="Principal and interest only" value={money(result.payment, currency)} accent="cyan" />
+            <Result label={t('Total monthly payment')} value={money(result.payment + monthlyExtras, currency)} note={t('Principal, interest, tax and insurance')} />
+            <Result label={t('Principal and interest only')} value={money(result.payment, currency)} accent="cyan" />
           </div>
           <StatGrid columns="md:grid-cols-4">
-            <Stat label="Loan amount" value={money(principal, currency)} />
-            <Stat label="Total interest" value={money(result.interest, currency)} accent="cyan" />
-            <Stat label="Total repaid" value={money(result.total, currency)} />
-            <Stat label="Tax + insurance monthly" value={money(monthlyExtras, currency)} accent="cyan" />
+            <Stat label={t('Loan amount')} value={money(principal, currency)} />
+            <Stat label={t('Total interest')} value={money(result.interest, currency)} accent="cyan" />
+            <Stat label={t('Total repaid')} value={money(result.total, currency)} />
+            <Stat label={t('Tax + insurance monthly')} value={money(monthlyExtras, currency)} accent="cyan" />
           </StatGrid>
-          {depositPercent < 20 && <p className="mt-4 rounded-xl border border-amber-400/20 bg-amber-400/10 p-3 text-sm text-amber-200">A deposit under 20% usually triggers mortgage insurance, which is not included above.</p>}
+          {depositPercent < 20 && <p className="mt-4 rounded-xl border border-amber-400/20 bg-amber-400/10 p-3 text-sm text-amber-200">{t('A deposit under 20% usually triggers mortgage insurance, which is not included above.')}</p>}
         </>
-      ) : <ErrorNote>Enter a property price higher than the deposit, and a term of at least one year.</ErrorNote>}
+      ) : <ErrorNote>{t('Enter a property price higher than the deposit, and a term of at least one year.')}</ErrorNote>}
     </>
   );
 }
 
 /* ----------------------------------------------------- Compound interest */
 export function CompoundInterestCalculator() {
+  const t = useT();
   const [currency, picker] = useCurrency();
   const [principal, setPrincipal] = useState('5000');
   const [monthly, setMonthly] = useState('300');
@@ -116,12 +123,12 @@ export function CompoundInterestCalculator() {
   const result = useMemo(() => {
     const p = toNumber(principal);
     const r = toNumber(rate) / 100;
-    const t = toNumber(years);
+    const years_ = toNumber(years);
     const n = toNumber(frequency, 12);
-    if (t <= 0 || n <= 0) return null;
-    const lump = p * (1 + r / n) ** (n * t);
+    if (years_ <= 0 || n <= 0) return null;
+    const lump = p * (1 + r / n) ** (n * years_);
     const monthlyRate = (1 + r / n) ** (n / 12) - 1;
-    const months = t * 12;
+    const months = years_ * 12;
     const contributions = toNumber(monthly);
     const annuity = monthlyRate === 0 ? contributions * months : contributions * (((1 + monthlyRate) ** months - 1) / monthlyRate);
     const final = lump + annuity;
@@ -132,27 +139,27 @@ export function CompoundInterestCalculator() {
   return (
     <>
       <Grid className="md:grid-cols-3">
-        <LabelledField label="Starting balance" id="ci-principal" type="number" min="0" value={principal} onChange={(e) => setPrincipal(e.target.value)} />
-        <LabelledField label="Monthly contribution" id="ci-monthly" type="number" min="0" value={monthly} onChange={(e) => setMonthly(e.target.value)} />
+        <LabelledField label={t('Starting balance')} id="ci-principal" type="number" min="0" value={principal} onChange={(e) => setPrincipal(e.target.value)} />
+        <LabelledField label={t('Monthly contribution')} id="ci-monthly" type="number" min="0" value={monthly} onChange={(e) => setMonthly(e.target.value)} />
         {picker}
-        <LabelledField label="Annual return (%)" id="ci-rate" type="number" step="0.1" value={rate} onChange={(e) => setRate(e.target.value)} />
-        <LabelledField label="Years" id="ci-years" type="number" min="1" value={years} onChange={(e) => setYears(e.target.value)} />
-        <LabelledSelect label="Compounding" id="ci-freq" value={frequency} onChange={(e) => setFrequency(e.target.value)}>
-          <option value="1">Annually</option>
-          <option value="4">Quarterly</option>
-          <option value="12">Monthly</option>
-          <option value="365">Daily</option>
+        <LabelledField label={t('Annual return (%)')} id="ci-rate" type="number" step="0.1" value={rate} onChange={(e) => setRate(e.target.value)} />
+        <LabelledField label={t('Years')} id="ci-years" type="number" min="1" value={years} onChange={(e) => setYears(e.target.value)} />
+        <LabelledSelect label={t('Compounding')} id="ci-freq" value={frequency} onChange={(e) => setFrequency(e.target.value)}>
+          <option value="1">{t('Annually')}</option>
+          <option value="4">{t('Quarterly')}</option>
+          <option value="12">{t('Monthly')}</option>
+          <option value="365">{t('Daily')}</option>
         </LabelledSelect>
       </Grid>
       {result && (
         <>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
-            <Result label="Final balance" value={money(result.final, currency)} />
-            <Result label="Total contributed" value={money(result.paidIn, currency)} accent="indigo" />
-            <Result label="Growth from interest" value={money(result.growth, currency)} accent="cyan" />
+            <Result label={t('Final balance')} value={money(result.final, currency)} />
+            <Result label={t('Total contributed')} value={money(result.paidIn, currency)} accent="indigo" />
+            <Result label={t('Growth from interest')} value={money(result.growth, currency)} accent="cyan" />
           </div>
           <p className="mt-4 text-sm text-slate-500">
-            Interest accounts for {num((result.growth / (result.final || 1)) * 100, 1)}% of the final balance. Figures are nominal and ignore inflation, fees, and tax.
+            {t('Interest accounts for {pct}% of the final balance. Figures are nominal and ignore inflation, fees, and tax.', { pct: num((result.growth / (result.final || 1)) * 100, 1) })}
           </p>
         </>
       )}
@@ -162,6 +169,7 @@ export function CompoundInterestCalculator() {
 
 /* ------------------------------------------------------- Simple interest */
 export function SimpleInterestCalculator() {
+  const t = useT();
   const [currency, picker] = useCurrency();
   const [principal, setPrincipal] = useState('10000');
   const [rate, setRate] = useState('6');
@@ -172,14 +180,14 @@ export function SimpleInterestCalculator() {
   return (
     <>
       <Grid className="md:grid-cols-4">
-        <LabelledField label="Principal" id="si-principal" type="number" min="0" value={principal} onChange={(e) => setPrincipal(e.target.value)} />
-        <LabelledField label="Annual rate (%)" id="si-rate" type="number" step="0.01" value={rate} onChange={(e) => setRate(e.target.value)} />
-        <LabelledField label="Time (years)" hint="6 months = 0.5" id="si-years" type="number" step="0.25" value={years} onChange={(e) => setYears(e.target.value)} />
+        <LabelledField label={t('Principal')} id="si-principal" type="number" min="0" value={principal} onChange={(e) => setPrincipal(e.target.value)} />
+        <LabelledField label={t('Annual rate (%)')} id="si-rate" type="number" step="0.01" value={rate} onChange={(e) => setRate(e.target.value)} />
+        <LabelledField label={t('Time (years)')} hint={t('6 months = 0.5')} id="si-years" type="number" step="0.25" value={years} onChange={(e) => setYears(e.target.value)} />
         {picker}
       </Grid>
       <div className="mt-6 grid gap-4 md:grid-cols-2">
-        <Result label="Simple interest" value={money(interest, currency)} />
-        <Result label="Total amount" value={money(toNumber(principal) + interest, currency)} accent="cyan" />
+        <Result label={t('Simple interest')} value={money(interest, currency)} />
+        <Result label={t('Total amount')} value={money(toNumber(principal) + interest, currency)} accent="cyan" />
       </div>
       <p className="mt-4 text-sm text-slate-500">I = P × R × T ÷ 100 = {num(toNumber(principal), 2)} × {rate} × {years} ÷ 100</p>
     </>
@@ -187,10 +195,15 @@ export function SimpleInterestCalculator() {
 }
 
 /* ------------------------------------------------------------------- Tip */
+const TIP_PRESETS = [10, 12, 15, 18, 20, 25];
+
 export function TipCalculator() {
+  const t = useT();
+  const extras = useExtras();
+  const presets = extras.tip?.presets || TIP_PRESETS;
   const [currency, picker] = useCurrency();
   const [bill, setBill] = useState('84.50');
-  const [percent, setPercent] = useState(18);
+  const [percent, setPercent] = useState(extras.tip?.percent ?? 18);
   const [people, setPeople] = useState('2');
 
   const tip = (toNumber(bill) * percent) / 100;
@@ -200,21 +213,21 @@ export function TipCalculator() {
   return (
     <>
       <Grid className="md:grid-cols-3">
-        <LabelledField label="Bill total" id="tip-bill" type="number" min="0" step="0.01" value={bill} onChange={(e) => setBill(e.target.value)} />
-        <LabelledField label="Number of people" id="tip-people" type="number" min="1" value={people} onChange={(e) => setPeople(e.target.value)} />
+        <LabelledField label={t('Bill total')} id="tip-bill" type="number" min="0" step="0.01" value={bill} onChange={(e) => setBill(e.target.value)} />
+        <LabelledField label={t('Number of people')} id="tip-people" type="number" min="1" value={people} onChange={(e) => setPeople(e.target.value)} />
         {picker}
       </Grid>
       <div className="mt-5">
-        <Label>Tip percentage: <strong className="text-white">{percent}%</strong></Label>
+        <Label>{t('Tip percentage: {value}', { value: <strong className="text-white">{percent}%</strong> })}</Label>
         <div className="mt-3 flex flex-wrap gap-2">
-          <Segmented ariaLabel="Common tip percentages" value={percent} onChange={setPercent} options={[10, 12, 15, 18, 20, 25].map((value) => ({ value, label: `${value}%` }))} />
+          <Segmented ariaLabel={t('Common tip percentages')} value={percent} onChange={setPercent} options={presets.map((value) => ({ value, label: `${value}%` }))} />
         </div>
-        <input type="range" min="0" max="40" value={percent} onChange={(e) => setPercent(Number(e.target.value))} className="mt-4 w-full accent-indigo-500" aria-label="Tip percentage" />
+        <input type="range" min="0" max="40" value={percent} onChange={(e) => setPercent(Number(e.target.value))} className="mt-4 w-full accent-indigo-500" aria-label={t('Tip percentage')} />
       </div>
       <div className="mt-6 grid gap-4 md:grid-cols-3">
-        <Result label="Tip amount" value={money(tip, currency)} accent="cyan" />
-        <Result label="Total with tip" value={money(total, currency)} />
-        <Result label={`Each person pays (${split})`} value={money(total / split, currency)} accent="indigo" />
+        <Result label={t('Tip amount')} value={money(tip, currency)} accent="cyan" />
+        <Result label={t('Total with tip')} value={money(total, currency)} />
+        <Result label={t('Each person pays ({n})', { n: split })} value={money(total / split, currency)} accent="indigo" />
       </div>
     </>
   );
@@ -222,6 +235,7 @@ export function TipCalculator() {
 
 /* -------------------------------------------------------------- Discount */
 export function DiscountCalculator() {
+  const t = useT();
   const [currency, picker] = useCurrency();
   const [price, setPrice] = useState('120');
   const [first, setFirst] = useState('30');
@@ -236,19 +250,24 @@ export function DiscountCalculator() {
   return (
     <>
       <Grid className="md:grid-cols-4">
-        <LabelledField label="Original price" id="disc-price" type="number" min="0" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} />
-        <LabelledField label="First discount (%)" id="disc-1" type="number" min="0" max="100" value={first} onChange={(e) => setFirst(e.target.value)} />
-        <LabelledField label="Second discount (%)" hint="optional" id="disc-2" type="number" min="0" max="100" value={second} onChange={(e) => setSecond(e.target.value)} />
+        <LabelledField label={t('Original price')} id="disc-price" type="number" min="0" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} />
+        <LabelledField label={t('First discount (%)')} id="disc-1" type="number" min="0" max="100" value={first} onChange={(e) => setFirst(e.target.value)} />
+        <LabelledField label={t('Second discount (%)')} hint={t('optional')} id="disc-2" type="number" min="0" max="100" value={second} onChange={(e) => setSecond(e.target.value)} />
         {picker}
       </Grid>
       <div className="mt-6 grid gap-4 md:grid-cols-3">
-        <Result label="Final price" value={money(final, currency)} />
-        <Result label="You save" value={money(saved, currency)} accent="cyan" />
-        <Result label="True total discount" value={`${num(effective, 2)}%`} accent="indigo" />
+        <Result label={t('Final price')} value={money(final, currency)} />
+        <Result label={t('You save')} value={money(saved, currency)} accent="cyan" />
+        <Result label={t('True total discount')} value={`${num(effective, 2)}%`} accent="indigo" />
       </div>
       {toNumber(second) > 0 && (
         <p className="mt-4 rounded-xl border border-indigo-400/20 bg-indigo-400/10 p-3 text-sm text-indigo-200">
-          {first}% then {second}% is <strong>{num(effective, 1)}% off</strong>, not {num(toNumber(first) + toNumber(second), 0)}% — stacked discounts multiply rather than add.
+          {t('{first}% then {second}% is {effective}, not {sum}% — stacked discounts multiply rather than add.', {
+            first,
+            second,
+            effective: <strong>{t('{pct}% off', { pct: num(effective, 1) })}</strong>,
+            sum: num(toNumber(first) + toNumber(second), 0),
+          })}
         </p>
       )}
     </>
@@ -257,10 +276,12 @@ export function DiscountCalculator() {
 
 /* ------------------------------------------------------------- Sales tax */
 export function SalesTaxCalculator() {
+  const t = useT();
+  const extras = useExtras();
   const [currency, picker] = useCurrency();
   const [mode, setMode] = useState('add');
   const [amount, setAmount] = useState('100');
-  const [rate, setRate] = useState('20');
+  const [rate, setRate] = useState(extras.salesTax?.rate ?? '20');
 
   const value = toNumber(amount);
   const percent = toNumber(rate);
@@ -270,21 +291,32 @@ export function SalesTaxCalculator() {
 
   return (
     <>
-      <Segmented ariaLabel="Tax mode" value={mode} onChange={setMode}
-        options={[{ value: 'add', label: 'Add tax to a net price' }, { value: 'remove', label: 'Remove tax from a gross price' }]} />
+      <Segmented ariaLabel={t('Tax mode')} value={mode} onChange={setMode}
+        options={[{ value: 'add', label: t('Add tax to a net price') }, { value: 'remove', label: t('Remove tax from a gross price') }]} />
       <Grid className="mt-5 md:grid-cols-3">
-        <LabelledField label={mode === 'add' ? 'Net amount (before tax)' : 'Gross amount (including tax)'} id="tax-amount" type="number" min="0" step="0.01" value={amount} onChange={(e) => setAmount(e.target.value)} />
-        <LabelledField label="Tax rate (%)" id="tax-rate" type="number" min="0" step="0.01" value={rate} onChange={(e) => setRate(e.target.value)} />
+        <LabelledField label={mode === 'add' ? t('Net amount (before tax)') : t('Gross amount (including tax)')} id="tax-amount" type="number" min="0" step="0.01" value={amount} onChange={(e) => setAmount(e.target.value)} />
+        <LabelledField label={t('Tax rate (%)')} id="tax-rate" type="number" min="0" step="0.01" value={rate} onChange={(e) => setRate(e.target.value)} />
         {picker}
       </Grid>
+      {extras.salesTax?.presets && (
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <span className="text-sm text-slate-400">{t('Common rates')}</span>
+          <Segmented ariaLabel={t('Common rates')} value={String(rate)} onChange={setRate}
+            options={extras.salesTax.presets.map((preset) => ({ value: String(preset), label: `${num(preset, 1)}%` }))} />
+        </div>
+      )}
       <div className="mt-6 grid gap-4 md:grid-cols-3">
-        <Result label="Net (excluding tax)" value={money(net, currency)} accent="cyan" />
-        <Result label="Tax amount" value={money(tax, currency)} accent="indigo" />
-        <Result label="Gross (including tax)" value={money(gross, currency)} />
+        <Result label={t('Net (excluding tax)')} value={money(net, currency)} accent="cyan" />
+        <Result label={t('Tax amount')} value={money(tax, currency)} accent="indigo" />
+        <Result label={t('Gross (including tax)')} value={money(gross, currency)} />
       </div>
       {mode === 'remove' && (
         <p className="mt-4 text-sm text-slate-500">
-          Removing {percent}% tax means dividing by {num(1 + percent / 100, 4)} — a reduction of {num((1 - 1 / (1 + percent / 100)) * 100, 2)}%, not {percent}%.
+          {t('Removing {percent}% tax means dividing by {divisor} — a reduction of {reduction}%, not {percent}%.', {
+            percent: num(percent, 2),
+            divisor: num(1 + percent / 100, 4),
+            reduction: num((1 - 1 / (1 + percent / 100)) * 100, 2),
+          })}
         </p>
       )}
     </>
@@ -293,6 +325,8 @@ export function SalesTaxCalculator() {
 
 /* -------------------------------------------------------- Margin & markup */
 export function MarginMarkupCalculator() {
+  const t = useT();
+  const extras = useExtras();
   const [currency, picker] = useCurrency();
   const [cost, setCost] = useState('30');
   const [price, setPrice] = useState('50');
@@ -309,26 +343,27 @@ export function MarginMarkupCalculator() {
   return (
     <>
       <Grid className="md:grid-cols-3">
-        <LabelledField label="Unit cost" id="mm-cost" type="number" min="0" step="0.01" value={cost} onChange={(e) => setCost(e.target.value)} />
-        <LabelledField label="Selling price" id="mm-price" type="number" min="0" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} />
+        <LabelledField label={t('Unit cost')} id="mm-cost" type="number" min="0" step="0.01" value={cost} onChange={(e) => setCost(e.target.value)} />
+        <LabelledField label={t('Selling price')} id="mm-price" type="number" min="0" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} />
         {picker}
       </Grid>
-      <div className="mt-6 grid gap-4 md:grid-cols-3">
-        <Result label="Gross profit" value={money(profit, currency)} />
-        <Result label="Profit margin" value={`${num(margin, 2)}%`} accent="cyan" />
-        <Result label="Markup" value={`${num(markup, 2)}%`} accent="indigo" />
+      <div className={`mt-6 grid gap-4 ${extras.marginCoefficient ? 'md:grid-cols-4' : 'md:grid-cols-3'}`}>
+        <Result label={t('Gross profit')} value={money(profit, currency)} />
+        <Result label={t('Profit margin')} value={`${num(margin, 2)}%`} accent="cyan" />
+        <Result label={t('Markup')} value={`${num(markup, 2)}%`} accent="indigo" />
+        {extras.marginCoefficient && <Result label={t('Multiplier coefficient')} value={c ? `× ${num(p / c, 3)}` : '—'} accent="cyan" />}
       </div>
-      <Panel title="Price for a target margin">
+      <Panel title={t('Price for a target margin')}>
         <Grid className="md:grid-cols-2">
-          <LabelledField label="Target margin (%)" id="mm-target" type="number" min="0" max="99" step="0.1" value={targetMargin} onChange={(e) => setTargetMargin(e.target.value)} />
+          <LabelledField label={t('Target margin (%)')} id="mm-target" type="number" min="0" max="99" step="0.1" value={targetMargin} onChange={(e) => setTargetMargin(e.target.value)} />
           <div>
-            <Label>Required selling price</Label>
+            <Label>{t('Required selling price')}</Label>
             <div className="mt-2 rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-3 text-xl font-bold text-emerald-300">
-              {requiredPrice === null ? 'Margin must be under 100%' : money(requiredPrice, currency)}
+              {requiredPrice === null ? t('Margin must be under 100%') : money(requiredPrice, currency)}
             </div>
           </div>
         </Grid>
-        <p className="mt-4 text-sm text-slate-500">cost ÷ (1 − margin ÷ 100). Adding the margin percentage to cost gives a markup, not a margin — a common and expensive mix-up.</p>
+        <p className="mt-4 text-sm text-slate-500">{t('cost ÷ (1 − margin ÷ 100). Adding the margin percentage to cost gives a markup, not a margin — a common and expensive mix-up.')}</p>
       </Panel>
     </>
   );
@@ -336,6 +371,7 @@ export function MarginMarkupCalculator() {
 
 /* ------------------------------------------------------------------- ROI */
 export function RoiCalculator() {
+  const t = useT();
   const [currency, picker] = useCurrency();
   const [invested, setInvested] = useState('10000');
   const [returned, setReturned] = useState('16000');
@@ -345,29 +381,30 @@ export function RoiCalculator() {
   const r = toNumber(returned);
   const gain = r - i;
   const roi = i ? (gain / i) * 100 : 0;
-  const t = toNumber(years);
-  const annualised = i > 0 && r > 0 && t > 0 ? ((r / i) ** (1 / t) - 1) * 100 : null;
+  const period = toNumber(years);
+  const annualised = i > 0 && r > 0 && period > 0 ? ((r / i) ** (1 / period) - 1) * 100 : null;
 
   return (
     <>
       <Grid className="md:grid-cols-4">
-        <LabelledField label="Amount invested" hint="include fees" id="roi-in" type="number" min="0" value={invested} onChange={(e) => setInvested(e.target.value)} />
-        <LabelledField label="Amount returned" id="roi-out" type="number" min="0" value={returned} onChange={(e) => setReturned(e.target.value)} />
-        <LabelledField label="Holding period (years)" id="roi-years" type="number" min="0.1" step="0.1" value={years} onChange={(e) => setYears(e.target.value)} />
+        <LabelledField label={t('Amount invested')} hint={t('include fees')} id="roi-in" type="number" min="0" value={invested} onChange={(e) => setInvested(e.target.value)} />
+        <LabelledField label={t('Amount returned')} id="roi-out" type="number" min="0" value={returned} onChange={(e) => setReturned(e.target.value)} />
+        <LabelledField label={t('Holding period (years)')} id="roi-years" type="number" min="0.1" step="0.1" value={years} onChange={(e) => setYears(e.target.value)} />
         {picker}
       </Grid>
       <div className="mt-6 grid gap-4 md:grid-cols-3">
-        <Result label="Net gain" value={money(gain, currency)} accent={gain >= 0 ? 'emerald' : 'indigo'} />
-        <Result label="Total ROI" value={`${num(roi, 2)}%`} accent="cyan" />
-        <Result label="Annualised ROI" value={annualised === null ? '—' : `${num(annualised, 2)}%`} accent="indigo" />
+        <Result label={t('Net gain')} value={money(gain, currency)} accent={gain >= 0 ? 'emerald' : 'indigo'} />
+        <Result label={t('Total ROI')} value={`${num(roi, 2)}%`} accent="cyan" />
+        <Result label={t('Annualised ROI')} value={annualised === null ? '—' : `${num(annualised, 2)}%`} accent="indigo" />
       </div>
-      <p className="mt-4 text-sm text-slate-500">Annualised ROI is what makes investments of different lengths comparable. ROI says nothing about risk.</p>
+      <p className="mt-4 text-sm text-slate-500">{t('Annualised ROI is what makes investments of different lengths comparable. ROI says nothing about risk.')}</p>
     </>
   );
 }
 
 /* ------------------------------------------------------------ Break-even */
 export function BreakEvenCalculator() {
+  const t = useT();
   const [currency, picker] = useCurrency();
   const [fixed, setFixed] = useState('12000');
   const [price, setPrice] = useState('49');
@@ -380,24 +417,24 @@ export function BreakEvenCalculator() {
   return (
     <>
       <Grid className="md:grid-cols-4">
-        <LabelledField label="Fixed costs per period" id="be-fixed" type="number" min="0" value={fixed} onChange={(e) => setFixed(e.target.value)} />
-        <LabelledField label="Price per unit" id="be-price" type="number" min="0" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} />
-        <LabelledField label="Variable cost per unit" id="be-var" type="number" min="0" step="0.01" value={variable} onChange={(e) => setVariable(e.target.value)} />
+        <LabelledField label={t('Fixed costs per period')} id="be-fixed" type="number" min="0" value={fixed} onChange={(e) => setFixed(e.target.value)} />
+        <LabelledField label={t('Price per unit')} id="be-price" type="number" min="0" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} />
+        <LabelledField label={t('Variable cost per unit')} id="be-var" type="number" min="0" step="0.01" value={variable} onChange={(e) => setVariable(e.target.value)} />
         {picker}
       </Grid>
       {contribution > 0 ? (
         <>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
-            <Result label="Break-even units" value={Math.ceil(units).toLocaleString()} />
-            <Result label="Break-even revenue" value={money(Math.ceil(units) * toNumber(price), currency)} accent="cyan" />
-            <Result label="Contribution per unit" value={money(contribution, currency)} accent="indigo" />
+            <Result label={t('Break-even units')} value={num(Math.ceil(units), 0)} />
+            <Result label={t('Break-even revenue')} value={money(Math.ceil(units) * toNumber(price), currency)} accent="cyan" />
+            <Result label={t('Contribution per unit')} value={money(contribution, currency)} accent="indigo" />
           </div>
           <p className="mt-4 text-sm text-slate-500">
-            Each sale contributes {num(marginRatio, 1)}% of its price toward fixed costs. Selling {Math.ceil(units).toLocaleString()} units per period covers them exactly.
+            {t('Each sale contributes {pct}% of its price toward fixed costs. Selling {units} units per period covers them exactly.', { pct: num(marginRatio, 1), units: num(Math.ceil(units), 0) })}
           </p>
         </>
       ) : (
-        <ErrorNote>The price must exceed the variable cost, otherwise every extra unit sold increases the loss and there is no break-even point.</ErrorNote>
+        <ErrorNote>{t('The price must exceed the variable cost, otherwise every extra unit sold increases the loss and there is no break-even point.')}</ErrorNote>
       )}
     </>
   );
@@ -405,6 +442,7 @@ export function BreakEvenCalculator() {
 
 /* ---------------------------------------------------------- Savings goal */
 export function SavingsGoalCalculator() {
+  const t = useT();
   const [currency, picker] = useCurrency();
   const [goal, setGoal] = useState('20000');
   const [saved, setSaved] = useState('2500');
@@ -428,59 +466,69 @@ export function SavingsGoalCalculator() {
   return (
     <>
       <Grid className="md:grid-cols-3">
-        <LabelledField label="Savings goal" id="sg-goal" type="number" min="0" value={goal} onChange={(e) => setGoal(e.target.value)} />
-        <LabelledField label="Already saved" id="sg-saved" type="number" min="0" value={saved} onChange={(e) => setSaved(e.target.value)} />
+        <LabelledField label={t('Savings goal')} id="sg-goal" type="number" min="0" value={goal} onChange={(e) => setGoal(e.target.value)} />
+        <LabelledField label={t('Already saved')} id="sg-saved" type="number" min="0" value={saved} onChange={(e) => setSaved(e.target.value)} />
         {picker}
-        <LabelledField label="Months to save" id="sg-months" type="number" min="1" value={months} onChange={(e) => setMonths(e.target.value)} />
-        <LabelledField label="Annual interest rate (%)" id="sg-rate" type="number" min="0" step="0.1" value={rate} onChange={(e) => setRate(e.target.value)} />
+        <LabelledField label={t('Months to save')} id="sg-months" type="number" min="1" value={months} onChange={(e) => setMonths(e.target.value)} />
+        <LabelledField label={t('Annual interest rate (%)')} id="sg-rate" type="number" min="0" step="0.1" value={rate} onChange={(e) => setRate(e.target.value)} />
       </Grid>
       {result ? (
         <div className="mt-6 grid gap-4 md:grid-cols-3">
-          <Result label="Save each month" value={money(result.monthly, currency)} />
-          <Result label="Interest earned" value={money(Math.max(0, result.interest), currency)} accent="cyan" />
-          <Result label="Weekly equivalent" value={money((result.monthly * 12) / 52, currency)} accent="indigo" />
+          <Result label={t('Save each month')} value={money(result.monthly, currency)} />
+          <Result label={t('Interest earned')} value={money(Math.max(0, result.interest), currency)} accent="cyan" />
+          <Result label={t('Weekly equivalent')} value={money((result.monthly * 12) / 52, currency)} accent="indigo" />
         </div>
-      ) : <ErrorNote>Set a goal larger than the amount already saved, over at least one month.</ErrorNote>}
+      ) : <ErrorNote>{t('Set a goal larger than the amount already saved, over at least one month.')}</ErrorNote>}
     </>
   );
 }
 
 /* -------------------------------------------------------- Salary ↔ hourly */
 export function SalaryToHourlyCalculator() {
+  const t = useT();
+  const extras = useExtras();
   const [currency, picker] = useCurrency();
-  const [mode, setMode] = useState('annual');
-  const [amount, setAmount] = useState('60000');
-  const [hours, setHours] = useState('40');
+  // Markets that quote pay monthly (Brazil, France, Germany) start in that
+  // mode, with their statutory week: 44 h under the CLT, 35 h in France.
+  const [mode, setMode] = useState(extras.salary?.mode ?? 'annual');
+  const [amount, setAmount] = useState(extras.salary?.amount ?? '60000');
+  const [hours, setHours] = useState(extras.salary?.hours ?? '40');
   const [weeks, setWeeks] = useState('52');
 
   const totalHours = toNumber(hours) * toNumber(weeks);
-  const annual = mode === 'annual' ? toNumber(amount) : toNumber(amount) * totalHours;
+  const annual = mode === 'annual' ? toNumber(amount) : mode === 'monthly' ? toNumber(amount) * 12 : toNumber(amount) * totalHours;
   const hourly = totalHours ? annual / totalHours : 0;
+  const amountLabel = mode === 'annual' ? t('Annual salary') : mode === 'monthly' ? t('Monthly salary') : t('Hourly rate');
 
   return (
     <>
-      <Segmented ariaLabel="Conversion direction" value={mode} onChange={setMode}
-        options={[{ value: 'annual', label: 'From annual salary' }, { value: 'hourly', label: 'From hourly rate' }]} />
+      <Segmented ariaLabel={t('Conversion direction')} value={mode} onChange={setMode}
+        options={[
+          { value: 'annual', label: t('From annual salary') },
+          { value: 'monthly', label: t('From monthly salary') },
+          { value: 'hourly', label: t('From hourly rate') },
+        ]} />
       <Grid className="mt-5 md:grid-cols-4">
-        <LabelledField label={mode === 'annual' ? 'Annual salary' : 'Hourly rate'} id="s2h-amount" type="number" min="0" value={amount} onChange={(e) => setAmount(e.target.value)} />
-        <LabelledField label="Hours per week" id="s2h-hours" type="number" min="1" max="168" value={hours} onChange={(e) => setHours(e.target.value)} />
-        <LabelledField label="Paid weeks per year" hint="52 salaried, ~46 contract" id="s2h-weeks" type="number" min="1" max="52" value={weeks} onChange={(e) => setWeeks(e.target.value)} />
+        <LabelledField label={amountLabel} id="s2h-amount" type="number" min="0" value={amount} onChange={(e) => setAmount(e.target.value)} />
+        <LabelledField label={t('Hours per week')} id="s2h-hours" type="number" min="1" max="168" value={hours} onChange={(e) => setHours(e.target.value)} />
+        <LabelledField label={t('Paid weeks per year')} hint={t('52 salaried, ~46 contract')} id="s2h-weeks" type="number" min="1" max="52" value={weeks} onChange={(e) => setWeeks(e.target.value)} />
         {picker}
       </Grid>
       <StatGrid columns="md:grid-cols-5">
-        <Stat label="Hourly" value={money(hourly, currency)} accent="emerald" />
-        <Stat label="Daily" value={money(hourly * (toNumber(hours) / 5), currency)} />
-        <Stat label="Weekly" value={money(hourly * toNumber(hours), currency)} accent="cyan" />
-        <Stat label="Monthly" value={money(annual / 12, currency)} />
-        <Stat label="Annual" value={money(annual, currency)} accent="emerald" />
+        <Stat label={t('Hourly')} value={money(hourly, currency)} accent="emerald" />
+        <Stat label={t('Daily')} value={money(hourly * (toNumber(hours) / 5), currency)} />
+        <Stat label={t('Weekly')} value={money(hourly * toNumber(hours), currency)} accent="cyan" />
+        <Stat label={t('Monthly')} value={money(annual / 12, currency)} />
+        <Stat label={t('Annual')} value={money(annual, currency)} accent="emerald" />
       </StatGrid>
-      <p className="mt-4 text-sm text-slate-500">All figures are gross, before income tax and deductions.</p>
+      <p className="mt-4 text-sm text-slate-500">{t('All figures are gross, before income tax and deductions.')}</p>
     </>
   );
 }
 
 /* ------------------------------------------------------------- Inflation */
 export function InflationCalculator() {
+  const t = useT();
   const [currency, picker] = useCurrency();
   const [amount, setAmount] = useState('50000');
   const [rate, setRate] = useState('3');
@@ -494,19 +542,19 @@ export function InflationCalculator() {
   return (
     <>
       <Grid className="md:grid-cols-4">
-        <LabelledField label="Amount today" id="inf-amount" type="number" min="0" value={amount} onChange={(e) => setAmount(e.target.value)} />
-        <LabelledField label="Annual inflation (%)" id="inf-rate" type="number" min="0" step="0.1" value={rate} onChange={(e) => setRate(e.target.value)} />
-        <LabelledField label="Years ahead" id="inf-years" type="number" min="1" value={years} onChange={(e) => setYears(e.target.value)} />
+        <LabelledField label={t('Amount today')} id="inf-amount" type="number" min="0" value={amount} onChange={(e) => setAmount(e.target.value)} />
+        <LabelledField label={t('Annual inflation (%)')} id="inf-rate" type="number" min="0" step="0.1" value={rate} onChange={(e) => setRate(e.target.value)} />
+        <LabelledField label={t('Years ahead')} id="inf-years" type="number" min="1" value={years} onChange={(e) => setYears(e.target.value)} />
         {picker}
       </Grid>
       <div className="mt-6 grid gap-4 md:grid-cols-2">
-        <Result label={`Buying power in ${years} years`} value={money(erodedValue, currency)} note={`Today's ${money(toNumber(amount), currency)} will buy this much`} accent="cyan" />
-        <Result label="Equivalent future amount needed" value={money(futureNeeded, currency)} note="To match today's purchasing power" />
+        <Result label={t('Buying power in {years} years', { years })} value={money(erodedValue, currency)} note={t("Today's {amount} will buy this much", { amount: money(toNumber(amount), currency) })} accent="cyan" />
+        <Result label={t('Equivalent future amount needed')} value={money(futureNeeded, currency)} note={t("To match today's purchasing power")} />
       </div>
       <StatGrid columns="md:grid-cols-3">
-        <Stat label="Purchasing power lost" value={`${num((1 - 1 / factor) * 100, 1)}%`} />
-        <Stat label="Prices multiply by" value={`${num(factor, 2)}×`} accent="cyan" />
-        <Stat label="Value halves in" value={halvingYears ? `${num(halvingYears, 0)} years` : '—'} accent="indigo" />
+        <Stat label={t('Purchasing power lost')} value={`${num((1 - 1 / factor) * 100, 1)}%`} />
+        <Stat label={t('Prices multiply by')} value={`${num(factor, 2)}×`} accent="cyan" />
+        <Stat label={t('Value halves in')} value={halvingYears ? t('{n} years', { n: num(halvingYears, 0) }) : '—'} accent="indigo" />
       </StatGrid>
     </>
   );

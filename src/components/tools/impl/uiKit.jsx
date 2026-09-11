@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Check, Copy } from 'lucide-react';
 import { cx } from './toolFormat.js';
+import { useT } from '../../../i18n/i18n.js';
 
 export const TextArea = ({ className = '', ...props }) => (
   <textarea
@@ -90,7 +91,8 @@ export const Segmented = ({ options, value, onChange, ariaLabel }) => (
   </div>
 );
 
-export const CopyButton = ({ value, label = 'Copy' }) => {
+export const CopyButton = ({ value, label }) => {
+  const t = useT();
   const [copied, setCopied] = useState(false);
   const copy = async () => {
     if (!value) return;
@@ -104,7 +106,7 @@ export const CopyButton = ({ value, label = 'Copy' }) => {
   };
   return (
     <Button onClick={copy} disabled={!value} className="inline-flex items-center gap-2">
-      {copied ? <Check size={16} /> : <Copy size={16} />} {copied ? 'Copied' : label}
+      {copied ? <Check size={16} /> : <Copy size={16} />} {copied ? t('Copied') : (label ?? t('Copy'))}
     </Button>
   );
 };

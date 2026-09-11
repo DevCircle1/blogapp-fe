@@ -12,6 +12,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";
 import logo from "../../../assets/logo.png";
+import { CHROME, hubPath, langFromPath } from "../../../i18n/locales.js";
 const navigation = [
   { name: "Home", href: "/", current: false },
   { name: "Blogs", href: "/blogs", current: false },
@@ -29,10 +30,19 @@ export default function Navbar() {
   const { isAuthenticated, user, logoutUser } = useAuth();
   const location = useLocation();
 
-  const updatedNavigation = navigation.map((item) => ({
-    ...item,
-    current: location.pathname === item.href,
-  }));
+  // Inside a language section the labels follow that language and "Tools"
+  // leads to its own directory (/es, /de, …) instead of the English one.
+  const lang = langFromPath(location.pathname);
+  const labels = CHROME[lang]?.nav;
+  const updatedNavigation = navigation.map((item) => {
+    const href = item.href === "/tools" ? hubPath(lang) : item.href;
+    return {
+      ...item,
+      href,
+      label: labels?.[item.name] ?? item.name,
+      current: location.pathname === href,
+    };
+  });
 
   const handleNavigation = (item, e) => {
     if (item.requiresAuth && !isAuthenticated) {
@@ -87,7 +97,7 @@ export default function Navbar() {
                           : ""
                       )}
                     >
-                      {item.name}
+                      {item.label}
                       {item.requiresAuth && !isAuthenticated && (
                         <span className="ml-1 text-xs">🔒</span>
                       )}
@@ -161,7 +171,7 @@ export default function Navbar() {
                         )
                       }
                     >
-                      Login
+                      {labels?.Login ?? "Login"}
                     </NavLink>
                     <NavLink
                       to="/signup"
@@ -174,7 +184,7 @@ export default function Navbar() {
                         )
                       }
                     >
-                      Register
+                      {labels?.Register ?? "Register"}
                     </NavLink>
                   </div>
                 )}
@@ -200,7 +210,7 @@ export default function Navbar() {
                       : ""
                   )}
                 >
-                  {item.name}
+                  {item.label}
                   {item.requiresAuth && !isAuthenticated && (
                     <span className="ml-1 text-xs">🔒</span>
                   )}

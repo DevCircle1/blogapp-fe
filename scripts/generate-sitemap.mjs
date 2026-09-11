@@ -96,12 +96,20 @@ const run = async () => {
     return true;
   });
 
+  const absolute = (path) => escapeXml(SITE_URL + (path === '/' ? '/' : path));
+
+  // hreflang is declared here as well as in each page's <head>: the sitemap
+  // is often read before the pages themselves are crawled, so Google learns
+  // about every language version of a tool from the first fetch.
   const xml = [
     '<?xml version="1.0" encoding="UTF-8"?>',
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
     ...unique.map((entry) => [
       '  <url>',
-      `    <loc>${escapeXml(SITE_URL + (entry.path === '/' ? '/' : entry.path))}</loc>`,
+      `    <loc>${absolute(entry.path)}</loc>`,
+      ...(entry.alternates || []).map((alternate) => (
+        `    <xhtml:link rel="alternate" hreflang="${alternate.hreflang}" href="${absolute(alternate.path)}"/>`
+      )),
       `    <lastmod>${entry.lastmod}</lastmod>`,
       `    <changefreq>${entry.changefreq || 'monthly'}</changefreq>`,
       `    <priority>${entry.priority || '0.5'}</priority>`,

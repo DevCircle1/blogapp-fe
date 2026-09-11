@@ -1,15 +1,17 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
   Button, CopyButton, ErrorNote, Field, Grid, Label, LabelledField, LabelledSelect, Panel,
-  Result, Segmented, Select, Stat, StatGrid, Toggle,
+  Result, Segmented, Stat, StatGrid, Toggle,
 } from './uiKit.jsx';
-import { num, toNumber } from './toolFormat.js';
+import { getFormatLocale, num, toNumber } from './toolFormat.js';
+import { msg, useT } from '../../../i18n/i18n.js';
 
 const today = () => new Date().toISOString().slice(0, 10);
 const parseDate = (value) => {
   const date = new Date(`${value}T00:00:00`);
   return Number.isNaN(date.getTime()) ? null : date;
 };
+const longDate = (date) => date.toLocaleDateString(getFormatLocale(), { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
 const countWeekdays = (start, end) => {
   let days = 0;
@@ -24,6 +26,7 @@ const countWeekdays = (start, end) => {
 
 /* -------------------------------------------------------- Date difference */
 export function DateDifferenceCalculator() {
+  const t = useT();
   const [start, setStart] = useState(today());
   const [end, setEnd] = useState(today());
   const [weekdaysOnly, setWeekdaysOnly] = useState(false);
@@ -54,31 +57,35 @@ export function DateDifferenceCalculator() {
   return (
     <>
       <Grid className="md:grid-cols-2">
-        <LabelledField label="Start date" id="dd-start" type="date" value={start} onChange={(e) => setStart(e.target.value)} />
-        <LabelledField label="End date" id="dd-end" type="date" value={end} onChange={(e) => setEnd(e.target.value)} />
+        <LabelledField label={t('Start date')} id="dd-start" type="date" value={start} onChange={(e) => setStart(e.target.value)} />
+        <LabelledField label={t('End date')} id="dd-end" type="date" value={end} onChange={(e) => setEnd(e.target.value)} />
       </Grid>
-      <div className="mt-4"><Toggle checked={weekdaysOnly} onChange={() => setWeekdaysOnly(!weekdaysOnly)} label="Also count weekdays only (excludes weekends)" /></div>
+      <div className="mt-4"><Toggle checked={weekdaysOnly} onChange={() => setWeekdaysOnly(!weekdaysOnly)} label={t('Also count weekdays only (excludes weekends)')} /></div>
       {result ? (
         <>
           <div className="mt-6 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-6 text-center">
-            <p className="text-4xl font-black text-emerald-300">{Math.abs(result.totalDays).toLocaleString()} days</p>
-            <p className="mt-2 text-slate-300">{result.years} years, {result.months} months, {result.days} days{result.negative ? ' (end date is earlier)' : ''}</p>
+            <p className="text-4xl font-black text-emerald-300">{t('{n} days', { n: num(Math.abs(result.totalDays), 0) })}</p>
+            <p className="mt-2 text-slate-300">
+              {t('{y} years, {m} months, {d} days', { y: result.years, m: result.months, d: result.days })}
+              {result.negative ? ` ${t('(end date is earlier)')}` : ''}
+            </p>
           </div>
           <StatGrid columns="md:grid-cols-4">
-            <Stat label="Weeks" value={result.weeks.toLocaleString()} accent="cyan" />
-            <Stat label="Hours" value={Math.abs(result.hours).toLocaleString()} />
-            <Stat label="Months (approx)" value={num(Math.abs(result.totalDays) / 30.44, 1)} accent="cyan" />
-            <Stat label="Weekdays" value={result.weekdays === null ? '—' : result.weekdays.toLocaleString()} accent="emerald" />
+            <Stat label={t('Weeks')} value={num(result.weeks, 0)} accent="cyan" />
+            <Stat label={t('Hours')} value={num(Math.abs(result.hours), 0)} />
+            <Stat label={t('Months (approx)')} value={num(Math.abs(result.totalDays) / 30.44, 1)} accent="cyan" />
+            <Stat label={t('Weekdays')} value={result.weekdays === null ? '—' : num(result.weekdays, 0)} accent="emerald" />
           </StatGrid>
-          <p className="mt-4 text-sm text-slate-500">The count excludes the end date. Add one day if you need an inclusive total, as for a holiday booking.</p>
+          <p className="mt-4 text-sm text-slate-500">{t('The count excludes the end date. Add one day if you need an inclusive total, as for a holiday booking.')}</p>
         </>
-      ) : <ErrorNote>Choose two valid dates.</ErrorNote>}
+      ) : <ErrorNote>{t('Choose two valid dates.')}</ErrorNote>}
     </>
   );
 }
 
 /* ------------------------------------------------------ Add/subtract days */
 export function DateAddSubtract() {
+  const t = useT();
   const [start, setStart] = useState(today());
   const [operation, setOperation] = useState('add');
   const [amount, setAmount] = useState('30');
@@ -110,38 +117,39 @@ export function DateAddSubtract() {
   return (
     <>
       <Grid className="md:grid-cols-4">
-        <LabelledField label="Start date" id="das-start" type="date" value={start} onChange={(e) => setStart(e.target.value)} />
-        <LabelledSelect label="Operation" id="das-op" value={operation} onChange={(e) => setOperation(e.target.value)}>
-          <option value="add">Add</option>
-          <option value="subtract">Subtract</option>
+        <LabelledField label={t('Start date')} id="das-start" type="date" value={start} onChange={(e) => setStart(e.target.value)} />
+        <LabelledSelect label={t('Operation')} id="das-op" value={operation} onChange={(e) => setOperation(e.target.value)}>
+          <option value="add">{t('Add')}</option>
+          <option value="subtract">{t('Subtract')}</option>
         </LabelledSelect>
-        <LabelledField label="Amount" id="das-amount" type="number" min="0" value={amount} onChange={(e) => setAmount(e.target.value)} />
-        <LabelledSelect label="Unit" id="das-unit" value={unit} onChange={(e) => setUnit(e.target.value)}>
-          <option value="days">Days</option>
-          <option value="weeks">Weeks</option>
-          <option value="months">Months</option>
-          <option value="years">Years</option>
+        <LabelledField label={t('Amount')} id="das-amount" type="number" min="0" value={amount} onChange={(e) => setAmount(e.target.value)} />
+        <LabelledSelect label={t('Unit')} id="das-unit" value={unit} onChange={(e) => setUnit(e.target.value)}>
+          <option value="days">{t('Days')}</option>
+          <option value="weeks">{t('Weeks')}</option>
+          <option value="months">{t('Months')}</option>
+          <option value="years">{t('Years')}</option>
         </LabelledSelect>
       </Grid>
       {result ? (
         <>
           <div className="mt-6 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-6 text-center">
-            <p className="text-3xl font-black text-emerald-300">{result.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+            <p className="text-3xl font-black text-emerald-300">{longDate(result)}</p>
           </div>
           <StatGrid columns="md:grid-cols-3">
             <Stat label="ISO 8601" value={iso} accent="cyan" />
-            <Stat label="Day of week" value={result.toLocaleDateString(undefined, { weekday: 'long' })} />
-            <Stat label="Weekend?" value={[0, 6].includes(result.getDay()) ? 'Yes — may roll to Monday' : 'No'} accent="cyan" />
+            <Stat label={t('Day of week')} value={result.toLocaleDateString(getFormatLocale(), { weekday: 'long' })} />
+            <Stat label={t('Weekend?')} value={[0, 6].includes(result.getDay()) ? t('Yes — may roll to Monday') : t('No')} accent="cyan" />
           </StatGrid>
-          <div className="mt-4"><CopyButton value={iso} label="Copy ISO date" /></div>
+          <div className="mt-4"><CopyButton value={iso} label={t('Copy ISO date')} /></div>
         </>
-      ) : <ErrorNote>Choose a valid start date.</ErrorNote>}
+      ) : <ErrorNote>{t('Choose a valid start date.')}</ErrorNote>}
     </>
   );
 }
 
 /* ----------------------------------------------------------- Time duration */
 export function TimeDurationCalculator() {
+  const t = useT();
   const [start, setStart] = useState('09:00');
   const [end, setEnd] = useState('17:30');
   const [breakMinutes, setBreakMinutes] = useState('30');
@@ -164,30 +172,31 @@ export function TimeDurationCalculator() {
   return (
     <>
       <Grid className="md:grid-cols-3">
-        <LabelledField label="Start time" id="td-start" type="time" value={start} onChange={(e) => setStart(e.target.value)} />
-        <LabelledField label="End time" id="td-end" type="time" value={end} onChange={(e) => setEnd(e.target.value)} />
-        <LabelledField label="Unpaid break (minutes)" id="td-break" type="number" min="0" value={breakMinutes} onChange={(e) => setBreakMinutes(e.target.value)} />
+        <LabelledField label={t('Start time')} id="td-start" type="time" value={start} onChange={(e) => setStart(e.target.value)} />
+        <LabelledField label={t('End time')} id="td-end" type="time" value={end} onChange={(e) => setEnd(e.target.value)} />
+        <LabelledField label={t('Unpaid break (minutes)')} id="td-break" type="number" min="0" value={breakMinutes} onChange={(e) => setBreakMinutes(e.target.value)} />
       </Grid>
       {result ? (
         <>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
-            <Result label="Duration" value={`${result.hours}h ${result.minutes}m`} />
-            <Result label="Decimal hours (for timesheets)" value={num(result.decimal, 2)} accent="cyan" note="Use this figure for payroll, not the hours-and-minutes form" />
+            <Result label={t('Duration')} value={t('{h}h {m}m', { h: result.hours, m: result.minutes })} />
+            <Result label={t('Decimal hours (for timesheets)')} value={num(result.decimal, 2)} accent="cyan" note={t('Use this figure for payroll, not the hours-and-minutes form')} />
           </div>
-          {result.overnight && <p className="mt-4 rounded-xl border border-indigo-400/20 bg-indigo-400/10 p-3 text-sm text-indigo-200">The end time is earlier than the start time, so this is treated as an overnight shift.</p>}
+          {result.overnight && <p className="mt-4 rounded-xl border border-indigo-400/20 bg-indigo-400/10 p-3 text-sm text-indigo-200">{t('The end time is earlier than the start time, so this is treated as an overnight shift.')}</p>}
           <StatGrid columns="md:grid-cols-3">
-            <Stat label="Total minutes" value={result.worked.toLocaleString()} />
-            <Stat label="Five-day week" value={`${num(result.decimal * 5, 2)} hours`} accent="cyan" />
-            <Stat label="Monthly (21 days)" value={`${num(result.decimal * 21, 1)} hours`} />
+            <Stat label={t('Total minutes')} value={num(result.worked, 0)} />
+            <Stat label={t('Five-day week')} value={t('{n} hours', { n: num(result.decimal * 5, 2) })} accent="cyan" />
+            <Stat label={t('Monthly (21 days)')} value={t('{n} hours', { n: num(result.decimal * 21, 1) })} />
           </StatGrid>
         </>
-      ) : <ErrorNote>Enter valid start and end times.</ErrorNote>}
+      ) : <ErrorNote>{t('Enter valid start and end times.')}</ErrorNote>}
     </>
   );
 }
 
 /* ------------------------------------------------------------ Working days */
 export function WorkingDaysCalculator() {
+  const t = useT();
   const [mode, setMode] = useState('between');
   const [start, setStart] = useState(today());
   const [end, setEnd] = useState(today());
@@ -215,41 +224,44 @@ export function WorkingDaysCalculator() {
 
   return (
     <>
-      <Segmented ariaLabel="Mode" value={mode} onChange={setMode}
-        options={[{ value: 'between', label: 'Between two dates' }, { value: 'add', label: 'Add business days' }]} />
+      <Segmented ariaLabel={t('Mode')} value={mode} onChange={setMode}
+        options={[{ value: 'between', label: t('Between two dates') }, { value: 'add', label: t('Add business days') }]} />
       {mode === 'between' ? (
         <>
           <Grid className="mt-5 md:grid-cols-2">
-            <LabelledField label="Start date" id="wd-start" type="date" value={start} onChange={(e) => setStart(e.target.value)} />
-            <LabelledField label="End date" id="wd-end" type="date" value={end} onChange={(e) => setEnd(e.target.value)} />
+            <LabelledField label={t('Start date')} id="wd-start" type="date" value={start} onChange={(e) => setStart(e.target.value)} />
+            <LabelledField label={t('End date')} id="wd-end" type="date" value={end} onChange={(e) => setEnd(e.target.value)} />
           </Grid>
           {between ? (
             <div className="mt-6 grid gap-4 md:grid-cols-2">
-              <Result label="Business days" value={between.weekdays.toLocaleString()} />
-              <Result label="Calendar days" value={between.calendar.toLocaleString()} accent="cyan" />
+              <Result label={t('Business days')} value={num(between.weekdays, 0)} />
+              <Result label={t('Calendar days')} value={num(between.calendar, 0)} accent="cyan" />
             </div>
-          ) : <ErrorNote>The end date must be on or after the start date.</ErrorNote>}
+          ) : <ErrorNote>{t('The end date must be on or after the start date.')}</ErrorNote>}
         </>
       ) : (
         <>
           <Grid className="mt-5 md:grid-cols-2">
-            <LabelledField label="Start date" id="wd-astart" type="date" value={start} onChange={(e) => setStart(e.target.value)} />
-            <LabelledField label="Business days to add" id="wd-days" type="number" min="0" value={days} onChange={(e) => setDays(e.target.value)} />
+            <LabelledField label={t('Start date')} id="wd-astart" type="date" value={start} onChange={(e) => setStart(e.target.value)} />
+            <LabelledField label={t('Business days to add')} id="wd-days" type="number" min="0" value={days} onChange={(e) => setDays(e.target.value)} />
           </Grid>
           {projected && (
             <div className="mt-6 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-6 text-center">
-              <p className="text-3xl font-black text-emerald-300">{projected.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+              <p className="text-3xl font-black text-emerald-300">{longDate(projected)}</p>
             </div>
           )}
         </>
       )}
-      <p className="mt-5 text-sm text-slate-500">Weekends are excluded; public holidays are not, because they differ by country and region. Subtract any that fall inside your range.</p>
+      <p className="mt-5 text-sm text-slate-500">{t('Weekends are excluded; public holidays are not, because they differ by country and region. Subtract any that fall inside your range.')}</p>
     </>
   );
 }
 
 /* --------------------------------------------------------- Countdown timer */
+const COUNTDOWN_UNITS = [msg('days'), msg('hours'), msg('minutes'), msg('seconds')];
+
 export function CountdownTimer() {
+  const t = useT();
   const nextNewYear = `${new Date().getFullYear() + 1}-01-01T00:00`;
   const [target, setTarget] = useState(nextNewYear);
   const [now, setNow] = useState(Date.now());
@@ -265,48 +277,49 @@ export function CountdownTimer() {
   const past = diff < 0;
   const absolute = Math.abs(diff);
 
-  const parts = {
-    days: Math.floor(absolute / 86400000),
-    hours: Math.floor((absolute % 86400000) / 3600000),
-    minutes: Math.floor((absolute % 3600000) / 60000),
-    seconds: Math.floor((absolute % 60000) / 1000),
-  };
+  const parts = [
+    Math.floor(absolute / 86400000),
+    Math.floor((absolute % 86400000) / 3600000),
+    Math.floor((absolute % 3600000) / 60000),
+    Math.floor((absolute % 60000) / 1000),
+  ];
 
   return (
     <>
       <Grid className="md:grid-cols-2">
-        <LabelledField label="Target date and time" id="cd-target" type="datetime-local" value={target} onChange={(e) => setTarget(e.target.value)} />
+        <LabelledField label={t('Target date and time')} id="cd-target" type="datetime-local" value={target} onChange={(e) => setTarget(e.target.value)} />
         <div>
-          <Label>Quick presets</Label>
+          <Label>{t('Quick presets')}</Label>
           <div className="mt-2 flex flex-wrap gap-2">
-            <Button variant="ghost" onClick={() => setTarget(nextNewYear)}>New Year</Button>
-            <Button variant="ghost" onClick={() => { const d = new Date(); d.setDate(d.getDate() + 7); setTarget(d.toISOString().slice(0, 16)); }}>In 7 days</Button>
-            <Button variant="ghost" onClick={() => { const d = new Date(); d.setDate(d.getDate() + 30); setTarget(d.toISOString().slice(0, 16)); }}>In 30 days</Button>
+            <Button variant="ghost" onClick={() => setTarget(nextNewYear)}>{t('New Year')}</Button>
+            <Button variant="ghost" onClick={() => { const d = new Date(); d.setDate(d.getDate() + 7); setTarget(d.toISOString().slice(0, 16)); }}>{t('In 7 days')}</Button>
+            <Button variant="ghost" onClick={() => { const d = new Date(); d.setDate(d.getDate() + 30); setTarget(d.toISOString().slice(0, 16)); }}>{t('In 30 days')}</Button>
           </div>
         </div>
       </Grid>
       {valid ? (
         <>
-          <p className="mt-6 text-center text-sm uppercase tracking-widest text-slate-500">{past ? 'Time since' : 'Time remaining'}</p>
+          <p className="mt-6 text-center text-sm uppercase tracking-widest text-slate-500">{past ? t('Time since') : t('Time remaining')}</p>
           <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-4">
-            {Object.entries(parts).map(([label, value]) => (
+            {COUNTDOWN_UNITS.map((label, index) => (
               <div key={label} className="rounded-2xl border border-white/10 bg-slate-950/70 p-6 text-center">
-                <strong className="block text-4xl font-black text-emerald-300 tabular-nums">{String(value).padStart(2, '0')}</strong>
-                <span className="mt-1 block text-xs uppercase tracking-wider text-slate-500">{label}</span>
+                <strong className="block text-4xl font-black text-emerald-300 tabular-nums">{String(parts[index]).padStart(2, '0')}</strong>
+                <span className="mt-1 block text-xs uppercase tracking-wider text-slate-500">{t(label)}</span>
               </div>
             ))}
           </div>
           <p className="mt-5 text-center text-sm text-slate-500">
-            Target: {new Date(target).toLocaleString()} in your local time zone.
+            {t('Target: {date} in your local time zone.', { date: new Date(target).toLocaleString(getFormatLocale()) })}
           </p>
         </>
-      ) : <ErrorNote>Choose a valid target date and time.</ErrorNote>}
+      ) : <ErrorNote>{t('Choose a valid target date and time.')}</ErrorNote>}
     </>
   );
 }
 
 /* ------------------------------------------------------ Timestamp converter */
 export function TimestampConverter() {
+  const t = useT();
   const [timestamp, setTimestamp] = useState(() => Math.floor(Date.now() / 1000).toString());
   const [dateInput, setDateInput] = useState(() => new Date().toISOString().slice(0, 16));
 
@@ -318,29 +331,29 @@ export function TimestampConverter() {
 
   return (
     <>
-      <Panel title="Timestamp to date">
-        <Label htmlFor="ts-input" hint={timestamp.length > 11 ? 'read as milliseconds' : 'read as seconds'}>Unix timestamp</Label>
+      <Panel title={t('Timestamp to date')}>
+        <Label htmlFor="ts-input" hint={timestamp.length > 11 ? t('read as milliseconds') : t('read as seconds')}>{t('Unix timestamp')}</Label>
         <Field id="ts-input" className="mt-2 font-mono" value={timestamp} onChange={(e) => setTimestamp(e.target.value.replace(/\D/g, ''))} inputMode="numeric" />
         <div className="mt-4 flex flex-wrap gap-3">
-          <Button onClick={() => setTimestamp(Math.floor(Date.now() / 1000).toString())}>Use current time</Button>
-          <Button variant="ghost" onClick={() => setTimestamp(Date.now().toString())}>Current time (ms)</Button>
+          <Button onClick={() => setTimestamp(Math.floor(Date.now() / 1000).toString())}>{t('Use current time')}</Button>
+          <Button variant="ghost" onClick={() => setTimestamp(Date.now().toString())}>{t('Current time (ms)')}</Button>
         </div>
         {valid && (
           <StatGrid columns="md:grid-cols-3">
-            <Stat label="Local time" value={date.toLocaleString()} accent="emerald" />
+            <Stat label={t('Local time')} value={date.toLocaleString(getFormatLocale())} accent="emerald" />
             <Stat label="UTC" value={date.toUTCString()} accent="cyan" />
             <Stat label="ISO 8601" value={date.toISOString()} />
           </StatGrid>
         )}
       </Panel>
 
-      <Panel title="Date to timestamp">
-        <LabelledField label="Date and time" id="ts-date" type="datetime-local" value={dateInput} onChange={(e) => setDateInput(e.target.value)} />
+      <Panel title={t('Date to timestamp')}>
+        <LabelledField label={t('Date and time')} id="ts-date" type="datetime-local" value={dateInput} onChange={(e) => setDateInput(e.target.value)} />
         {reverseValid && (
           <div className="mt-4 space-y-3">
-            {[['Seconds', Math.floor(reverse.getTime() / 1000)], ['Milliseconds', reverse.getTime()]].map(([label, value]) => (
+            {[[msg('Seconds'), Math.floor(reverse.getTime() / 1000)], [msg('Milliseconds'), reverse.getTime()]].map(([label, value]) => (
               <div key={label} className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3">
-                <span className="text-sm text-slate-400">{label}</span>
+                <span className="text-sm text-slate-400">{t(label)}</span>
                 <span className="font-mono text-emerald-300">{value}</span>
                 <CopyButton value={String(value)} />
               </div>

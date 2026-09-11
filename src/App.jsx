@@ -1,7 +1,8 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async'; 
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import Navbar from './components/common/Navbar/Navbar.jsx';
+import { LOCALES, LOCALIZED_LANGS, langFromPath } from './i18n/locales.js';
 import { shouldShowNavbar } from './utils/navbarUtils.js';
 import Footer from './components/common/Footer/Footer.jsx';
 import ScrollToTop from './components/common/ScrollToTop.jsx';
@@ -34,6 +35,8 @@ const QuestionDetail = lazy(() => import('./components/tools/QuestionDetail.jsx'
 const MyAnswers = lazy(() => import('./components/tools/MyAnswers.jsx'));
 const WordleGame = lazy(() => import('./components/tools/WordleGame.jsx'));
 const PremiumToolSuite = lazy(() => import('./components/tools/PremiumToolSuite.jsx'));
+const LocalizedToolPage = lazy(() => import('./components/tools/localized/LocalizedToolPage.jsx'));
+const LocalizedToolsHub = lazy(() => import('./components/tools/localized/LocalizedToolsHub.jsx'));
 const NotFound = lazy(() => import('./components/common/NotFound.jsx'));
 function App() {
   const location = useLocation();
@@ -49,6 +52,10 @@ function App() {
 
   return (
     <HelmetProvider>
+      {/* Derived from the URL rather than set by each page's <Seo>, so pages
+          without one still report a language and nothing is left stale when
+          navigating out of a language section. */}
+      <Helmet htmlAttributes={{ lang: LOCALES[langFromPath(location.pathname)].htmlLang }} />
       <ScrollToTop />
       {shouldShowNavbar(location.pathname) && <Navbar />}
 
@@ -80,6 +87,13 @@ function App() {
         <Route path="/q/:id" element={<QuestionDetail />} />
         <Route path="/my-answers" element={<MyAnswers />} />
         <Route path="/word-game" element={<WordleGame />} />
+        {/* Language versions of the tool catalogue: /es, /es/<localized-slug>, … */}
+        {LOCALIZED_LANGS.map((lang) => (
+          <Route key={`${lang}-hub`} path={`/${lang}`} element={<LocalizedToolsHub lang={lang} />} />
+        ))}
+        {LOCALIZED_LANGS.map((lang) => (
+          <Route key={`${lang}-tool`} path={`/${lang}/:toolSlug`} element={<LocalizedToolPage lang={lang} />} />
+        ))}
         <Route path="*" element={<NotFound />} />
       </Routes></Suspense>
 

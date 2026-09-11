@@ -3,10 +3,23 @@
  * Consumed by both the sitemap generator and the prerender step so the two can
  * never disagree about what exists.
  */
-import { premiumTools, standaloneTools } from '../src/components/tools/toolCatalog.js';
+import {
+  allToolLinks, getRelatedTools, premiumTools, standaloneTools,
+} from '../src/components/tools/toolCatalog.js';
+import { toolHubSchemas, toolPageSchemas } from '../src/seo/toolSchema.js';
+import {
+  LOCALES, LOCALIZED_LANGS, hubAlternates, hubPath, toolAlternates, toolPath,
+} from '../src/i18n/locales.js';
+import es from '../src/i18n/content/es.js';
+import pt from '../src/i18n/content/pt.js';
+import fr from '../src/i18n/content/fr.js';
+import de from '../src/i18n/content/de.js';
 
 export const SITE_URL = 'https://talkandtool.com';
 export const SITE_NAME = 'Talk & Tool';
+
+const CONTENT = { es, pt, fr, de };
+const fill = (template, name) => template.replace('{name}', name);
 
 const organizationSchema = {
   '@context': 'https://schema.org',
@@ -46,6 +59,8 @@ export const staticRoutes = [
     changefreq: 'weekly',
     heading: 'Free online tools that work instantly',
     body: 'A directory of free calculators, converters, text utilities, and developer tools. Every tool opens instantly, works on mobile, and processes your input locally in the browser.',
+    list: allToolLinks.map((tool) => ({ name: tool.shortTitle || tool.title, path: tool.link })),
+    alternates: hubAlternates(),
   },
   {
     path: '/blogs',
@@ -136,66 +151,16 @@ const STANDALONE_COPY = {
   },
 };
 
-const APPLICATION_CATEGORY = {
-  Finance: 'FinanceApplication',
-  Health: 'HealthApplication',
-  Developer: 'DeveloperApplication',
-  Security: 'SecurityApplication',
-  SEO: 'BusinessApplication',
-};
-
-/**
+/*
  * The same structured data the page emits at runtime, baked in statically.
  * Google renders JavaScript, but static JSON-LD is picked up on the first pass
  * instead of waiting for the render queue — which matters most for the FAQ and
  * HowTo markup that drives rich results.
  */
-const toolSchemas = (tool, canonical) => [
-  {
-    '@context': 'https://schema.org',
-    '@type': 'WebApplication',
-    name: tool.title,
-    url: canonical,
-    description: tool.description,
-    applicationCategory: APPLICATION_CATEGORY[tool.category] || 'UtilitiesApplication',
-    operatingSystem: 'Any',
-    browserRequirements: 'Requires JavaScript',
-    isAccessibleForFree: true,
-    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-    provider: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
-  },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: tool.faqs.map((item) => ({
-      '@type': 'Question',
-      name: item.q,
-      acceptedAnswer: { '@type': 'Answer', text: item.a },
-    })),
-  },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
-      { '@type': 'ListItem', position: 2, name: 'Tools', item: `${SITE_URL}/tools` },
-      { '@type': 'ListItem', position: 3, name: tool.shortTitle, item: canonical },
-    ],
-  },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'HowTo',
-    name: `How to use the ${tool.shortTitle}`,
-    description: tool.intro,
-    totalTime: 'PT1M',
-    step: tool.steps.map((step, index) => ({ '@type': 'HowToStep', position: index + 1, text: step })),
-  },
-];
-
 export const toolRoutes = premiumTools.map((tool) => {
-  const canonical = `${SITE_URL}/tools/${tool.slug}`;
+  const path = `/tools/${tool.slug}`;
   return {
-    path: `/tools/${tool.slug}`,
+    path,
     title: `${tool.title} | ${SITE_NAME}`,
     description: tool.description,
     priority: '0.8',
@@ -204,7 +169,17 @@ export const toolRoutes = premiumTools.map((tool) => {
     body: tool.intro,
     steps: tool.steps,
     faqs: tool.faqs,
-    schemas: toolSchemas(tool, canonical),
+    alternates: toolAlternates(tool.slug),
+    schemas: toolPageSchemas({
+      tool,
+      path,
+      breadcrumb: [
+        { name: 'Home', path: '/' },
+        { name: 'Tools', path: '/tools' },
+        { name: tool.shortTitle, path },
+      ],
+      howToName: `How to use the ${tool.shortTitle}`,
+    }),
   };
 });
 
@@ -217,4 +192,90 @@ export const standaloneRoutes = standaloneTools
     ...STANDALONE_COPY[tool.slug],
   }));
 
-export const allRoutes = [...staticRoutes, ...standaloneRoutes, ...toolRoutes];
+/** /es, /pt, /fr, /de — each language's tool directory. */
+export const localizedHubRoutes = LOCALIZED_LANGS.map((lang) => {
+  const { hub, chrome, tools } = CONTENT[lang];
+  const path = hubPath(lang);
+  const items = premiumTools
+    .filter((tool) => tools[tool.slug])
+    .map((tool) => ({ name: tools[tool.slug].shortTitle, path: toolPath(lang, tool.slug) }));
+  return {
+    path,
+    lang,
+    title: `${hub.title} | ${SITE_NAME}`,
+    description: hub.description,
+    priority: '0.9',
+    changefreq: 'weekly',
+    heading: hub.heading,
+    body: hub.body,
+    list: items,
+    faqs: hub.faqs,
+    faqHeading: chrome.faq,
+    alsoAvailable: chrome.alsoAvailable,
+    links: [{ href: '/tools', label: 'English' }],
+    alternates: hubAlternates(),
+    schemas: toolHubSchemas({
+      name: hub.title,
+      path,
+      description: hub.description,
+      lang: LOCALES[lang].htmlLang,
+      items,
+      faqs: hub.faqs,
+      breadcrumb: [{ name: chrome.home, path: '/' }, { name: chrome.tools, path }],
+    }),
+  };
+});
+
+/** Every catalogue tool in every localized language. */
+export const localizedToolRoutes = LOCALIZED_LANGS.flatMap((lang) => {
+  const { chrome, tools } = CONTENT[lang];
+  return premiumTools.filter((base) => tools[base.slug]).map((base) => {
+    const tool = { ...base, ...tools[base.slug] };
+    const path = toolPath(lang, base.slug);
+    const howTo = fill(chrome.howTo, tool.shortTitle);
+    return {
+      path,
+      lang,
+      title: `${tool.title} | ${SITE_NAME}`,
+      description: tool.description,
+      priority: '0.7',
+      changefreq: 'monthly',
+      heading: tool.title,
+      body: tool.intro,
+      steps: tool.steps,
+      faqs: tool.faqs,
+      howToHeading: howTo,
+      faqHeading: chrome.faq,
+      alsoAvailable: chrome.alsoAvailable,
+      // Related tools in the same language, then the language hub: the same
+      // internal links the rendered page carries.
+      links: [
+        ...getRelatedTools(base.slug, 4)
+          .filter((item) => tools[item.slug])
+          .map((item) => ({ href: toolPath(lang, item.slug), label: tools[item.slug].shortTitle })),
+        { href: hubPath(lang), label: chrome.browseAll.replace(/\s*→\s*$/, '') },
+      ],
+      alternates: toolAlternates(base.slug),
+      schemas: toolPageSchemas({
+        tool,
+        path,
+        lang: LOCALES[lang].htmlLang,
+        currency: LOCALES[lang].currency,
+        breadcrumb: [
+          { name: chrome.home, path: '/' },
+          { name: chrome.tools, path: hubPath(lang) },
+          { name: tool.shortTitle, path },
+        ],
+        howToName: howTo,
+      }),
+    };
+  });
+});
+
+export const allRoutes = [
+  ...staticRoutes,
+  ...standaloneRoutes,
+  ...toolRoutes,
+  ...localizedHubRoutes,
+  ...localizedToolRoutes,
+];
