@@ -2,17 +2,6 @@ import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { ADSENSE_CLIENT } from '../../seo/siteMeta.js';
 
-/**
- * A single AdSense display unit.
- *
- * Slot IDs come from environment variables so the component renders nothing
- * until real units exist in the AdSense dashboard — an empty <ins> on a live
- * page is an AdSense policy problem, not a harmless placeholder.
- *
- * Never render this on auth screens, error pages, or any page whose main
- * content has not loaded yet: ads beside thin or missing content are the most
- * common reason a site is rejected or limited.
- */
 const SLOTS = {
   toolInline: import.meta.env.VITE_ADSENSE_SLOT_TOOL_INLINE,
   toolFooter: import.meta.env.VITE_ADSENSE_SLOT_TOOL_FOOTER,
@@ -28,7 +17,6 @@ export default function AdSlot({ placement, className = '', label = true }) {
 
   useEffect(() => {
     if (!slot || pushed.current || !insRef.current) return;
-    // A re-pushed <ins> throws "already have ads in them"; guard per mount.
     if (insRef.current.getAttribute('data-adsbygoogle-status')) return;
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});

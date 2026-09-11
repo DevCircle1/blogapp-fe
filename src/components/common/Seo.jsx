@@ -10,10 +10,7 @@ export default function Seo({
   type = 'website',
   noindex = false,
   schemas = [],
-  // Page language code (en, es, pt, fr, de). The <html lang> attribute itself
-  // is set once in App from the URL, so it is right even on pages without Seo.
   lang = 'en',
-  // hreflang cluster: [{ hreflang, path }], including this page itself.
   alternates = [],
   children,
 }) {
