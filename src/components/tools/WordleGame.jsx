@@ -1,16 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Share2, Copy, Home, RotateCcw, Settings } from "lucide-react";
 import { publicRequest } from "../../services/api";
-import { useAuth } from "../../context/AuthContext";
 import { getPlayerId } from "../../utils/playerId";
 import Seo from '../common/Seo.jsx';
+import { ToolContentSections } from './StandaloneToolSeo.jsx';
 const WordleGame = () => {
-  const navigate = useNavigate();
-  const { user } = useAuth();
   const playerId = getPlayerId();
   const [gameState, setGameState] = useState({
     secretWordLength: 5,
@@ -591,6 +589,17 @@ const WordleGame = () => {
           </p>
         </div>
       </div>
+
+      <ToolContentSections
+        heading="About the daily word game"
+        intro="Use the colour hints to solve one five-letter word in six attempts. A green tile is in the correct position, an orange tile belongs elsewhere in the word, and a grey tile is not in the answer. The puzzle resets each day."
+        related={[
+          { to: '/tools/word-counter', label: 'Word Counter', description: 'Count words, characters, sentences, and reading time.' },
+          { to: '/tools/case-converter', label: 'Text Case Converter', description: 'Change text between uppercase, lowercase, title case, and more.' },
+          { to: '/tools/remove-duplicate-lines', label: 'Duplicate Line Remover', description: 'Clean repeated lines from lists and documents.' },
+          { to: '/tools/random-number-generator', label: 'Random Number Generator', description: 'Generate one or more random numbers in a chosen range.' },
+        ]}
+      />
 
       <ToastContainer position="bottom-right" theme="dark" autoClose={3000} />
     </div>

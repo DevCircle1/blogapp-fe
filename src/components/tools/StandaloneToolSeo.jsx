@@ -55,6 +55,16 @@ export function ToolContentSections({ heading, intro, extraParagraphs = [], step
 
   return (
     <section className={`mx-auto mt-14 max-w-4xl px-4 pb-12 ${light ? '' : 'text-white'}`}>
+      <nav aria-label="Breadcrumb" className={`mb-6 text-sm ${base}`}>
+        <ol className="flex flex-wrap items-center gap-2">
+          <li><Link to="/" className="hover:underline">Home</Link></li>
+          <li aria-hidden="true">/</li>
+          <li><Link to="/tools" className="hover:underline">Free online tools</Link></li>
+          <li aria-hidden="true">/</li>
+          <li className={strong} aria-current="page">{heading}</li>
+        </ol>
+      </nav>
+
       <AdSlot placement="toolInline" />
 
       <h2 className={`text-2xl font-bold ${strong}`}>{heading}</h2>
