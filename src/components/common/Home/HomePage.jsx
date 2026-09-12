@@ -19,6 +19,7 @@ export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [isScrolled, setIsScrolled] = useState(false);
   const [featuredBlogs, setFeaturedBlogs] = useState([]);
+  const [publishedPostCount, setPublishedPostCount] = useState(0);
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
@@ -28,8 +29,10 @@ export default function HomePage() {
       try {
         setIsLoading(true);
         const response = await publicRequest.get("/posts/");
+        const publishedPosts = Array.isArray(response.data) ? response.data : [];
+        setPublishedPostCount(publishedPosts.length);
         // Get the 3 latest posts sorted by created_at
-        const latestPosts = response.data
+        const latestPosts = publishedPosts
           .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
           .slice(0, 3);
 
@@ -135,19 +138,16 @@ export default function HomePage() {
 
   const getArticleCount = (category) => {
     const count = Number(
+      category?.total_articles ??
       category?.article_count ??
       category?.articles_count ??
       category?.post_count ??
+      (Array.isArray(category?.articles) ? category.articles.length : undefined) ??
       0
     );
 
     return Number.isFinite(count) && count >= 0 ? count : 0;
   };
-
-  const totalArticles = categories.reduce(
-    (total, category) => total + getArticleCount(category),
-    0
-  );
 
   // Icon mapping for categories
   const categoryIcons = {
@@ -299,7 +299,7 @@ export default function HomePage() {
                     activeCategory === "all" ? "text-blue-100" : "text-gray-500"
                   }`}
                 >
-                  {totalArticles} {totalArticles === 1 ? "article" : "articles"}
+                  {publishedPostCount} {publishedPostCount === 1 ? "article" : "articles"}
                 </div>
               </button>
 
