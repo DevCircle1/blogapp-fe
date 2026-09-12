@@ -10,7 +10,10 @@
  *
  * A missing UI string only falls back to English at runtime, so the site
  * still works — but a half-English page is exactly what this project is
- * trying to avoid. Run with: node scripts/check-i18n.mjs
+ * trying to avoid.
+ *
+ * Run with: node scripts/check-i18n.mjs
+ * One language at a time: node scripts/check-i18n.mjs es
  */
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -18,6 +21,9 @@ import { pathToFileURL } from 'node:url';
 import { premiumTools } from '../src/components/tools/toolCatalog.js';
 import { TOOL_SLUGS } from '../src/i18n/slugs.js';
 import { LOCALIZED_LANGS } from '../src/i18n/locales.js';
+
+const LANGS = process.argv.slice(2).filter((arg) => LOCALIZED_LANGS.includes(arg));
+const CHECKED = LANGS.length ? LANGS : LOCALIZED_LANGS;
 
 const IMPL_DIR = 'src/components/tools/impl';
 const KEY_PATTERN = /\b(?:t|msg)\(\s*('(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*")/g;
@@ -43,7 +49,7 @@ const CHROME_KEYS = ['home', 'tools', 'breadcrumb', 'toolRegion', 'privacy', 'ab
 const HUB_KEYS = ['title', 'description', 'heading', 'body', 'badge', 'searchLabel', 'searchPlaceholder', 'shown', 'empty', 'paragraphs', 'faqs'];
 const CATEGORIES = [...new Set(premiumTools.map((tool) => tool.category))];
 
-for (const lang of LOCALIZED_LANGS) {
+for (const lang of CHECKED) {
   const ui = await import(pathToFileURL(path.resolve(`src/i18n/ui/${lang}.js`)).href);
   const dict = ui.default;
   for (const [key, file] of keys) {
@@ -84,5 +90,5 @@ for (const lang of LOCALIZED_LANGS) {
 
 warnings.forEach((line) => console.warn(`warn  ${line}`));
 errors.forEach((line) => console.error(`error ${line}`));
-console.log(`${keys.size} UI strings × ${LOCALIZED_LANGS.length} languages, ${premiumTools.length} tools checked: ${errors.length} errors, ${warnings.length} warnings.`);
+console.log(`${keys.size} UI strings × ${CHECKED.length} language(s) [${CHECKED.join(', ')}], ${premiumTools.length} tools checked: ${errors.length} errors, ${warnings.length} warnings.`);
 process.exitCode = errors.length ? 1 : 0;
