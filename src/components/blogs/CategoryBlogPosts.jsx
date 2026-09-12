@@ -13,14 +13,6 @@ const CategoryBlogPosts = () => {
   const location = useLocation();
   const categoryName = location.state?.categoryName;
 
-  // Image size guidelines for upload
-  const IMAGE_GUIDELINES = {
-    recommendedSize: '800px × 400px',
-    aspectRatio: '2:1',
-    maxFileSize: '500KB',
-    formats: 'WebP, JPEG, PNG'
-  };
-
   useEffect(() => {
     const fetchCategoryPosts = async () => {
       try {
@@ -41,16 +33,6 @@ const CategoryBlogPosts = () => {
     };
     fetchCategoryPosts();
   }, [categorySlug]);
-
-  // Function to ensure image covers properly without distortion
-  const getImageStyle = (imageUrl) => {
-    return {
-      backgroundImage: `url(${imageUrl})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    };
-  };
 
   if (isLoading) {
     return (
@@ -155,30 +137,16 @@ const CategoryBlogPosts = () => {
                 {/* Improved Image Container with Fixed Aspect Ratio */}
                 <div className="relative pb-[56.25%] overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50">
                   {/* 56.25% = 16:9 aspect ratio, change to 50% for 2:1 */}
-                  {post.featured_image ? (
-                    <img
-                      src={post.featured_image}
-                      alt={post.title}
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                      loading="lazy"
-                      // Add error handling for broken images
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.nextElementSibling.style.display = 'flex';
-                      }}
-                    />
-                  ) : null}
-                  
-                  {/* Fallback when no image or image fails to load */}
-                  <div 
-                    className={`absolute inset-0 flex items-center justify-center ${
-                      post.featured_image ? 'hidden' : 'flex'
-                    }`}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                  </div>
+                  <img
+                    src={post.featured_image || '/og-cover.png'}
+                    alt={post.featured_image ? post.title : `${SITE_NAME} — ${post.title}`}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                    loading="lazy"
+                    onError={(event) => {
+                      event.currentTarget.onerror = null;
+                      event.currentTarget.src = '/og-cover.png';
+                    }}
+                  />
 
                   {/* Date Badge */}
                   <div className="absolute top-4 right-4 bg-white bg-opacity-90 backdrop-blur-sm rounded-full px-3 py-1">

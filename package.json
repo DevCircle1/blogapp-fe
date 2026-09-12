@@ -11,7 +11,8 @@
     "og:image": "node scripts/make-og-image.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
-    "smoke": "node scripts/smoke-tools.mjs"
+    "smoke": "node scripts/smoke-tools.mjs",
+    "blog:topics": "node scripts/publish-topic-guides.mjs"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.7",
