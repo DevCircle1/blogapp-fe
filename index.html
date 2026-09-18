@@ -26,21 +26,53 @@
   <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
   <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
 
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3784907597850575"
-    crossorigin="anonymous"></script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PY1TRQG0PQ"></script>
   <script>
+    // GA4, Clarity, and AdSense are the biggest contributors to blocking
+    // time (measured ~1.2s combined main-thread work from AdSense alone on
+    // a tool page) but nothing they do is needed for first paint or LCP.
+    // The queue stubs below let app code (gtag(), adsbygoogle.push()) call
+    // them immediately without erroring; the real scripts load once the
+    // browser is idle, or immediately on the visitor's first interaction/
+    // scroll so nothing is lost if they engage before the idle callback
+    // fires. send_page_view is off because App.jsx fires page_view itself
+    // on every route change (gtag.js's own auto-pageview only fires once,
+    // on load, which doesn't see client-side route changes in an SPA).
     window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
+    function gtag() { window.dataLayer.push(arguments); }
     gtag('js', new Date());
-    gtag('config', 'G-PY1TRQG0PQ');
-  </script>
-  <script type="text/javascript">
-    (function (c, l, a, r, i, t, y) {
-      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
-      t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
-      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
-    })(window, document, "clarity", "script", "ykeu033jrf");
+    gtag('config', 'G-PY1TRQG0PQ', { send_page_view: false });
+    window.adsbygoogle = window.adsbygoogle || [];
+
+    function loadDeferredThirdParties() {
+      if (window.__thirdPartiesLoaded) return;
+      window.__thirdPartiesLoaded = true;
+
+      var ga = document.createElement('script');
+      ga.async = true;
+      ga.src = 'https://www.googletagmanager.com/gtag/js?id=G-PY1TRQG0PQ';
+      document.head.appendChild(ga);
+
+      (function (c, l, a, r, i, t, y) {
+        c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+        t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+        y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+      })(window, document, "clarity", "script", "ykeu033jrf");
+
+      var ads = document.createElement('script');
+      ads.async = true;
+      ads.crossOrigin = 'anonymous';
+      ads.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3784907597850575';
+      document.head.appendChild(ads);
+    }
+
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(loadDeferredThirdParties, { timeout: 4000 });
+    } else {
+      setTimeout(loadDeferredThirdParties, 3000);
+    }
+    ['pointerdown', 'keydown', 'touchstart', 'scroll'].forEach(function (evt) {
+      window.addEventListener(evt, loadDeferredThirdParties, { once: true, passive: true });
+    });
   </script>
 </head>
 

@@ -50,6 +50,20 @@ function App() {
       .forEach((node) => node.remove());
   }, []);
 
+  // GA4 is loaded with send_page_view:false (see index.html) because its own
+  // auto-pageview only fires once, on the initial load — it has no way to see
+  // client-side route changes in an SPA. This is the replacement: one
+  // page_view per route, including the first. gtag() is a queue stub until
+  // the deferred script loads, so calling it immediately is safe either way.
+  useEffect(() => {
+    if (typeof window.gtag !== 'function') return;
+    window.gtag('event', 'page_view', {
+      page_path: location.pathname + location.search,
+      page_location: window.location.href,
+      page_title: document.title,
+    });
+  }, [location.pathname, location.search]);
+
   return (
     <HelmetProvider>
       {/* Derived from the URL rather than set by each page's <Seo>, so pages
