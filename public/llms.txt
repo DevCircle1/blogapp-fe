@@ -1,0 +1,25 @@
+# Talk & Tool
+
+> Talk & Tool is a free directory of browser-based calculators, converters, and developer utilities, plus practical how-to guides. Every tool runs client-side — nothing typed into a calculator is uploaded or stored. The catalogue is available in English, Spanish, Portuguese, French, German, Italian, Dutch, and Polish.
+
+Tool pages document what each calculator computes, the formula or method used, and answer common questions about it. Blog articles are practical, tool-adjacent how-to guides. Prices, ad placements, and account/login pages are not relevant to understanding the site's content.
+
+## Docs
+
+- [All tools](https://talkandtool.com/tools): Full directory of calculators, converters, and utilities, grouped by category.
+- [Blog](https://talkandtool.com/blogs): Guides and tutorials related to the tools.
+- [About](https://talkandtool.com/about-us): What Talk & Tool is and who publishes it.
+
+## Popular tools
+
+- [Percentage Calculator](https://talkandtool.com/tools/percentage-calculator): Percentages, percentage change, and what share one number is of another.
+- [BMI Calculator](https://talkandtool.com/tools/bmi-calculator): Body mass index in metric or imperial, with the healthy range for your height.
+- [Loan & EMI Calculator](https://talkandtool.com/tools/loan-calculator): Monthly repayments, total interest, and the real cost of a longer term.
+- [Word Counter](https://talkandtool.com/tools/word-counter): Words, characters, sentences, and reading time as you type.
+- [JSON Formatter](https://talkandtool.com/tools/json-studio): Format, validate, and minify JSON with clear syntax error messages.
+- [Unit Converter](https://talkandtool.com/tools/unit-converter): Length, weight, temperature, area, volume, speed, time, and data.
+
+## Optional
+
+- [Sitemap](https://talkandtool.com/sitemap.xml): Machine-readable index of every page, including all language versions.
+- [Privacy Policy](https://talkandtool.com/privacy-policy): Data handling, cookies, and third-party advertising disclosure.

@@ -28,6 +28,16 @@
   status = 301
   force = true
 
+# Without this, /.well-known/* falls through to the catch-all SPA rewrite
+# below and gets a 200 (the app shell) instead of a real 404. Crawlers and
+# tooling probe /.well-known/ for standardised metadata (e.g. an AI-agent
+# resource manifest); a soft-200 there reads as "a manifest exists but is
+# malformed" instead of "there is no manifest", which is the wrong signal.
+[[redirects]]
+  from = "/.well-known/*"
+  to = "/app.html"
+  status = 404
+
 # SPA fallback. Points at app.html rather than index.html so the prerendered
 # homepage at index.html is not served for every unmatched path — that would
 # put the homepage's canonical tag on blog articles and 404s alike.
