@@ -14,11 +14,14 @@ import es from '../src/i18n/content/es.js';
 import pt from '../src/i18n/content/pt.js';
 import fr from '../src/i18n/content/fr.js';
 import de from '../src/i18n/content/de.js';
+import it from '../src/i18n/content/it.js';
+import nl from '../src/i18n/content/nl.js';
+import pl from '../src/i18n/content/pl.js';
 
 export const SITE_URL = 'https://talkandtool.com';
 export const SITE_NAME = 'Talk & Tool';
 
-const CONTENT = { es, pt, fr, de };
+const CONTENT = { es, pt, fr, de, it, nl, pl };
 const fill = (template, name) => template.replace('{name}', name);
 
 const organizationSchema = {
