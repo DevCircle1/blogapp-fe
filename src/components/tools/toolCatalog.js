@@ -5,6 +5,7 @@ import { healthTools } from './data/health.js';
 import { textTools } from './data/text.js';
 import { developerTools } from './data/developer.js';
 import { seoTools } from './data/seo.js';
+import { RELATED_TOOLS } from './data/relatedTools.js';
 import { SITE_URL } from '../../seo/siteMeta.js';
 
 export { SITE_URL };
@@ -30,17 +31,36 @@ const bySlug = new Map(premiumTools.map((tool) => [tool.slug, tool]));
 
 export const getToolBySlug = (slug) => bySlug.get(slug);
 
-/** Related tools power internal linking, which is how deep tool pages get crawled. */
-export const getRelatedTools = (slug, limit = 4) => {
+/**
+ * Related tools power internal linking, which is how deep tool pages get
+ * crawled. The curated list in data/relatedTools.js is the primary source —
+ * it picks genuinely related tools rather than just same-category ones — and
+ * same-category/shared-tag matching only fills in behind it, so a tool added
+ * without a curated entry yet still gets a reasonable set instead of none.
+ */
+const MIN_RELATED = 4;
+
+export const getRelatedTools = (slug, limit = 6) => {
   const tool = bySlug.get(slug);
   if (!tool) return [];
-  const sameCategory = premiumTools.filter((item) => item.slug !== slug && item.category === tool.category);
+
+  const curated = (RELATED_TOOLS[slug] || [])
+    .map((relatedSlug) => bySlug.get(relatedSlug))
+    .filter(Boolean);
+  // A curated list that already meets the minimum is used as-is, capped at
+  // `limit` — it is never topped up with looser automatic matches, so a
+  // deliberately-short, high-quality list (e.g. 4 tools) is never diluted
+  // by a same-category pick just to reach a round number.
+  if (curated.length >= MIN_RELATED) return curated.slice(0, limit);
+
+  const seen = new Set([slug, ...curated.map((item) => item.slug)]);
+  const sameCategory = premiumTools.filter((item) => !seen.has(item.slug) && item.category === tool.category);
   const sharedTag = premiumTools.filter((item) => (
-    item.slug !== slug
+    !seen.has(item.slug)
     && item.category !== tool.category
     && item.tags.some((tag) => tool.tags.includes(tag))
   ));
-  return [...sameCategory, ...sharedTag].slice(0, limit);
+  return [...curated, ...sameCategory, ...sharedTag].slice(0, MIN_RELATED);
 };
 
 /** Standalone pages that live outside /tools/<slug> but belong in the directory and sitemap. */

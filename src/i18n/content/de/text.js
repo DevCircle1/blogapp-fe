@@ -1,9 +1,9 @@
 export const textTools = {
   'word-counter': {
-    title: 'Wörter zählen: Wort- und Zeichenzähler online',
+    title: 'Wörter zählen – Wortzähler & Zeichenzähler',
     shortTitle: 'Wörter zählen',
-    description: 'Zählen Sie Wörter, Zeichen mit und ohne Leerzeichen, Sätze, Absätze und die Lesezeit, während Sie schreiben. Kostenlos, ohne Anmeldung.',
-    intro: 'Wortgrenzen begegnen einem überall: Hausarbeiten, Bachelorarbeiten, Bewerbungsschreiben, Meta Descriptions oder Beiträge in sozialen Netzwerken. Dieser Zähler aktualisiert sich live beim Tippen und liefert mehr als eine Gesamtzahl: Zeichen mit und ohne Leerzeichen, Sätze, Absätze, durchschnittliche Satzlänge sowie die geschätzte Lese- und Sprechzeit.',
+    description: 'Wörter zählen online mit dem Wortzähler: Zeichen zählen ohne Leerzeichen, Sätze, Absätze und Lesezeit – kostenlos, ohne Anmeldung.',
+    intro: 'Ob Hausarbeit, Bachelorarbeit, Bewerbungsschreiben, Meta Description oder Beitrag für soziale Netzwerke – fast überall gibt es eine Wort- oder Zeichengrenze, an die man sich halten muss. Dieser Wortzähler zählt online und in Echtzeit mit, während Sie tippen oder einen Text einfügen, und zeigt dabei mehr als nur eine einzige Zahl: die Anzahl der Wörter, die Zeichenzahl mit Leerzeichen und die Zeichenzahl ohne Leerzeichen, die Anzahl der Sätze und Absätze, die durchschnittliche Satzlänge sowie die geschätzte Lese- und Sprechzeit. Gerade bei deutschen Abschlussarbeiten und Klausuren wird die zulässige Länge häufig ausdrücklich als Zeichen ohne Leerzeichen angegeben, weil dieser Wert unabhängiger von Schriftart und durchschnittlicher Wortlänge ist als eine reine Wortzahl – deshalb zeigt dieser Zähler beide Werte nebeneinander an, statt sich auf eine einzige Zahl festzulegen. Die Logik dahinter ist bewusst einfach gehalten: Wörter werden anhand von Leerzeichen und Zeilenumbrüchen zwischen zusammenhängenden Zeichenfolgen gezählt, die Zeichenzahl ohne Leerzeichen ergibt sich, indem alle Leerraumzeichen aus der Gesamtzeichenzahl herausgerechnet werden, und Sätze werden an Punkt-, Frage- und Ausrufezeichen erkannt. Die Lesezeit rechnet mit rund 225 Wörtern pro Minute, einem üblichen Tempo für stilles Lesen am Bildschirm; die Sprechzeit legt ein langsameres Tempo für lautes Vorlesen zugrunde. Auf X (vormals Twitter) zählen 280 Zeichen inklusive Leerzeichen, und viele Meta Descriptions werden bei rund 155 Zeichen abgeschnitten – auch hier hilft die getrennte Anzeige von Wörtern und Zeichen bei der Feinabstimmung. Alles läuft direkt in Ihrem Browser: Der eingegebene Text wird nicht hochgeladen oder gespeichert, sodass sich der Zähler auch für vertrauliche Entwürfe eignet.',
     steps: [
       'Schreiben Sie direkt in das Feld oder fügen Sie Text aus einem beliebigen Dokument ein.',
       'Beobachten Sie, wie sich die Zahlen bei jedem Tastendruck aktualisieren; nichts wird hochgeladen.',
@@ -11,8 +11,10 @@ export const textTools = {
       'Nutzen Sie die Lesezeit für die Länge eines Artikels und die Sprechzeit für einen Vortrag.',
     ],
     faqs: [
+      { q: 'Wie zähle ich Wörter online?', a: 'Schreiben Sie direkt in das Textfeld oder fügen Sie einen vorhandenen Text ein. Der Wortzähler aktualisiert die Wortzahl bei jedem Tastendruck, ohne dass Sie etwas hochladen oder ein Konto anlegen müssen.' },
+      { q: 'Was ist ein Wortzähler?', a: 'Ein Wortzähler ist ein Werkzeug, das die Anzahl der Wörter in einem Text automatisch ermittelt und dabei meist weitere Werte wie Zeichenzahl, Sätze, Absätze und Lesezeit gleich mitliefert – wie dieser Zähler hier.' },
+      { q: 'Wie zähle ich Zeichen ohne Leerzeichen?', a: 'Fügen Sie Ihren Text ein: Der Zähler zeigt die Zeichenzahl mit und ohne Leerzeichen direkt nebeneinander an. Für die Version ohne Leerzeichen werden alle Leerraumzeichen aus der Gesamtzeichenzahl herausgerechnet – der übliche Maßstab bei deutschen Abschlussarbeiten und Klausuren.' },
       { q: 'Wie wird die Lesezeit berechnet?', a: 'Mit 225 Wörtern pro Minute, einem üblichen Durchschnitt für Erwachsene, die am Bildschirm lesen. Fachtexte werden mit etwa 150 Wörtern pro Minute langsamer gelesen, lautes Vorlesen liegt bei rund 130.' },
-      { q: 'Zählt die Zeichenzahl Leerzeichen mit?', a: 'Beide Werte werden angezeigt. X (Twitter) und die meisten SMS-Grenzen zählen Leerzeichen mit, manche Formulare und Datenbankfelder nicht – mit beiden Zahlen bleibt kein Zweifel.' },
       { q: 'Wie werden Sätze erkannt?', a: 'An Punkt, Frage- und Ausrufezeichen. Abkürzungen wie „z. B.“ oder „usw.“ können die Zahl leicht erhöhen – eine Grenze jeder regelbasierten Erkennung.' },
       { q: 'Wie viele Wörter sollte ein Blogbeitrag haben?', a: 'Das hängt von der Suchintention ab, nicht von einer magischen Zahl. Eine Seite, die eine eng gefasste Frage gut beantwortet, kann mit 600 Wörtern ranken; umfassende Ratgeber zu umkämpften Begriffen liegen oft über 2000. Decken Sie das Thema ab und hören Sie dann auf.' },
     ],

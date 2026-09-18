@@ -61,7 +61,7 @@ export default function PremiumToolSuite() {
           browseAll: 'Browse all tools →',
           alsoAvailable: 'Also available in:',
         }}
-        related={getRelatedTools(tool.slug, 4).map((item) => ({ path: `/tools/${item.slug}`, title: item.shortTitle, description: item.description }))}
+        related={getRelatedTools(tool.slug).map((item) => ({ path: `/tools/${item.slug}`, title: item.shortTitle, description: item.description }))}
         languages={LOCALIZED_LANGS.map((lang) => ({
           lang,
           name: LOCALES[lang].name,

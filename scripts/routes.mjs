@@ -172,6 +172,12 @@ export const toolRoutes = premiumTools.map((tool) => {
     body: tool.intro,
     steps: tool.steps,
     faqs: tool.faqs,
+    // Related tools, then the tools hub: the same internal links
+    // PremiumToolSuite renders once React hydrates.
+    links: [
+      ...getRelatedTools(tool.slug).map((item) => ({ href: `/tools/${item.slug}`, label: item.shortTitle })),
+      { href: '/tools', label: 'All free tools' },
+    ],
     alternates: toolAlternates(tool.slug),
     schemas: toolPageSchemas({
       tool,
@@ -253,7 +259,7 @@ export const localizedToolRoutes = LOCALIZED_LANGS.flatMap((lang) => {
       // Related tools in the same language, then the language hub: the same
       // internal links the rendered page carries.
       links: [
-        ...getRelatedTools(base.slug, 4)
+        ...getRelatedTools(base.slug)
           .filter((item) => tools[item.slug])
           .map((item) => ({ href: toolPath(lang, item.slug), label: tools[item.slug].shortTitle })),
         { href: hubPath(lang), label: chrome.browseAll.replace(/\s*→\s*$/, '') },

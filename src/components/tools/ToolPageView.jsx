@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Globe, ShieldCheck, Sparkles } from 'lucide-react';
 import Seo from '../common/Seo.jsx';
 import AdSlot from '../common/AdSlot.jsx';
+import RelatedTools from './RelatedTools.jsx';
 
 /**
  * Layout for a catalogue tool page in any language. The English route and
@@ -88,16 +89,7 @@ export default function ToolPageView({ tool, Tool, seo, labels, related, languag
           </article>
 
           <aside>
-            <h2 className="text-xl font-bold">{labels.related}</h2>
-            <div className="mt-4 space-y-3">
-              {related.map((item) => (
-                <Link key={item.path} to={item.path} className="block rounded-xl border border-white/10 bg-white/5 p-4 transition hover:border-indigo-400/60 hover:bg-white/10">
-                  <strong className="text-white">{item.title}</strong>
-                  <span className="mt-1 block text-sm leading-6 text-slate-500">{item.description}</span>
-                </Link>
-              ))}
-            </div>
-            <Link to={labels.toolsPath} className="mt-5 inline-block text-sm font-semibold text-indigo-300 hover:text-white">{labels.browseAll}</Link>
+            <RelatedTools heading={labels.related} items={related} browseAllLabel={labels.browseAll} browseAllPath={labels.toolsPath} />
             <AdSlot placement="toolFooter" className="mt-8" />
           </aside>
         </div>

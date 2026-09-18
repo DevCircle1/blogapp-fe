@@ -81,7 +81,7 @@ export default function LocalizedToolPage({ lang }) {
           browseAll: chrome.browseAll,
           alsoAvailable: chrome.alsoAvailable,
         }}
-        related={getRelatedTools(slug, 4).filter((item) => tools[item.slug]).map((item) => ({
+        related={getRelatedTools(slug).filter((item) => tools[item.slug]).map((item) => ({
           path: toolPath(lang, item.slug),
           title: tools[item.slug].shortTitle,
           description: tools[item.slug].description,
