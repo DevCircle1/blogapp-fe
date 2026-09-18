@@ -1,45 +1,57 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="/3.png" />
-    <link rel="apple-touch-icon" href="/2.png" />
-    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
-    <meta name="theme-color" content="#020617" />
 
-    <!--
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="/3.png" />
+  <link rel="apple-touch-icon" href="/2.png" />
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+  <meta name="theme-color" content="#020617" />
+
+  <!--
       These are the neutral defaults for the SPA shell (served as app.html for
       routes that are not prerendered, such as blog articles). Every route
       replaces them with its own values via the Seo component on mount, and the
       prerender step bakes real per-page tags into the static HTML files.
       Deliberately no canonical here: the shell is served for many URLs.
     -->
-    <title>Talk &amp; Tool | Free Online Tools and Practical Guides</title>
-    <meta name="description" content="Free online tools, calculators, converters, developer utilities, and practical guides from Talk &amp; Tool." />
-    <meta property="og:site_name" content="Talk &amp; Tool" />
-    <meta property="og:image" content="https://talkandtool.com/og-cover.png" />
-    <meta name="twitter:card" content="summary_large_image" />
+  <title>Talk &amp; Tool | Free Online Tools and Practical Guides</title>
+  <meta name="description"
+    content="Free online tools, calculators, converters, developer utilities, and practical guides from Talk &amp; Tool." />
+  <meta property="og:site_name" content="Talk &amp; Tool" />
+  <meta property="og:image" content="https://talkandtool.com/og-cover.png" />
+  <meta name="twitter:card" content="summary_large_image" />
 
-    <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
-    <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+  <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
 
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3784907597850575" crossorigin="anonymous"></script>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PY1TRQG0PQ"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-PY1TRQG0PQ');
-    </script>
-  </head>
-  <body>
-    <div id="root"></div>
-    <noscript>
-      Talk &amp; Tool provides free online calculators, converters, writing tools, and developer utilities.
-      JavaScript is required to use the interactive tools.
-      <a href="/tools">Browse all tools</a> or <a href="/blogs">read the blog</a>.
-    </noscript>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3784907597850575"
+    crossorigin="anonymous"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PY1TRQG0PQ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-PY1TRQG0PQ');
+  </script>
+  <script type="text/javascript">
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+      t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "ykeu033jrf");
+  </script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <noscript>
+    Talk &amp; Tool provides free online calculators, converters, writing tools, and developer utilities.
+    JavaScript is required to use the interactive tools.
+    <a href="/tools">Browse all tools</a> or <a href="/blogs">read the blog</a>.
+  </noscript>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
 </html>
