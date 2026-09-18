@@ -348,7 +348,11 @@ export function MacroCalculator() {
 }
 
 /* --------------------------------------------------------------- Due date */
-const TRIMESTERS = [msg('First'), msg('Second'), msg('Third')];
+// "Middle" rather than "Second" so this doesn't collide with the "Second"
+// time unit in calcTools.jsx: several languages use unrelated words for
+// "2nd" versus the duration "a second", and sharing one dictionary entry
+// between them silently mistranslates one of the two.
+const TRIMESTERS = [msg('First'), msg('Middle'), msg('Third')];
 
 export function PregnancyDueDateCalculator() {
   const t = useT();

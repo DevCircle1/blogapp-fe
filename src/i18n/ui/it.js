@@ -725,6 +725,7 @@ export default {
   'Protein and carbohydrate provide 4 kcal per gram; fat provides 9. Hitting within about ten grams a day is close enough — weekly averages drive results.': 'Proteine e carboidrati forniscono 4 kcal per grammo, i grassi 9. Restare entro una decina di grammi al giorno è più che sufficiente: sono le medie settimanali a fare la differenza.',
   'General nutrition information, not personalised dietary advice. Anyone with a medical condition or specific dietary needs should consult a registered dietitian or doctor.': 'Informazioni nutrizionali generali, non un consiglio dietetico personalizzato. Chi ha una patologia o esigenze alimentari specifiche dovrebbe consultare un dietista o un medico.',
   'First': 'Primo',
+  'Middle': 'Secondo',
   'Third': 'Terzo',
   'Calculation method': 'Metodo di calcolo',
   'From last menstrual period': 'Dall\'ultima mestruazione',

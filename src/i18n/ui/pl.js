@@ -721,6 +721,7 @@ export default {
   'Protein and carbohydrate provide 4 kcal per gram; fat provides 9. Hitting within about ten grams a day is close enough — weekly averages drive results.': 'Białko i węglowodany dostarczają 4 kcal na gram, a tłuszcz 9. Odchylenie do dziesięciu gramów dziennie jest wystarczająco dokładne: liczą się średnie tygodniowe.',
   'General nutrition information, not personalised dietary advice. Anyone with a medical condition or specific dietary needs should consult a registered dietitian or doctor.': 'Ogólne informacje żywieniowe, a nie spersonalizowana porada dietetyczna. Osoby z chorobą przewlekłą albo szczególnymi potrzebami żywieniowymi powinny skonsultować się z dietetykiem lub lekarzem.',
   First: 'Pierwszy',
+  Middle: 'Drugi',
   Third: 'Trzeci',
   'Calculation method': 'Metoda obliczeń',
   'From last menstrual period': 'Od ostatniej miesiączki',
