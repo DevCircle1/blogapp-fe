@@ -208,11 +208,13 @@ export default function HomePage() {
   const getBlogImage = (blog) => {
     if (blog.featured_image) return blog.featured_image;
 
-    // Fallback images based on category or random
+    // Fallback images based on category or random. fm=webp+q=70 asks
+    // Unsplash's own image API for a pre-compressed WebP instead of the
+    // default JPEG — no extra processing on our side.
     const fallbackImages = [
-      "https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=400",
-      "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400",
-      "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400",
+      "https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=400&fm=webp&q=70",
+      "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400&fm=webp&q=70",
+      "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&fm=webp&q=70",
     ];
     return fallbackImages[Math.floor(Math.random() * fallbackImages.length)];
   };
@@ -272,8 +274,18 @@ export default function HomePage() {
           </h2>
 
           {categoriesLoading ? (
-            <div className="flex justify-center items-center h-40">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            // Sized like the real grid below (same columns, same button
+            // height) rather than a small spinner box, so the categories
+            // popping in doesn't push the rest of the page — and the footer —
+            // down once the request resolves.
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" aria-label="Loading categories">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="p-6 rounded-xl bg-white shadow-lg animate-pulse">
+                  <div className="h-8 w-8 mb-2 rounded bg-gray-200"></div>
+                  <div className="h-4 w-3/4 rounded bg-gray-200"></div>
+                  <div className="h-3 w-1/2 mt-2 rounded bg-gray-100"></div>
+                </div>
+              ))}
             </div>
           ) : categories.length === 0 ? (
             <div className="text-center py-8">
@@ -349,8 +361,20 @@ export default function HomePage() {
           </div>
 
           {isLoading ? (
-            <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            // Same 3-column card grid the real content renders into, so the
+            // section doesn't grow taller once the blogs arrive.
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8" aria-label="Loading blog posts">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="bg-white rounded-2xl shadow-lg overflow-hidden animate-pulse">
+                  <div className="w-full h-48 bg-gray-200"></div>
+                  <div className="p-6">
+                    <div className="h-5 w-5/6 rounded bg-gray-200 mb-3"></div>
+                    <div className="h-4 w-full rounded bg-gray-100 mb-2"></div>
+                    <div className="h-4 w-2/3 rounded bg-gray-100 mb-4"></div>
+                    <div className="h-3 w-1/3 rounded bg-gray-100"></div>
+                  </div>
+                </div>
+              ))}
             </div>
           ) : error ? (
             <div className="flex justify-center items-center h-64">
@@ -376,7 +400,9 @@ export default function HomePage() {
                   <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden cursor-pointer">
                     <div className="relative">
                       <img
-                      loading="lazy"
+                        loading="lazy"
+                        width={400}
+                        height={192}
                         src={getBlogImage(blog)}
                         alt={`Blog article — ${blog.title}`}
                         className="w-full h-48 object-cover"
