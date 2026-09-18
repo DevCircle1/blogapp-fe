@@ -73,7 +73,15 @@ function App() {
       <ScrollToTop />
       {shouldShowNavbar(location.pathname) && <Navbar />}
 
-      <Suspense fallback={<div className="min-h-[60vh] bg-slate-950" aria-label="Loading page" />}><Routes>
+      {/* min-h-screen rather than the previous 60vh: a raw CDP layout-shift
+          trace pinned the site's residual mobile CLS to this exact fallback —
+          once the lazy route chunk resolves and replaces this placeholder
+          with the real (taller) page, the footer sitting right below a short
+          60vh box was still inside the viewport and visibly jumped down.
+          Keeping the fallback at least one viewport tall keeps the footer
+          below the fold during that swap on every route, since every route
+          shares this one fallback and its real height varies page to page. */}
+      <Suspense fallback={<div className="min-h-screen bg-slate-950" aria-label="Loading page" />}><Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<RegisterForm />} />
