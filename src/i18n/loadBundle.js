@@ -8,6 +8,9 @@ const LOADERS = {
   pt: () => Promise.all([import('./content/pt.js'), import('./ui/pt.js')]),
   fr: () => Promise.all([import('./content/fr.js'), import('./ui/fr.js')]),
   de: () => Promise.all([import('./content/de.js'), import('./ui/de.js')]),
+  it: () => Promise.all([import('./content/it.js'), import('./ui/it.js')]),
+  nl: () => Promise.all([import('./content/nl.js'), import('./ui/nl.js')]),
+  pl: () => Promise.all([import('./content/pl.js'), import('./ui/pl.js')]),
 };
 
 const cache = new Map();

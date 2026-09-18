@@ -23,9 +23,12 @@ export const LOCALES = {
   pt: { code: 'pt', hreflang: 'pt-BR', htmlLang: 'pt-BR', ogLocale: 'pt_BR', intl: 'pt-BR', name: 'Português', currency: 'BRL' },
   fr: { code: 'fr', hreflang: 'fr', htmlLang: 'fr', ogLocale: 'fr_FR', intl: 'fr-FR', name: 'Français', currency: 'EUR' },
   de: { code: 'de', hreflang: 'de', htmlLang: 'de', ogLocale: 'de_DE', intl: 'de-DE', name: 'Deutsch', currency: 'EUR' },
+  it: { code: 'it', hreflang: 'it', htmlLang: 'it', ogLocale: 'it_IT', intl: 'it-IT', name: 'Italiano', currency: 'EUR' },
+  nl: { code: 'nl', hreflang: 'nl', htmlLang: 'nl', ogLocale: 'nl_NL', intl: 'nl-NL', name: 'Nederlands', currency: 'EUR' },
+  pl: { code: 'pl', hreflang: 'pl', htmlLang: 'pl', ogLocale: 'pl_PL', intl: 'pl-PL', name: 'Polski', currency: 'PLN' },
 };
 
-export const LOCALIZED_LANGS = ['es', 'pt', 'fr', 'de'];
+export const LOCALIZED_LANGS = ['es', 'pt', 'fr', 'de', 'it', 'nl', 'pl'];
 export const ALL_LANGS = [DEFAULT_LANG, ...LOCALIZED_LANGS];
 
 /* ------------------------------------------------------------------ paths */
@@ -67,7 +70,7 @@ export const hubAlternates = () => alternatesFor(hubPath);
 const REGION_CURRENCY = {
   MX: 'MXN', AR: 'ARS', CO: 'COP', CL: 'CLP', PE: 'PEN', US: 'USD', CA: 'CAD',
   CH: 'CHF', GB: 'GBP', BR: 'BRL', PT: 'EUR', ES: 'EUR', FR: 'EUR', DE: 'EUR',
-  AT: 'EUR', BE: 'EUR', LU: 'EUR', IE: 'EUR', IT: 'EUR', NL: 'EUR',
+  AT: 'EUR', BE: 'EUR', LU: 'EUR', IE: 'EUR', IT: 'EUR', NL: 'EUR', PL: 'PLN',
 };
 
 const browserLocale = () => (typeof navigator !== 'undefined' && navigator.language) || '';
@@ -171,6 +174,63 @@ export const CHROME = {
       newsletterNote: 'Neuigkeiten und neue Tools direkt in Ihr Postfach.',
       rights: 'Alle Rechte vorbehalten.',
       disclaimer: 'Die Rechner auf dieser Website dienen der allgemeinen Information und ersetzen keine Finanz-, Medizin- oder Rechtsberatung.',
+    },
+  },
+  it: {
+    nav: { Home: 'Home', Blogs: 'Blog', Tools: 'Strumenti', 'Contact Us': 'Contatti', 'Write Blogs': 'Scrivi', 'Job Alerts': 'Lavoro', Game: 'Gioco', Login: 'Accedi', Register: 'Registrati' },
+    tagline: 'Calcolatrici, convertitori e strumenti online gratuiti che funzionano nel browser, senza registrazione.',
+    popularTools: 'Strumenti popolari',
+    allTools: 'Tutti gli strumenti →',
+    popular: [
+      ['percentage-calculator', 'Calcolatrice percentuale'], ['sales-tax-calculator', 'Calcolatore IVA'],
+      ['ratio-calculator', 'Calcolatore di proporzioni'], ['bmi-calculator', 'Calcolatore IMC'],
+      ['word-counter', 'Contatore di parole'], ['loan-calculator', 'Calcolatore di prestiti'],
+    ],
+    footer: {
+      company: 'Azienda', about: 'Chi siamo', blog: 'Blog', help: 'Centro assistenza', contact: 'Contatti',
+      terms: 'Termini di servizio', privacy: 'Informativa sulla privacy', stayUpdated: 'Novità',
+      emailPlaceholder: 'La tua email', subscribe: 'Iscriviti', subscribing: 'Invio…',
+      newsletterNote: 'Ricevi le novità e i nuovi strumenti via email.',
+      rights: 'Tutti i diritti riservati.',
+      disclaimer: 'Le calcolatrici di questo sito hanno scopo puramente informativo e non costituiscono consulenza finanziaria, medica o legale.',
+    },
+  },
+  nl: {
+    nav: { Home: 'Home', Blogs: 'Blog', Tools: 'Tools', 'Contact Us': 'Contact', 'Write Blogs': 'Schrijven', 'Job Alerts': 'Vacatures', Game: 'Spel', Login: 'Inloggen', Register: 'Registreren' },
+    tagline: 'Gratis rekenmachines, converters en online tools die direct in je browser werken, zonder registratie.',
+    popularTools: 'Populaire tools',
+    allTools: 'Alle tools →',
+    popular: [
+      ['percentage-calculator', 'Percentage berekenen'], ['sales-tax-calculator', 'Btw-calculator'],
+      ['ratio-calculator', 'Verhoudingen berekenen'], ['bmi-calculator', 'BMI-calculator'],
+      ['word-counter', 'Woorden tellen'], ['loan-calculator', 'Lening berekenen'],
+    ],
+    footer: {
+      company: 'Bedrijf', about: 'Over ons', blog: 'Blog', help: 'Helpcentrum', contact: 'Contact',
+      terms: 'Gebruiksvoorwaarden', privacy: 'Privacybeleid', stayUpdated: 'Blijf op de hoogte',
+      emailPlaceholder: 'Je e-mailadres', subscribe: 'Aanmelden', subscribing: 'Bezig met verzenden…',
+      newsletterNote: 'Ontvang nieuws en nieuwe tools in je inbox.',
+      rights: 'Alle rechten voorbehouden.',
+      disclaimer: 'De rekenmachines op deze site zijn bedoeld ter informatie en vormen geen financieel, medisch of juridisch advies.',
+    },
+  },
+  pl: {
+    nav: { Home: 'Strona główna', Blogs: 'Blog', Tools: 'Narzędzia', 'Contact Us': 'Kontakt', 'Write Blogs': 'Pisz', 'Job Alerts': 'Praca', Game: 'Gra', Login: 'Zaloguj się', Register: 'Zarejestruj się' },
+    tagline: 'Darmowe kalkulatory, konwertery i narzędzia online działające w przeglądarce, bez rejestracji.',
+    popularTools: 'Popularne narzędzia',
+    allTools: 'Wszystkie narzędzia →',
+    popular: [
+      ['percentage-calculator', 'Kalkulator procentowy'], ['sales-tax-calculator', 'Kalkulator VAT'],
+      ['ratio-calculator', 'Kalkulator proporcji'], ['bmi-calculator', 'Kalkulator BMI'],
+      ['word-counter', 'Licznik słów'], ['loan-calculator', 'Kalkulator kredytu'],
+    ],
+    footer: {
+      company: 'Firma', about: 'O nas', blog: 'Blog', help: 'Centrum pomocy', contact: 'Kontakt',
+      terms: 'Warunki korzystania z usługi', privacy: 'Polityka prywatności', stayUpdated: 'Bądź na bieżąco',
+      emailPlaceholder: 'Twój adres e-mail', subscribe: 'Zapisz się', subscribing: 'Wysyłanie…',
+      newsletterNote: 'Otrzymuj nowości i nowe narzędzia na e-mail.',
+      rights: 'Wszelkie prawa zastrzeżone.',
+      disclaimer: 'Kalkulatory na tej stronie mają charakter wyłącznie informacyjny i nie stanowią porady finansowej, medycznej ani prawnej.',
     },
   },
 };
