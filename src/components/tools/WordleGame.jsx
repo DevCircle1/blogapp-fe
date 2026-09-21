@@ -58,7 +58,6 @@ const WordleGame = () => {
         maxStreak: statsData.max_streak || 0,
       });
 
-      console.log("Attempts data:", attemptsData); 
       const newKeyboardStatus = {};
       attemptsData.attempts?.forEach((attempt) => {
         attempt.result?.forEach((status, index) => {

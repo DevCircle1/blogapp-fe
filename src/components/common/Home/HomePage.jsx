@@ -17,7 +17,6 @@ import { publicRequest } from "../../../services/api";
 
 export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState("all");
-  const [isScrolled, setIsScrolled] = useState(false);
   const [featuredBlogs, setFeaturedBlogs] = useState([]);
   const [publishedPostCount, setPublishedPostCount] = useState(0);
   const [categories, setCategories] = useState([]);
@@ -166,14 +165,6 @@ export default function HomePage() {
   const getCategoryIcon = (categoryName) => {
     return categoryIcons[categoryName] || "📁";
   };
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   // Helper function to strip HTML tags and get plain text
   const stripHtmlTags = (html) => {

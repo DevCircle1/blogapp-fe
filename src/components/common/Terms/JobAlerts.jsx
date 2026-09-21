@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from "../../../context/AuthContext";
 import { publicRequest } from '../../../services/api';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -73,7 +72,6 @@ const MessageModal = ({ isOpen, onClose, message, title, date }) => {
 };
 
 const JobAlerts = () => {
-  const { user } = useAuth();
   const [jobAlerts, setJobAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');

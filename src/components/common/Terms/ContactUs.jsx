@@ -42,7 +42,7 @@ const ContactUs = () => {
 
     try {
       // API call to submit contact form
-      const response = await publicRequest.post('/contact/', contactForm);
+      await publicRequest.post('/contact/', contactForm);
       
       toast.success('Message sent successfully! We will get back to you soon.');
       setContactForm({

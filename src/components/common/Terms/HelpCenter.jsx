@@ -256,7 +256,7 @@ const HelpCenter = () => {
                   if (e.key === 'Enter') {
                     const searchTerm = e.target.value.toLowerCase();
                     // Simple search implementation
-                    categories.forEach((category, catIndex) => {
+                    categories.forEach((category) => {
                       category.questions.forEach((question, questIndex) => {
                         if (question.question.toLowerCase().includes(searchTerm) || 
                             question.answer.toLowerCase().includes(searchTerm)) {

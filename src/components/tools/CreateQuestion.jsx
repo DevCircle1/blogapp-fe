@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Send } from "lucide-react";
-import { privateRequest, publicRequest } from "../../services/api";
+import { privateRequest } from "../../services/api";
 import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthContext"; 
 import Seo from '../common/Seo.jsx';
