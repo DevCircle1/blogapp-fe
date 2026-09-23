@@ -15,12 +15,7 @@ const LOADERS = {
 
 const cache = new Map();
 
-/**
- * Suspends until the language bundle is loaded; the route-level <Suspense>
- * in App.jsx shows its fallback meanwhile. A failed load is evicted so the
- * next render retries instead of caching the failure.
- */
-export function useLocaleBundle(lang) {
+const entryFor = (lang) => {
   let entry = cache.get(lang);
   if (!entry) {
     entry = { status: 'pending' };
@@ -36,6 +31,19 @@ export function useLocaleBundle(lang) {
     );
     cache.set(lang, entry);
   }
+  return entry;
+};
+
+/** Starts loading a language ahead of render, so main.jsx can hydrate a localized page without suspending. */
+export const preloadLocaleBundle = (lang) => entryFor(lang).promise;
+
+/**
+ * Suspends until the language bundle is loaded; the route-level <Suspense>
+ * in App.jsx shows its fallback meanwhile. A failed load is evicted so the
+ * next render retries instead of caching the failure.
+ */
+export function useLocaleBundle(lang) {
+  const entry = entryFor(lang);
   if (entry.status === 'pending') throw entry.promise;
   if (entry.status === 'error') {
     cache.delete(lang);

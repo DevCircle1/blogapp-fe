@@ -3,8 +3,8 @@ import {
   Button, CopyButton, ErrorNote, Field, Grid, Label, LabelledField, Panel, Segmented, Select,
   Stat, StatGrid, TextArea, Toggle,
 } from './uiKit.jsx';
-import { getFormatLocale, num } from './toolFormat.js';
-import { msg, useExtras, useT } from '../../../i18n/i18n.js';
+
+import { msg, useExtras, useT, useFormat } from '../../../i18n/i18n.js';
 
 const STOP_WORDS = new Set(['the', 'a', 'an', 'and', 'or', 'but', 'of', 'to', 'in', 'is', 'it', 'for', 'on', 'with', 'as', 'at', 'by', 'from', 'this', 'that', 'these', 'those', 'be', 'are', 'was', 'were', 'been', 'has', 'have', 'had', 'not', 'you', 'your', 'we', 'our', 'they', 'their', 'i', 'he', 'she', 'his', 'her', 'its', 'can', 'will', 'if', 'so', 'than', 'then', 'there', 'when', 'which', 'who', 'what', 'how', 'all', 'more', 'most', 'up', 'out', 'do', 'does', 'no', 'yes', 'also', 'into', 'about', 'over']);
 
@@ -16,6 +16,7 @@ const useStopWords = () => {
 
 /* ---------------------------------------------------------- Word counter */
 export function WordCounter() {
+  const { num } = useFormat();
   const t = useT();
   const [text, setText] = useState('');
 
@@ -81,6 +82,7 @@ const CASES = [
 ];
 
 export function CaseConverter() {
+  const { locale } = useFormat();
   const t = useT();
   const [text, setText] = useState('');
   const [result, setResult] = useState('');
@@ -91,7 +93,7 @@ export function CaseConverter() {
       <TextArea id="cc-text" className="mt-2" value={text} onChange={(e) => setText(e.target.value)} placeholder={t('Paste the text you want to convert…')} />
       <div className="my-5 flex flex-wrap gap-2">
         {CASES.map(([name, convert]) => (
-          <Button key={name} variant="ghost" onClick={() => setResult(convert(text, getFormatLocale()))}>{t(name)}</Button>
+          <Button key={name} variant="ghost" onClick={() => setResult(convert(text, locale))}>{t(name)}</Button>
         ))}
       </div>
       <Label htmlFor="cc-result">{t('Result')}</Label>
@@ -162,12 +164,12 @@ export function RemoveDuplicateLines() {
 
 /* ------------------------------------------------------------ Sort lines */
 export function SortTextLines() {
+  const { locale } = useFormat();
   const t = useT();
   const [text, setText] = useState('');
   const [sortBy, setSortBy] = useState('alpha');
   const [direction, setDirection] = useState('asc');
   const [caseSensitive, setCaseSensitive] = useState(false);
-  const locale = getFormatLocale();
 
   const output = useMemo(() => {
     const lines = text.split('\n').filter((line) => line.trim() !== '');
@@ -445,6 +447,7 @@ export function SlugGenerator() {
 
 /* ------------------------------------------------------- Word frequency */
 export function WordFrequencyCounter() {
+  const { num } = useFormat();
   const t = useT();
   const stopWords = useStopWords();
   const [text, setText] = useState('');

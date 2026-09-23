@@ -166,7 +166,7 @@ export default function Footer() {
             </Link>
           ))}
         </nav>
-        <p>© {new Date().getFullYear()} Talk &amp; Tool. {copy.footer.rights}</p>
+        <p>© 2026 Talk &amp; Tool. {copy.footer.rights}</p>
         <p className="mt-2 text-xs text-gray-500">
           {copy.footer.disclaimer}
         </p>

@@ -3,8 +3,8 @@ import {
   Button, CopyButton, ErrorNote, Field, Grid, Label, LabelledField, LabelledSelect, Panel,
   Result, Segmented, Select, Stat, StatGrid, TextArea, Toggle,
 } from './uiKit.jsx';
-import { getFormatLocale, num } from './toolFormat.js';
-import { msg, useT } from '../../../i18n/i18n.js';
+
+import { msg, useT, useFormat } from '../../../i18n/i18n.js';
 
 /* ------------------------------------------------------------------ JSON */
 export function JsonStudio() {
@@ -169,6 +169,7 @@ const decodeSegment = (segment) => {
 };
 
 export function JwtInspector() {
+  const { locale } = useFormat();
   const t = useT();
   const [token, setToken] = useState('');
   const decoded = useMemo(() => {
@@ -180,7 +181,7 @@ export function JwtInspector() {
   }, [token]);
 
   const claims = decoded?.payload || {};
-  const asDate = (seconds) => (Number.isFinite(seconds) ? new Date(seconds * 1000).toLocaleString(getFormatLocale()) : null);
+  const asDate = (seconds) => (Number.isFinite(seconds) ? new Date(seconds * 1000).toLocaleString(locale) : null);
   const expired = Number.isFinite(claims.exp) ? claims.exp * 1000 < Date.now() : null;
 
   return (
@@ -672,6 +673,7 @@ const relativeLuminance = ({ r, g, b }) => {
 };
 
 export function ColorConverter() {
+  const { num } = useFormat();
   const t = useT();
   const [hex, setHex] = useState('#6366f1');
   const rgb = hexToRgb(hex);

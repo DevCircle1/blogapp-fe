@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, startTransition, useContext, useEffect, useMemo, useState } from 'react';
 import { supabase } from '../services/supabase';
 
 export const AuthContext = createContext();
@@ -15,20 +15,29 @@ export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // The first session updates arrive right after mount, while a server-rendered
+  // page is still hydrating. React hydrates each Suspense boundary in its own
+  // pass, and a second default-priority update reaching a boundary that has not
+  // finished forces it to client-render, discarding the server markup. As
+  // transitions they wait their turn instead.
   useEffect(() => {
     let mounted = true;
     supabase.auth.getSession().then(({ data }) => {
       if (!mounted) return;
-      setSession(data.session);
-      setUser(toAppUser(data.session?.user));
-      setLoading(false);
+      startTransition(() => {
+        setSession(data.session);
+        setUser(toAppUser(data.session?.user));
+        setLoading(false);
+      });
     });
 
     const { data } = supabase.auth.onAuthStateChange((_event, nextSession) => {
       if (!mounted) return;
-      setSession(nextSession);
-      setUser(toAppUser(nextSession?.user));
-      setLoading(false);
+      startTransition(() => {
+        setSession(nextSession);
+        setUser(toAppUser(nextSession?.user));
+        setLoading(false);
+      });
     });
 
     return () => {
@@ -45,7 +54,7 @@ export default function AuthProvider({ children }) {
       .eq('id', session.user.id)
       .maybeSingle()
       .then(({ data }) => {
-        if (data) setUser((current) => ({ ...current, ...data }));
+        if (data) startTransition(() => setUser((current) => ({ ...current, ...data })));
       });
   }, [session?.user?.id]);
 

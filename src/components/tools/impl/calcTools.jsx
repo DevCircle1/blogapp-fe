@@ -3,11 +3,12 @@ import {
   Button, CopyButton, ErrorNote, Field, Grid, Label, LabelledField, LabelledSelect, Panel,
   Result, Segmented, Select, Stat, StatGrid, TextArea, Toggle,
 } from './uiKit.jsx';
-import { getFormatLocale, num, toNumber } from './toolFormat.js';
-import { msg, useT } from '../../../i18n/i18n.js';
+import { toNumber } from './toolFormat.js';
+import { msg, useT, useFormat } from '../../../i18n/i18n.js';
 
 /* ------------------------------------------------------------ Percentage */
 export function PercentageCalculator() {
+  const { num } = useFormat();
   const t = useT();
   const [percent, setPercent] = useState('15');
   const [value, setValue] = useState('240');
@@ -59,6 +60,7 @@ export function PercentageCalculator() {
 
 /* --------------------------------------------------------------- Average */
 export function AverageCalculator() {
+  const { num } = useFormat();
   const t = useT();
   const [input, setInput] = useState('12, 7, 3, 19, 7, 22, 15');
 
@@ -108,6 +110,7 @@ export function AverageCalculator() {
 const gcd = (a, b) => (b ? gcd(b, a % b) : Math.abs(a));
 
 export function FractionCalculator() {
+  const { num } = useFormat();
   const t = useT();
   const [a, setA] = useState({ n: '1', d: '2' });
   const [b, setB] = useState({ n: '1', d: '3' });
@@ -163,6 +166,7 @@ export function FractionCalculator() {
 
 /* ----------------------------------------------------------------- Ratio */
 export function RatioCalculator() {
+  const { num } = useFormat();
   const t = useT();
   const [mode, setMode] = useState('simplify');
   const [a, setA] = useState('1920');
@@ -286,6 +290,7 @@ const fromRoman = (text) => {
 };
 
 export function RomanNumeralConverter() {
+  const { num } = useFormat();
   const t = useT();
   const [number, setNumber] = useState('2026');
   const [roman, setRoman] = useState('');
@@ -318,6 +323,7 @@ export function RomanNumeralConverter() {
 const GRADE_POINTS = { 'A+': 4, A: 4, 'A-': 3.7, 'B+': 3.3, B: 3, 'B-': 2.7, 'C+': 2.3, C: 2, 'C-': 1.7, 'D+': 1.3, D: 1, 'D-': 0.7, F: 0 };
 
 export function GpaCalculator() {
+  const { num } = useFormat();
   const t = useT();
   const [courses, setCourses] = useState(() => [
     { id: 1, name: t('Course {n}', { n: 1 }), grade: 'A', credits: '3' },
@@ -433,6 +439,7 @@ const toCelsius = { Celsius: (v) => v, Fahrenheit: (v) => (v - 32) * (5 / 9), Ke
 const fromCelsius = { Celsius: (v) => v, Fahrenheit: (v) => v * (9 / 5) + 32, Kelvin: (v) => v + 273.15 };
 
 export function UnitConverter() {
+  const { num } = useFormat();
   const t = useT();
   const [group, setGroup] = useState('Length');
   const [from, setFrom] = useState('Meter');
@@ -490,11 +497,11 @@ export function UnitConverter() {
 
 /* ------------------------------------------------------------------- Age */
 export function AgeCalculator() {
+  const { locale, num } = useFormat();
   const t = useT();
   const today = new Date().toISOString().slice(0, 10);
   const [birthDate, setBirthDate] = useState('');
   const [asOf, setAsOf] = useState(today);
-  const locale = getFormatLocale();
 
   const result = useMemo(() => {
     if (!birthDate) return null;

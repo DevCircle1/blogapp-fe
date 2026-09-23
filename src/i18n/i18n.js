@@ -1,4 +1,7 @@
-import { createContext, createElement, Fragment, useContext } from 'react';
+import {
+  createContext, createElement, Fragment, useContext, useMemo, useSyncExternalStore,
+} from 'react';
+import { makeFormatters } from '../components/tools/impl/toolFormat.js';
 
 /**
  * Tool UI strings are keyed by their English source text, so the English
@@ -40,6 +43,24 @@ export const useI18n = () => useContext(I18nContext);
 export const useT = () => {
   const { dict } = useContext(I18nContext);
   return (key, vars) => interpolate(dict?.[key] ?? key, vars);
+};
+
+const neverChanges = () => () => {};
+
+/**
+ * Locale for numbers and dates, plus num()/money() bound to it. The language
+ * versions name their locale explicitly. The English pages have always used
+ * the visitor's own browser locale (intl is undefined), which a static build
+ * cannot know and hydration must not guess: the server and the hydrating
+ * render use en-US so the markup matches, and the browser locale takes over
+ * straight after (useSyncExternalStore switches from the server snapshot to
+ * the client one without a mismatch).
+ */
+export const useFormat = () => {
+  const { intl } = useContext(I18nContext);
+  const browserLocale = useSyncExternalStore(neverChanges, () => undefined, () => 'en-US');
+  const locale = intl ?? browserLocale;
+  return useMemo(() => ({ locale, ...makeFormatters(locale) }), [locale]);
 };
 
 /** Locale-specific tool behaviour: defaults, stop words, keyword templates. */

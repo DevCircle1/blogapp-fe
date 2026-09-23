@@ -44,7 +44,7 @@ export default function ToolPageView({ tool, Tool, seo, labels, related, languag
           )}
         </header>
 
-        <section aria-label={labels.toolRegion} className="rounded-3xl border border-white/10 bg-white/[0.06] p-5 shadow-2xl shadow-indigo-950/50 md:p-8">
+        <section aria-label={labels.toolRegion} data-tool-root={tool.slug} className="rounded-3xl border border-white/10 bg-white/[0.06] p-5 shadow-2xl shadow-indigo-950/50 md:p-8">
           <Tool />
         </section>
 

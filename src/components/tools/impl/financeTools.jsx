@@ -3,8 +3,8 @@ import {
   Button, ErrorNote, Field, Grid, Label, LabelledField, LabelledSelect, Panel, Result,
   Segmented, Select, Stat, StatGrid, Toggle,
 } from './uiKit.jsx';
-import { money, num, toNumber } from './toolFormat.js';
-import { useExtras, useI18n, useT } from '../../../i18n/i18n.js';
+import { toNumber } from './toolFormat.js';
+import { useExtras, useI18n, useT, useFormat } from '../../../i18n/i18n.js';
 
 const CURRENCIES = ['USD', 'EUR', 'GBP', 'INR', 'PKR', 'AUD', 'CAD', 'AED', 'NGN', 'ZAR', 'BRL', 'MXN', 'ARS', 'COP', 'CLP', 'PEN', 'CHF'];
 
@@ -33,6 +33,7 @@ const amortise = (principal, annualRate, months) => {
 
 /* ------------------------------------------------------------------ Loan */
 export function LoanCalculator() {
+  const { money, num } = useFormat();
   const t = useT();
   const [currency, picker] = useCurrency();
   const [amount, setAmount] = useState('15000');
@@ -66,6 +67,7 @@ export function LoanCalculator() {
 
 /* -------------------------------------------------------------- Mortgage */
 export function MortgageCalculator() {
+  const { money, num } = useFormat();
   const t = useT();
   const [currency, picker] = useCurrency();
   const [price, setPrice] = useState('350000');
@@ -112,6 +114,7 @@ export function MortgageCalculator() {
 
 /* ----------------------------------------------------- Compound interest */
 export function CompoundInterestCalculator() {
+  const { money, num } = useFormat();
   const t = useT();
   const [currency, picker] = useCurrency();
   const [principal, setPrincipal] = useState('5000');
@@ -169,6 +172,7 @@ export function CompoundInterestCalculator() {
 
 /* ------------------------------------------------------- Simple interest */
 export function SimpleInterestCalculator() {
+  const { money, num } = useFormat();
   const t = useT();
   const [currency, picker] = useCurrency();
   const [principal, setPrincipal] = useState('10000');
@@ -198,6 +202,7 @@ export function SimpleInterestCalculator() {
 const TIP_PRESETS = [10, 12, 15, 18, 20, 25];
 
 export function TipCalculator() {
+  const { money } = useFormat();
   const t = useT();
   const extras = useExtras();
   const presets = extras.tip?.presets || TIP_PRESETS;
@@ -235,6 +240,7 @@ export function TipCalculator() {
 
 /* -------------------------------------------------------------- Discount */
 export function DiscountCalculator() {
+  const { money, num } = useFormat();
   const t = useT();
   const [currency, picker] = useCurrency();
   const [price, setPrice] = useState('120');
@@ -276,6 +282,7 @@ export function DiscountCalculator() {
 
 /* ------------------------------------------------------------- Sales tax */
 export function SalesTaxCalculator() {
+  const { money, num } = useFormat();
   const t = useT();
   const extras = useExtras();
   const [currency, picker] = useCurrency();
@@ -325,6 +332,7 @@ export function SalesTaxCalculator() {
 
 /* -------------------------------------------------------- Margin & markup */
 export function MarginMarkupCalculator() {
+  const { money, num } = useFormat();
   const t = useT();
   const extras = useExtras();
   const [currency, picker] = useCurrency();
@@ -371,6 +379,7 @@ export function MarginMarkupCalculator() {
 
 /* ------------------------------------------------------------------- ROI */
 export function RoiCalculator() {
+  const { money, num } = useFormat();
   const t = useT();
   const [currency, picker] = useCurrency();
   const [invested, setInvested] = useState('10000');
@@ -404,6 +413,7 @@ export function RoiCalculator() {
 
 /* ------------------------------------------------------------ Break-even */
 export function BreakEvenCalculator() {
+  const { money, num } = useFormat();
   const t = useT();
   const [currency, picker] = useCurrency();
   const [fixed, setFixed] = useState('12000');
@@ -442,6 +452,7 @@ export function BreakEvenCalculator() {
 
 /* ---------------------------------------------------------- Savings goal */
 export function SavingsGoalCalculator() {
+  const { money } = useFormat();
   const t = useT();
   const [currency, picker] = useCurrency();
   const [goal, setGoal] = useState('20000');
@@ -485,6 +496,7 @@ export function SavingsGoalCalculator() {
 
 /* -------------------------------------------------------- Salary ↔ hourly */
 export function SalaryToHourlyCalculator() {
+  const { money } = useFormat();
   const t = useT();
   const extras = useExtras();
   const [currency, picker] = useCurrency();
@@ -528,6 +540,7 @@ export function SalaryToHourlyCalculator() {
 
 /* ------------------------------------------------------------- Inflation */
 export function InflationCalculator() {
+  const { money, num } = useFormat();
   const t = useT();
   const [currency, picker] = useCurrency();
   const [amount, setAmount] = useState('50000');

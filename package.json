@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && npm run sitemap && npm run prerender",
+    "build": "vite build && npm run build:ssr && npm run sitemap && npm run prerender && npm run verify",
+    "build:ssr": "vite build --ssr src/entry-server.jsx --outDir dist-ssr",
     "sitemap": "node scripts/generate-sitemap.mjs",
     "prerender": "node scripts/prerender.mjs",
+    "verify": "node scripts/verify-prerender.mjs",
     "og:image": "node scripts/make-og-image.mjs",
     "lint": "eslint .",
     "preview": "vite preview",

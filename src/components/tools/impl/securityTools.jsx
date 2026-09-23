@@ -3,8 +3,8 @@ import { RefreshCw } from 'lucide-react';
 import {
   Button, CopyButton, Field, Grid, Label, Panel, Result, Stat, StatGrid, TextArea, Toggle,
 } from './uiKit.jsx';
-import { num } from './toolFormat.js';
-import { msg, useT } from '../../../i18n/i18n.js';
+
+import { msg, useT, useFormat } from '../../../i18n/i18n.js';
 
 const POOLS = {
   uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
@@ -29,6 +29,7 @@ const randomIndex = (limit) => {
 };
 
 export function PasswordGenerator() {
+  const { num } = useFormat();
   const t = useT();
   const [length, setLength] = useState(20);
   const [options, setOptions] = useState({ uppercase: true, lowercase: true, numbers: true, symbols: true });
@@ -101,6 +102,7 @@ const crackTime = (seconds) => {
 };
 
 export function PasswordStrengthChecker() {
+  const { num } = useFormat();
   const t = useT();
   const [password, setPassword] = useState('');
 

@@ -3,8 +3,8 @@ import {
   ErrorNote, Grid, Label, LabelledField, LabelledSelect, Panel, Result, Segmented, Stat,
   StatGrid,
 } from './uiKit.jsx';
-import { getFormatLocale, num, toNumber } from './toolFormat.js';
-import { msg, useExtras, useT } from '../../../i18n/i18n.js';
+import { toNumber } from './toolFormat.js';
+import { msg, useExtras, useT, useFormat } from '../../../i18n/i18n.js';
 
 /** Metric/imperial switch shared by the body-measurement tools. */
 const useMeasurements = (defaults = { cm: '170', kg: '70' }) => {
@@ -57,6 +57,7 @@ const SexSelect = ({ id, value, onChange }) => {
 
 /* ------------------------------------------------------------------- BMI */
 export function BmiCalculator() {
+  const { num } = useFormat();
   const t = useT();
   const { heightCm, weightKg, inputs } = useMeasurements();
   const metres = heightCm / 100;
@@ -105,6 +106,7 @@ const ACTIVITY = [
 ];
 
 export function CalorieCalculator() {
+  const { num } = useFormat();
   const t = useT();
   const { heightCm, weightKg, inputs } = useMeasurements();
   const [age, setAge] = useState('30');
@@ -148,6 +150,7 @@ export function CalorieCalculator() {
 
 /* ----------------------------------------------------------- Ideal weight */
 export function IdealWeightCalculator() {
+  const { num } = useFormat();
   const t = useT();
   const { heightCm, inputs } = useMeasurements();
   const [sex, setSex] = useState('male');
@@ -196,6 +199,7 @@ const FAT_BANDS = {
 };
 
 export function BodyFatCalculator() {
+  const { num } = useFormat();
   const t = useT();
   const [sex, setSex] = useState('male');
   const [height, setHeight] = useState('178');
@@ -254,6 +258,7 @@ export function BodyFatCalculator() {
 
 /* ------------------------------------------------------------ Water intake */
 export function WaterIntakeCalculator() {
+  const { num } = useFormat();
   const t = useT();
   const extras = useExtras();
   const { weightKg, inputs } = useMeasurements({ cm: '170', kg: '70' });
@@ -307,6 +312,7 @@ const SPLITS = {
 };
 
 export function MacroCalculator() {
+  const { num } = useFormat();
   const t = useT();
   const [calories, setCalories] = useState('2200');
   const [preset, setPreset] = useState('Balanced');
@@ -355,6 +361,7 @@ export function MacroCalculator() {
 const TRIMESTERS = [msg('First'), msg('Middle'), msg('Third')];
 
 export function PregnancyDueDateCalculator() {
+  const { locale } = useFormat();
   const t = useT();
   const [method, setMethod] = useState('lmp');
   const [date, setDate] = useState('');
@@ -386,7 +393,7 @@ export function PregnancyDueDateCalculator() {
     };
   }, [date, method, cycle]);
 
-  const fmt = (value) => value.toLocaleDateString(getFormatLocale(), { year: 'numeric', month: 'long', day: 'numeric' });
+  const fmt = (value) => value.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' });
 
   return (
     <>

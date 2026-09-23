@@ -3,15 +3,15 @@ import {
   Button, CopyButton, ErrorNote, Field, Grid, Label, LabelledField, LabelledSelect, Panel,
   Result, Segmented, Stat, StatGrid, Toggle,
 } from './uiKit.jsx';
-import { getFormatLocale, num, toNumber } from './toolFormat.js';
-import { msg, useT } from '../../../i18n/i18n.js';
+import { toNumber } from './toolFormat.js';
+import { msg, useT, useFormat } from '../../../i18n/i18n.js';
 
 const today = () => new Date().toISOString().slice(0, 10);
 const parseDate = (value) => {
   const date = new Date(`${value}T00:00:00`);
   return Number.isNaN(date.getTime()) ? null : date;
 };
-const longDate = (date) => date.toLocaleDateString(getFormatLocale(), { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+const longDate = (date, locale) => date.toLocaleDateString(locale, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
 const countWeekdays = (start, end) => {
   let days = 0;
@@ -26,6 +26,7 @@ const countWeekdays = (start, end) => {
 
 /* -------------------------------------------------------- Date difference */
 export function DateDifferenceCalculator() {
+  const { num } = useFormat();
   const t = useT();
   const [start, setStart] = useState(today());
   const [end, setEnd] = useState(today());
@@ -85,6 +86,7 @@ export function DateDifferenceCalculator() {
 
 /* ------------------------------------------------------ Add/subtract days */
 export function DateAddSubtract() {
+  const { locale } = useFormat();
   const t = useT();
   const [start, setStart] = useState(today());
   const [operation, setOperation] = useState('add');
@@ -133,11 +135,11 @@ export function DateAddSubtract() {
       {result ? (
         <>
           <div className="mt-6 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-6 text-center">
-            <p className="text-3xl font-black text-emerald-300">{longDate(result)}</p>
+            <p className="text-3xl font-black text-emerald-300">{longDate(result, locale)}</p>
           </div>
           <StatGrid columns="md:grid-cols-3">
             <Stat label="ISO 8601" value={iso} accent="cyan" />
-            <Stat label={t('Day of week')} value={result.toLocaleDateString(getFormatLocale(), { weekday: 'long' })} />
+            <Stat label={t('Day of week')} value={result.toLocaleDateString(locale, { weekday: 'long' })} />
             <Stat label={t('Weekend?')} value={[0, 6].includes(result.getDay()) ? t('Yes — may roll to Monday') : t('No')} accent="cyan" />
           </StatGrid>
           <div className="mt-4"><CopyButton value={iso} label={t('Copy ISO date')} /></div>
@@ -149,6 +151,7 @@ export function DateAddSubtract() {
 
 /* ----------------------------------------------------------- Time duration */
 export function TimeDurationCalculator() {
+  const { num } = useFormat();
   const t = useT();
   const [start, setStart] = useState('09:00');
   const [end, setEnd] = useState('17:30');
@@ -196,6 +199,7 @@ export function TimeDurationCalculator() {
 
 /* ------------------------------------------------------------ Working days */
 export function WorkingDaysCalculator() {
+  const { locale, num } = useFormat();
   const t = useT();
   const [mode, setMode] = useState('between');
   const [start, setStart] = useState(today());
@@ -247,7 +251,7 @@ export function WorkingDaysCalculator() {
           </Grid>
           {projected && (
             <div className="mt-6 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-6 text-center">
-              <p className="text-3xl font-black text-emerald-300">{longDate(projected)}</p>
+              <p className="text-3xl font-black text-emerald-300">{longDate(projected, locale)}</p>
             </div>
           )}
         </>
@@ -261,6 +265,7 @@ export function WorkingDaysCalculator() {
 const COUNTDOWN_UNITS = [msg('days'), msg('hours'), msg('minutes'), msg('seconds')];
 
 export function CountdownTimer() {
+  const { locale } = useFormat();
   const t = useT();
   const nextNewYear = `${new Date().getFullYear() + 1}-01-01T00:00`;
   const [target, setTarget] = useState(nextNewYear);
@@ -309,7 +314,7 @@ export function CountdownTimer() {
             ))}
           </div>
           <p className="mt-5 text-center text-sm text-slate-500">
-            {t('Target: {date} in your local time zone.', { date: new Date(target).toLocaleString(getFormatLocale()) })}
+            {t('Target: {date} in your local time zone.', { date: new Date(target).toLocaleString(locale) })}
           </p>
         </>
       ) : <ErrorNote>{t('Choose a valid target date and time.')}</ErrorNote>}
@@ -319,6 +324,7 @@ export function CountdownTimer() {
 
 /* ------------------------------------------------------ Timestamp converter */
 export function TimestampConverter() {
+  const { locale } = useFormat();
   const t = useT();
   const [timestamp, setTimestamp] = useState(() => Math.floor(Date.now() / 1000).toString());
   const [dateInput, setDateInput] = useState(() => new Date().toISOString().slice(0, 16));
@@ -340,7 +346,7 @@ export function TimestampConverter() {
         </div>
         {valid && (
           <StatGrid columns="md:grid-cols-3">
-            <Stat label={t('Local time')} value={date.toLocaleString(getFormatLocale())} accent="emerald" />
+            <Stat label={t('Local time')} value={date.toLocaleString(locale)} accent="emerald" />
             <Stat label="UTC" value={date.toUTCString()} accent="cyan" />
             <Stat label="ISO 8601" value={date.toISOString()} />
           </StatGrid>
