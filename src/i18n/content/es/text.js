@@ -20,8 +20,8 @@ export const textTools = {
   'case-converter': {
     title: 'Convertir mayúsculas a minúsculas online',
     shortTitle: 'Mayúsculas y minúsculas',
-    description: 'Convierte texto a MAYÚSCULAS, minúsculas, tipo título, tipo oración, camelCase, PascalCase, snake_case o kebab-case con un clic.',
-    intro: 'Volver a escribir un titular porque llegó todo en mayúsculas, o renombrar variables de snake_case a camelCase, es tiempo perdido. Este conversor maneja ocho estilos a la vez: los editoriales que necesitan quienes escriben y las convenciones de programación de los desarrolladores, respetando tildes, ñ y signos de apertura.',
+    description: 'Convierte texto de mayúsculas a minúsculas, tipo título, tipo oración, camelCase, snake_case o kebab-case al instante. Gratis, sin registro y sin subir nada.',
+    intro: 'Convertir mayúsculas a minúsculas —o al revés— es tedioso cuando el texto es largo: un titular que llegó todo en mayúsculas, una lista de correos con formato inconsistente o un archivo de código que necesita otra convención de nombres. Esta herramienta lo hace en el navegador, sin depender de fórmulas de Excel como MINUSC() ni del atajo Mayús+F3 de Word, que solo alterna entre tres estilos, y maneja ocho a la vez: los editoriales que necesitan quienes escriben (tipo título, tipo oración) y las convenciones de programación de los desarrolladores (camelCase, PascalCase, snake_case, kebab-case), respetando tildes, ñ y signos de apertura.',
     steps: [
       'Pega el texto en el cuadro de entrada.',
       'Pulsa el estilo que quieres; el resultado aparece al instante.',
@@ -33,6 +33,9 @@ export const textTools = {
       { q: '¿Cuándo se usa camelCase y cuándo snake_case?', a: 'JavaScript, Java y Swift usan camelCase para las variables; Python, Ruby y SQL prefieren snake_case. El kebab-case se reserva para URL, clases CSS y nombres de archivo.' },
       { q: '¿Respeta las tildes y la ñ?', a: 'Sí. La conversión es compatible con Unicode, así que «ñandú» pasa a «ÑANDÚ» sin perder nada, y el tipo oración reconoce los signos de apertura ¿ y ¡.' },
       { q: '¿Estropea la puntuación o los emojis?', a: 'No. La puntuación, los números y los emojis se mantienen intactos; solo cambian las letras.' },
+      { q: '¿Cómo se pasa de mayúsculas a minúsculas en Word?', a: 'Selecciona el texto y pulsa Mayús + F3: alterna entre MAYÚSCULAS, minúsculas y Tipo Título. Para texto largo, o si necesitas camelCase o snake_case, que Word no ofrece, este conversor es más rápido.' },
+      { q: '¿Y en Excel o Google Sheets?', a: 'En Excel usa las fórmulas MINUSC(), MAYUSC() o NOMPROPIO() en una columna auxiliar; en Google Sheets son LOWER(), UPPER() y PROPER(). Si no quieres montar una hoja de cálculo para una lista suelta, pega el texto aquí directamente.' },
+      { q: '¿Existe un atajo de teclado universal para pasar de mayúsculas a minúsculas?', a: 'No a nivel de sistema operativo: solo algunas aplicaciones, como Word, lo ofrecen, y con opciones limitadas. Fuera de esas apps, lo más rápido es pegar el texto en un conversor como este.' },
     ],
   },
   'remove-duplicate-lines': {
