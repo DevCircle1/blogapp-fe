@@ -27,7 +27,6 @@ export function StandaloneToolSeo({ title, description, path, category = 'Utilit
           operatingSystem: 'Any',
           browserRequirements: 'Requires JavaScript',
           isAccessibleForFree: true,
-          offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
           provider: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
         },
         faqs?.length ? faqSchema(faqs) : null,

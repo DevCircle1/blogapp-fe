@@ -474,7 +474,6 @@ export const localizedToolRoutes = LOCALIZED_LANGS.flatMap((lang) => {
         tool,
         path,
         lang: LOCALES[lang].htmlLang,
-        currency: LOCALES[lang].currency,
         breadcrumb: [
           { name: chrome.home, path: '/' },
           { name: chrome.tools, path: hubPath(lang) },

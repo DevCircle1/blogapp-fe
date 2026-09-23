@@ -19,7 +19,7 @@ export const APPLICATION_CATEGORY = {
  * `tool` carries the copy in the page's own language; `category` stays the
  * English catalogue id because it maps to a schema.org application type.
  */
-export const toolPageSchemas = ({ tool, path, lang = 'en', breadcrumb, howToName, currency = 'USD' }) => [
+export const toolPageSchemas = ({ tool, path, lang = 'en', breadcrumb, howToName }) => [
   {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
@@ -31,7 +31,6 @@ export const toolPageSchemas = ({ tool, path, lang = 'en', breadcrumb, howToName
     operatingSystem: 'Any',
     browserRequirements: 'Requires JavaScript',
     isAccessibleForFree: true,
-    offers: { '@type': 'Offer', price: '0', priceCurrency: currency },
     provider: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
   },
   faqSchema(tool.faqs),

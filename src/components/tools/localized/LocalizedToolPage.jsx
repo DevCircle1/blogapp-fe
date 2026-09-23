@@ -50,7 +50,6 @@ export default function LocalizedToolPage({ lang }) {
     tool,
     path,
     lang: locale.htmlLang,
-    currency: locale.currency,
     breadcrumb: [
       { name: chrome.home, path: '/' },
       { name: chrome.tools, path: hubPath(lang) },
