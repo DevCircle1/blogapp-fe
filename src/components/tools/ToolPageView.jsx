@@ -19,7 +19,7 @@ export default function ToolPageView({ tool, Tool, seo, labels, related, languag
           <ol className="flex flex-wrap items-center gap-2">
             <li><Link to="/" className="hover:text-white">{labels.home}</Link></li>
             <li aria-hidden="true">/</li>
-            <li><Link to={labels.toolsPath} className="hover:text-white">{labels.tools}</Link></li>
+            <li><Link to={labels.categoryPath || labels.toolsPath} className="hover:text-white">{labels.categoryName || labels.tools}</Link></li>
             <li aria-hidden="true">/</li>
             <li className="text-slate-300" aria-current="page">{tool.shortTitle}</li>
           </ol>

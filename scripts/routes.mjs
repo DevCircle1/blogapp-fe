@@ -17,6 +17,9 @@ import de from '../src/i18n/content/de.js';
 import it from '../src/i18n/content/it.js';
 import nl from '../src/i18n/content/nl.js';
 import pl from '../src/i18n/content/pl.js';
+import {
+  assertCategorySlugs, categoryHubPage, categoryHubs, toolBreadcrumb,
+} from '../src/i18n/categories.js';
 import { PILLARS } from '../src/components/common/Terms/aboutUsContent.js';
 import { HELP_CENTER_CATEGORIES } from '../src/components/common/Terms/helpCenterContent.js';
 import { POPULAR_TOOLS } from '../src/components/common/Home/popularTools.js';
@@ -30,7 +33,8 @@ import {
 export const SITE_URL = 'https://talkandtool.com';
 export const SITE_NAME = 'Talk & Tool';
 
-const CONTENT = { es, pt, fr, de, it, nl, pl };
+export const CONTENT = { es, pt, fr, de, it, nl, pl };
+LOCALIZED_LANGS.forEach((lang) => assertCategorySlugs(lang, CONTENT[lang].categories));
 const fill = (template, name) => template.replace('{name}', name);
 
 const organizationSchema = {
@@ -440,6 +444,25 @@ export const localizedHubRoutes = LOCALIZED_LANGS.map((lang) => {
   };
 });
 
+/**
+ * Category hubs (/de/textwerkzeuge, …) for the languages whose categories have
+ * slugs. German-only hubs, so no hreflang alternates.
+ */
+export const categoryHubRoutes = LOCALIZED_LANGS.flatMap((lang) => (
+  categoryHubs(lang, CONTENT[lang]).map(({ id }) => {
+    const page = categoryHubPage(lang, CONTENT[lang], id);
+    return {
+      path: page.path,
+      lang,
+      title: `${page.title} | ${SITE_NAME}`,
+      description: page.description,
+      priority: '0.8',
+      changefreq: 'weekly',
+      schemas: page.schemas,
+    };
+  })
+));
+
 /** Every catalogue tool in every localized language. */
 export const localizedToolRoutes = LOCALIZED_LANGS.flatMap((lang) => {
   const { chrome, tools } = CONTENT[lang];
@@ -474,11 +497,7 @@ export const localizedToolRoutes = LOCALIZED_LANGS.flatMap((lang) => {
         tool,
         path,
         lang: LOCALES[lang].htmlLang,
-        breadcrumb: [
-          { name: chrome.home, path: '/' },
-          { name: chrome.tools, path: hubPath(lang) },
-          { name: tool.shortTitle, path },
-        ],
+        breadcrumb: toolBreadcrumb(lang, CONTENT[lang], tool, path),
         howToName: howTo,
       }),
     };
@@ -490,5 +509,6 @@ export const allRoutes = [
   ...standaloneRoutes,
   ...toolRoutes,
   ...localizedHubRoutes,
+  ...categoryHubRoutes,
   ...localizedToolRoutes,
 ];

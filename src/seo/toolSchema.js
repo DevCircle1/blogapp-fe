@@ -65,6 +65,6 @@ export const toolHubSchemas = ({ name, path, description, lang = 'en', items, fa
       })),
     },
   },
-  faqSchema(faqs),
+  faqs?.length ? faqSchema(faqs) : null,
   breadcrumbSchema(breadcrumb),
-];
+].filter(Boolean);

@@ -6,6 +6,8 @@ import { getRelatedTools, getToolBySlug } from '../toolCatalog.js';
 import { toolPageSchemas } from '../../../seo/toolSchema.js';
 import I18nProvider from '../../../i18n/I18nProvider.jsx';
 import { interpolate } from '../../../i18n/i18n.js';
+import { categoryHubPath, categoryIdForSlug, toolBreadcrumb } from '../../../i18n/categories.js';
+import LocalizedToolsHub from './LocalizedToolsHub.jsx';
 import { useLocaleBundle } from '../../../i18n/loadBundle.js';
 import {
   ALL_LANGS, LOCALES, hubPath, sourceSlug, toolAlternates, toolPath,
@@ -32,6 +34,10 @@ export default function LocalizedToolPage({ lang }) {
   const bundle = useLocaleBundle(lang);
   const { chrome, categories, tools } = bundle.content;
 
+  // Category hubs share the /<lang>/<slug> URL space with the tool pages.
+  const categoryId = categoryIdForSlug(categories, toolSlug);
+  if (categoryId) return <LocalizedToolsHub lang={lang} category={categoryId} />;
+
   const slug = sourceSlug(lang, toolSlug);
   const base = slug && getToolBySlug(slug);
   const copy = slug && tools[slug];
@@ -46,15 +52,14 @@ export default function LocalizedToolPage({ lang }) {
   const howTo = interpolate(chrome.howTo, name);
   const locale = LOCALES[lang];
 
+  const breadcrumb = toolBreadcrumb(lang, bundle.content, tool, path);
+  const categoryLink = categoryHubPath(lang, categories, tool.category);
+
   const schemas = toolPageSchemas({
     tool,
     path,
     lang: locale.htmlLang,
-    breadcrumb: [
-      { name: chrome.home, path: '/' },
-      { name: chrome.tools, path: hubPath(lang) },
-      { name: tool.shortTitle, path },
-    ],
+    breadcrumb,
     howToName: howTo,
   });
 
@@ -70,6 +75,8 @@ export default function LocalizedToolPage({ lang }) {
           tools: chrome.tools,
           toolsPath: hubPath(lang),
           category: categories[tool.category]?.name || tool.category,
+          categoryName: categoryLink ? categories[tool.category].name : undefined,
+          categoryPath: categoryLink || undefined,
           toolRegion: interpolate(chrome.toolRegion, name),
           privacy: chrome.privacy,
           about: interpolate(chrome.about, name),

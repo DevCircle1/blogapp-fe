@@ -7,6 +7,7 @@ import { premiumTools } from '../toolCatalog.js';
 import { toolHubSchemas } from '../../../seo/toolSchema.js';
 import { interpolate } from '../../../i18n/i18n.js';
 import { useLocaleBundle } from '../../../i18n/loadBundle.js';
+import { categoryHubPage, categoryHubs } from '../../../i18n/categories.js';
 import {
   ALL_LANGS, LOCALES, hubAlternates, hubPath, toolPath,
 } from '../../../i18n/locales.js';
@@ -18,15 +19,21 @@ const fold = (value) => value.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCa
  * Directory of every tool in one language — the /es, /pt, /fr and /de
  * equivalents of /tools. It is the hub each language's tool pages link back
  * to, which is what lets crawlers find all of them from a single entry point.
+ *
+ * With `category` it is that category's hub instead (/de/textwerkzeuge, …):
+ * the same layout, limited to one category's tools. Where a language has
+ * category hubs, its directory page leads with links to them.
  */
-export default function LocalizedToolsHub({ lang }) {
+export default function LocalizedToolsHub({ lang, category }) {
   const bundle = useLocaleBundle(lang);
   const { hub, chrome, categories, tools } = bundle.content;
+  const categoryPage = category ? categoryHubPage(lang, bundle.content, category) : null;
+  const categoryLinks = category ? [] : categoryHubs(lang, bundle.content);
   const [search, setSearch] = useState('');
   const locale = LOCALES[lang];
-  const path = hubPath(lang);
+  const path = categoryPage ? categoryPage.path : hubPath(lang);
 
-  const items = useMemo(() => premiumTools.filter((tool) => tools[tool.slug]).map((tool) => ({
+  const items = useMemo(() => premiumTools.filter((tool) => tools[tool.slug] && (!category || tool.category === category)).map((tool) => ({
     slug: tool.slug,
     icon: tool.icon,
     category: tool.category,
@@ -34,7 +41,7 @@ export default function LocalizedToolsHub({ lang }) {
     description: tools[tool.slug].description,
     path: toolPath(lang, tool.slug),
     haystack: fold(`${tools[tool.slug].title} ${tools[tool.slug].shortTitle} ${tools[tool.slug].description}`),
-  })), [lang, tools]);
+  })), [lang, tools, category]);
 
   const grouped = useMemo(() => {
     const term = fold(search.trim());
@@ -49,7 +56,7 @@ export default function LocalizedToolsHub({ lang }) {
 
   const shownCount = grouped.reduce((total, [, list]) => total + list.length, 0);
 
-  const schemas = toolHubSchemas({
+  const schemas = categoryPage ? categoryPage.schemas : toolHubSchemas({
     name: hub.title,
     path,
     description: hub.description,
@@ -61,7 +68,14 @@ export default function LocalizedToolsHub({ lang }) {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
-      <Seo title={hub.title} description={hub.description} path={path} lang={lang} schemas={schemas} alternates={hubAlternates()} />
+      <Seo
+        title={categoryPage ? categoryPage.title : hub.title}
+        description={categoryPage ? categoryPage.description : hub.description}
+        path={path}
+        lang={lang}
+        schemas={schemas}
+        alternates={categoryPage ? undefined : hubAlternates()}
+      />
 
       <section className="relative overflow-hidden border-b border-white/10 px-4 py-20">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(99,102,241,.25),transparent_38%),radial-gradient(circle_at_top_right,rgba(16,185,129,.14),transparent_32%)]" />
@@ -69,8 +83,8 @@ export default function LocalizedToolsHub({ lang }) {
           <div className="inline-flex items-center gap-2 rounded-full border border-indigo-400/30 bg-indigo-400/10 px-4 py-2 text-sm text-indigo-200">
             <Sparkles size={16} /> {interpolate(hub.badge, { n: items.length })}
           </div>
-          <h1 className="mt-6 text-4xl font-black tracking-tight md:text-6xl">{hub.heading}</h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-400">{hub.body}</p>
+          <h1 className="mt-6 text-4xl font-black tracking-tight md:text-6xl">{categoryPage ? categoryPage.name : hub.heading}</h1>
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-400">{categoryPage ? categoryPage.description : hub.body}</p>
           <div className="relative mx-auto mt-10 max-w-2xl">
             <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500" size={21} aria-hidden="true" />
             <label htmlFor="tool-search" className="sr-only">{hub.searchLabel}</label>
@@ -87,12 +101,31 @@ export default function LocalizedToolsHub({ lang }) {
       </section>
 
       <main className="mx-auto max-w-6xl px-4 py-12">
+        {!search && categoryLinks.length > 0 && (
+          <section aria-label={chrome.tools} className="mb-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {categoryLinks.map((link) => (
+              <Link
+                key={link.id}
+                to={link.path}
+                className="group rounded-3xl border border-white/10 bg-white/[0.05] p-6 transition hover:-translate-y-1 hover:border-indigo-400/50 hover:bg-white/[0.08]"
+              >
+                <h2 className="text-xl font-bold group-hover:text-indigo-300">{link.name}</h2>
+                <p className="mt-2 text-sm leading-6 text-slate-400">{link.blurb}</p>
+                <span className="mt-5 flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-slate-500">
+                  {interpolate(hub.badge, { n: link.count })}
+                  <ArrowRight size={18} className="text-indigo-300 transition group-hover:translate-x-1" />
+                </span>
+              </Link>
+            ))}
+          </section>
+        )}
+
         <p className="mb-6 text-sm text-slate-500">{interpolate(hub.shown, { shown: shownCount, total: items.length })}</p>
 
-        {grouped.map(([category, list], groupIndex) => (
-          <section key={category} className="mb-12">
-            <h2 className="text-2xl font-bold">{categories[category]?.name || category}</h2>
-            {categories[category]?.blurb && <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-500">{categories[category].blurb}</p>}
+        {grouped.map(([groupKey, list], groupIndex) => (
+          <section key={groupKey} className="mb-12">
+            {!categoryPage && <h2 className="text-2xl font-bold">{categories[groupKey]?.name || groupKey}</h2>}
+            {!categoryPage && categories[groupKey]?.blurb && <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-500">{categories[groupKey].blurb}</p>}
             <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {list.map((item) => (
                 <Link
@@ -120,6 +153,11 @@ export default function LocalizedToolsHub({ lang }) {
           </div>
         )}
 
+        {categoryPage ? (
+          <p className="mt-2">
+            <Link to={hubPath(lang)} className="font-semibold text-indigo-300 hover:text-white">{chrome.browseAll}</Link>
+          </p>
+        ) : (
         <section className="mt-14 max-w-4xl">
           {hub.paragraphs.map(([heading, text]) => (
             <div key={heading}>
@@ -148,6 +186,7 @@ export default function LocalizedToolsHub({ lang }) {
             ))}
           </p>
         </section>
+        )}
       </main>
     </div>
   );

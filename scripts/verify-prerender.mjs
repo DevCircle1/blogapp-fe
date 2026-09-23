@@ -15,9 +15,12 @@
  */
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { allRoutes } from './routes.mjs';
+import { allRoutes, CONTENT, SITE_URL } from './routes.mjs';
 import { LEGACY_ROUTES } from './prerender-legacy.mjs';
-import { ALL_LANGS, toolPath } from '../src/i18n/locales.js';
+import {
+  ALL_LANGS, LOCALIZED_LANGS, hubPath, toolPath,
+} from '../src/i18n/locales.js';
+import { categoryHubs, toolBreadcrumb } from '../src/i18n/categories.js';
 import { premiumTools } from '../src/components/tools/toolCatalog.js';
 
 const DIST = 'dist';
@@ -99,6 +102,76 @@ for (const route of allRoutes) {
   }
 }
 
+/* ------------------------------------------------- category hubs (per language) */
+const read = (routePath) => readFile(fileFor(routePath), 'utf8').catch(() => null);
+const mainOf = (html) => {
+  const start = html.indexOf('<main');
+  return start === -1 ? '' : html.slice(start, html.indexOf('</main>', start));
+};
+const hrefsIn = (html) => [...html.matchAll(/href="([^"]+)"/g)].map((match) => match[1]);
+let hubCount = 0;
+let breadcrumbCount = 0;
+const hubLanguages = [];
+
+for (const lang of LOCALIZED_LANGS) {
+  const content = CONTENT[lang];
+  const hubs = categoryHubs(lang, content);
+  const langTools = premiumTools.filter((tool) => content.tools[tool.slug]);
+
+  if (hubs.length) {
+    hubLanguages.push(lang);
+    // The directory page must lead with the hubs: every hub link comes before the first tool link.
+    const directory = await read(hubPath(lang));
+    const directoryMain = directory ? mainOf(directory) : '';
+    const directoryLinks = hrefsIn(directoryMain);
+    const firstTool = Math.min(...langTools.map((tool) => directoryLinks.indexOf(toolPath(lang, tool.slug))).filter((index) => index >= 0));
+    hubs.forEach((hub) => {
+      const at = directoryLinks.indexOf(hub.path);
+      if (at === -1) problem(hubPath(lang), `does not link the ${hub.name} hub (${hub.path})`);
+      else if (at > firstTool) problem(hubPath(lang), `links the ${hub.name} hub after the first tool link, so it is not the primary navigation`);
+    });
+
+    for (const hub of hubs) {
+      hubCount += 1;
+      const html = await read(hub.path);
+      if (!html) continue;
+      // Exactly this category's tools (plus the way back to the directory), nothing from other categories.
+      const expected = new Set(langTools.filter((tool) => tool.category === hub.id).map((tool) => toolPath(lang, tool.slug)));
+      const found = new Set(hrefsIn(mainOf(html)));
+      expected.forEach((href) => { if (!found.has(href)) problem(hub.path, `is missing its tool ${href}`); });
+      langTools.filter((tool) => tool.category !== hub.id).forEach((tool) => {
+        if (found.has(toolPath(lang, tool.slug))) problem(hub.path, `lists ${toolPath(lang, tool.slug)}, which belongs to another category`);
+      });
+      if (!expected.size) problem(hub.path, 'has no tools');
+      if (html.includes('rel="alternate" hreflang')) problem(hub.path, 'has hreflang alternates, but the hub exists in one language only');
+      const trail = html.match(/"@type":"BreadcrumbList","itemListElement":(\[.*?\])\}/)?.[1];
+      const names = trail ? JSON.parse(trail).map((item) => item.name) : [];
+      if (names.length !== 2 || names[1] !== hub.name) problem(hub.path, `BreadcrumbList should be Home > ${hub.name} (two levels), found: ${names.join(' > ') || 'none'}`);
+    }
+  }
+
+  // Every tool page's visible breadcrumb and BreadcrumbList follow the shared trail.
+  for (const tool of langTools) {
+    const path = toolPath(lang, tool.slug);
+    if (LEGACY_ROUTES.has(path)) continue;
+    const html = await read(path);
+    if (!html) continue;
+    breadcrumbCount += 1;
+    const trail = toolBreadcrumb(lang, content, { ...tool, ...content.tools[tool.slug] }, path);
+    const navStart = html.indexOf(`<nav aria-label="${content.chrome.breadcrumb}"`);
+    const nav = navStart === -1 ? '' : html.slice(navStart, html.indexOf('</nav>', navStart));
+    if (!nav) { problem(path, 'has no breadcrumb nav'); continue; }
+    if (!nav.includes(`href="${trail[1].path}"`)) problem(path, `breadcrumb does not link ${trail[1].path}`);
+    const ld = html.match(/"@type":"BreadcrumbList","itemListElement":(\[.*?\])\}/)?.[1];
+    const items = ld ? JSON.parse(ld) : [];
+    const expectedItems = trail.map((crumb) => (crumb.path === '/' ? `${SITE_URL}/` : `${SITE_URL}${crumb.path}`));
+    if (items.length !== 3 || items.some((item, index) => item.item !== expectedItems[index])) {
+      problem(path, `BreadcrumbList should be ${expectedItems.join(' > ')}, found: ${items.map((item) => item.item).join(' > ') || 'none'}`);
+    }
+    if (!hubs.length && !nav.includes(`href="${hubPath(lang)}"`)) problem(path, 'a language without hubs must keep its Tools breadcrumb level');
+  }
+}
+
 if (problems.length) {
   console.error(`[verify] ${problems.length} problem(s) in the generated pages:`);
   problems.slice(0, 60).forEach((line) => console.error(`  - ${line}`));
@@ -106,4 +179,5 @@ if (problems.length) {
   process.exit(1);
 }
 if (exemptTools.length) console.warn(`[verify] ${exemptTools.length} tool pages are EXEMPT from the interactive-root check as legacy routes (see scripts/prerender-legacy.mjs): ${[...new Set(exemptTools.map((p) => toolRoutes.get(p)))].join(', ')}`);
+console.log(`[verify] category hubs: ${hubCount} in ${hubLanguages.join(', ') || 'no language'}; ${breadcrumbCount} tool-page breadcrumbs checked.`);
 console.log(`[verify] ${allRoutes.length} pages OK: ${checkedTools} tool pages contain their interactive root, ${allRoutes.length - exempt} hydrate, ${exempt} legacy.`);
