@@ -2,21 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Seo from '../Seo.jsx';
 import { SITE_URL, SITE_NAME, breadcrumbSchema } from '../../../seo/siteMeta.js';
-
-const PILLARS = [
-  {
-    title: 'Tools that do one thing well',
-    body: 'Every tool solves a single, specific problem and opens straight to the interface — no landing page, no upsell, no account wall. If you searched for a percentage calculator, the percentage calculator is the first thing on the screen.',
-  },
-  {
-    title: 'Your data stays on your device',
-    body: 'The calculators, converters, and text utilities run as JavaScript in your own browser. A document you paste into the word counter, a token you paste into the JWT decoder, and a password you test in the strength checker are never transmitted to us.',
-  },
-  {
-    title: 'The method, not just the number',
-    body: 'Each tool explains the formula it applied and where it stops being reliable. A BMI figure comes with the reasons BMI misreads athletes; a crack-time estimate comes with the hardware assumption behind it. A number without its caveats is worse than no number.',
-  },
-];
+import { PILLARS } from './aboutUsContent.js';
 
 const AboutUs = () => (
   <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">

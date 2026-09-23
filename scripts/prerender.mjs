@@ -180,8 +180,31 @@ const bodyFor = (route) => {
     `<h1>${escapeHtml(route.heading || route.title)}</h1>`,
     `<p>${escapeHtml(route.body || route.description)}</p>`,
   ];
+  // Paragraphs that continue directly under the hero copy on the live page,
+  // with no sub-heading of their own (e.g. the extra intro paragraphs on the
+  // /check-ip and /screen-resolution "About this tool" blocks).
+  if (route.extraParagraphs?.length) {
+    parts.push(route.extraParagraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join(''));
+  }
+  // Extra <h2>/<p>/<ul> blocks for pages whose real content is longer prose
+  // than a single body sentence (About, Privacy Policy, Help Center, the
+  // localized tool hubs, ...) — each entry mirrors a section already
+  // rendered by the live React page. Placed before the list/steps/faqs
+  // below to match where this copy actually sits on those pages (e.g. the
+  // localized hubs' intro paragraphs come before the tool grid).
+  if (route.sections?.length) {
+    parts.push(route.sections.map((section) => {
+      const heading = `<h2>${escapeHtml(section.heading)}</h2>`;
+      const paragraphs = (section.paragraphs || []).map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('');
+      const list = section.list?.length
+        ? `<ul>${section.list.map((entry) => `<li>${escapeHtml(entry)}</li>`).join('')}</ul>`
+        : '';
+      return heading + paragraphs + list;
+    }).join(''));
+  }
   if (route.list?.length) {
-    parts.push(`<ul>${route.list.map((item) => `<li><a href="${escapeHtml(item.path)}">${escapeHtml(item.name)}</a></li>`).join('')}</ul>`);
+    if (route.listHeading) parts.push(`<h2>${escapeHtml(route.listHeading)}</h2>`);
+    parts.push(`<ul>${route.list.map((item) => `<li><a href="${escapeHtml(item.path)}">${escapeHtml(item.name)}</a>${item.description ? ` — ${escapeHtml(item.description)}` : ''}</li>`).join('')}</ul>`);
   }
   if (route.steps?.length) {
     parts.push(`<h2>${escapeHtml(route.howToHeading || 'How to use it')}</h2>`);
