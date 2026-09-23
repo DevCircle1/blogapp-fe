@@ -169,6 +169,18 @@ for (const lang of LOCALIZED_LANGS) {
       problem(path, `BreadcrumbList should be ${expectedItems.join(' > ')}, found: ${items.map((item) => item.item).join(' > ') || 'none'}`);
     }
     if (!hubs.length && !nav.includes(`href="${hubPath(lang)}"`)) problem(path, 'a language without hubs must keep its Tools breadcrumb level');
+
+    // Related-tools row: no tool twice, and the language's pinned tool exactly once where it applies.
+    const asideStart = html.indexOf('<aside');
+    const related = asideStart === -1 ? [] : hrefsIn(html.slice(asideStart, html.indexOf('</aside>', asideStart)));
+    const repeated = related.filter((href, index) => related.indexOf(href) !== index);
+    if (repeated.length) problem(path, `related-tools row repeats ${[...new Set(repeated)].join(', ')}`);
+    const pinned = content.pinnedRelated;
+    if (pinned && pinned.slug !== tool.slug && pinned.categories.includes(tool.category)) {
+      const pinnedPath = toolPath(lang, pinned.slug);
+      const occurrences = related.filter((href) => href === pinnedPath).length;
+      if (occurrences !== 1) problem(path, `related-tools row should link ${pinnedPath} exactly once, found ${occurrences}`);
+    }
   }
 }
 

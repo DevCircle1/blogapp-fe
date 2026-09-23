@@ -43,6 +43,9 @@ export default {
     'Date & Time': { slug: 'datum-und-zeit', name: 'Datum & Zeit', blurb: 'Tage zwischen Daten, Fristen, Arbeitstage, Arbeitszeit, Countdowns und Unix-Timestamps.' },
     SEO: { slug: 'seo-werkzeuge', name: 'SEO', blurb: 'Keywords, Longtail, Content-Planung und thematische Gruppierung mit nachvollziehbaren Methoden.' },
   },
+  // German-only: this tool is added to the related-tools row of every tool in
+  // these categories (unless the shared curated list already has it).
+  pinnedRelated: { slug: 'word-counter', categories: ['Text'] },
   hub: {
     title: 'Kostenlose Online-Tools: Rechner und Umrechner',
     description: 'Kostenlose Online-Rechner, Umrechner und Text-Tools auf Deutsch: Prozentrechner, Mehrwertsteuer, Dreisatz, BMI, Wörter zählen und mehr.',

@@ -55,6 +55,15 @@ export default function LocalizedToolPage({ lang }) {
   const breadcrumb = toolBreadcrumb(lang, bundle.content, tool, path);
   const categoryLink = categoryHubPath(lang, categories, tool.category);
 
+  // The shared curated list, plus this language's pinned tool where it applies
+  // and is not already in the list, so no tool appears in the row twice.
+  const relatedTools = getRelatedTools(slug).filter((item) => tools[item.slug]);
+  const pinned = bundle.content.pinnedRelated;
+  if (pinned && pinned.slug !== slug && pinned.categories.includes(tool.category) && tools[pinned.slug]
+    && !relatedTools.some((item) => item.slug === pinned.slug)) {
+    relatedTools.push(getToolBySlug(pinned.slug));
+  }
+
   const schemas = toolPageSchemas({
     tool,
     path,
@@ -87,7 +96,7 @@ export default function LocalizedToolPage({ lang }) {
           browseAll: chrome.browseAll,
           alsoAvailable: chrome.alsoAvailable,
         }}
-        related={getRelatedTools(slug).filter((item) => tools[item.slug]).map((item) => ({
+        related={relatedTools.map((item) => ({
           path: toolPath(lang, item.slug),
           title: tools[item.slug].shortTitle,
           description: tools[item.slug].description,
