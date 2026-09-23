@@ -77,7 +77,9 @@ export default function LocalizedToolsHub({ lang, category }) {
         alternates={categoryPage ? undefined : hubAlternates()}
       />
 
-      <section className="relative overflow-hidden border-b border-white/10 px-4 py-20">
+      {/* Where the directory leads with category cards, the hero is tighter on
+          phones so the first cards start above the fold. */}
+      <section className={`relative overflow-hidden border-b border-white/10 px-4 ${categoryLinks.length ? 'py-8 md:py-20' : 'py-20'}`}>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(99,102,241,.25),transparent_38%),radial-gradient(circle_at_top_right,rgba(16,185,129,.14),transparent_32%)]" />
         <div className="relative mx-auto max-w-6xl text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-indigo-400/30 bg-indigo-400/10 px-4 py-2 text-sm text-indigo-200">
