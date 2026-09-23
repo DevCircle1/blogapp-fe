@@ -17,18 +17,6 @@ export const LEGACY_ROUTES = new Map([
   ['/text-to-html', 'ReactQuill touches document while rendering'],
 ]);
 
-// These tools start from the current date or time (useState(today()), Date.now()),
-// so the build date would be baked into the HTML and hydration would not match it.
-const TIME_DEPENDENT_TOOLS = [
-  'date-difference-calculator', 'date-add-subtract', 'working-days-calculator',
-  'countdown-timer', 'timestamp-converter', 'age-calculator',
-];
-TIME_DEPENDENT_TOOLS.forEach((slug) => {
-  ALL_LANGS.forEach((lang) => {
-    LEGACY_ROUTES.set(lang === 'en' ? `/tools/${slug}` : toolPath(lang, slug), 'initial state is the current date/time, which a static build cannot know');
-  });
-});
-
 const HREFLANG_NAMES = Object.fromEntries(Object.values(LOCALES).map((locale) => [locale.hreflang, locale]));
 
 // Mirrors of Navbar.jsx and Footer.jsx: same tags, same Tailwind classes, so

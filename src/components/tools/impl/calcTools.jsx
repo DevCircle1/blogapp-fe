@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Button, CopyButton, ErrorNote, Field, Grid, Label, LabelledField, LabelledSelect, Panel,
   Result, Segmented, Select, Stat, StatGrid, TextArea, Toggle,
@@ -499,9 +499,16 @@ export function UnitConverter() {
 export function AgeCalculator() {
   const { locale, num } = useFormat();
   const t = useT();
-  const today = new Date().toISOString().slice(0, 10);
+  const [today, setToday] = useState('');
   const [birthDate, setBirthDate] = useState('');
-  const [asOf, setAsOf] = useState(today);
+  const [asOf, setAsOf] = useState('');
+
+  // Today is read after mount: a static build would bake in its own date.
+  useEffect(() => {
+    const current = new Date().toISOString().slice(0, 10);
+    setToday(current);
+    setAsOf(current);
+  }, []);
 
   const result = useMemo(() => {
     if (!birthDate) return null;
@@ -526,7 +533,7 @@ export function AgeCalculator() {
   return (
     <>
       <Grid>
-        <LabelledField label={t('Date of birth')} id="age-birth" type="date" max={asOf || today} value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
+        <LabelledField label={t('Date of birth')} id="age-birth" type="date" max={asOf || today || undefined} value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
         <LabelledField label={t('Age as of')} hint={t('defaults to today')} id="age-asof" type="date" value={asOf} onChange={(e) => setAsOf(e.target.value)} />
       </Grid>
       {result ? (

@@ -6,6 +6,8 @@ import {
 import { toNumber } from './toolFormat.js';
 import { msg, useT, useFormat } from '../../../i18n/i18n.js';
 
+// The current date is only ever read inside effects and handlers. A static build
+// would otherwise bake its own date into the HTML, and hydration would not match.
 const today = () => new Date().toISOString().slice(0, 10);
 const parseDate = (value) => {
   const date = new Date(`${value}T00:00:00`);
@@ -28,9 +30,11 @@ const countWeekdays = (start, end) => {
 export function DateDifferenceCalculator() {
   const { num } = useFormat();
   const t = useT();
-  const [start, setStart] = useState(today());
-  const [end, setEnd] = useState(today());
+  const [start, setStart] = useState('');
+  const [end, setEnd] = useState('');
   const [weekdaysOnly, setWeekdaysOnly] = useState(false);
+
+  useEffect(() => { setStart(today()); setEnd(today()); }, []);
 
   const result = useMemo(() => {
     const a = parseDate(start);
@@ -88,10 +92,12 @@ export function DateDifferenceCalculator() {
 export function DateAddSubtract() {
   const { locale } = useFormat();
   const t = useT();
-  const [start, setStart] = useState(today());
+  const [start, setStart] = useState('');
   const [operation, setOperation] = useState('add');
   const [amount, setAmount] = useState('30');
   const [unit, setUnit] = useState('days');
+
+  useEffect(() => { setStart(today()); }, []);
 
   const result = useMemo(() => {
     const base = parseDate(start);
@@ -202,9 +208,11 @@ export function WorkingDaysCalculator() {
   const { locale, num } = useFormat();
   const t = useT();
   const [mode, setMode] = useState('between');
-  const [start, setStart] = useState(today());
-  const [end, setEnd] = useState(today());
+  const [start, setStart] = useState('');
+  const [end, setEnd] = useState('');
   const [days, setDays] = useState('10');
+
+  useEffect(() => { setStart(today()); setEnd(today()); }, []);
 
   const between = useMemo(() => {
     const a = parseDate(start);
@@ -267,17 +275,21 @@ const COUNTDOWN_UNITS = [msg('days'), msg('hours'), msg('minutes'), msg('seconds
 export function CountdownTimer() {
   const { locale } = useFormat();
   const t = useT();
-  const nextNewYear = `${new Date().getFullYear() + 1}-01-01T00:00`;
-  const [target, setTarget] = useState(nextNewYear);
-  const [now, setNow] = useState(Date.now());
+  const nextNewYear = () => `${new Date().getFullYear() + 1}-01-01T00:00`;
+  const [target, setTarget] = useState('');
+  const [now, setNow] = useState(null);
 
+  // Starts empty and is filled in after mount, so the static HTML holds the
+  // controls and an empty result rather than the moment the site was built.
   useEffect(() => {
+    setTarget(nextNewYear());
+    setNow(Date.now());
     const timer = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(timer);
   }, []);
 
   const targetTime = new Date(target).getTime();
-  const valid = Number.isFinite(targetTime);
+  const valid = now !== null && Number.isFinite(targetTime);
   const diff = valid ? targetTime - now : 0;
   const past = diff < 0;
   const absolute = Math.abs(diff);
@@ -296,7 +308,7 @@ export function CountdownTimer() {
         <div>
           <Label>{t('Quick presets')}</Label>
           <div className="mt-2 flex flex-wrap gap-2">
-            <Button variant="ghost" onClick={() => setTarget(nextNewYear)}>{t('New Year')}</Button>
+            <Button variant="ghost" onClick={() => setTarget(nextNewYear())}>{t('New Year')}</Button>
             <Button variant="ghost" onClick={() => { const d = new Date(); d.setDate(d.getDate() + 7); setTarget(d.toISOString().slice(0, 16)); }}>{t('In 7 days')}</Button>
             <Button variant="ghost" onClick={() => { const d = new Date(); d.setDate(d.getDate() + 30); setTarget(d.toISOString().slice(0, 16)); }}>{t('In 30 days')}</Button>
           </div>
@@ -326,8 +338,14 @@ export function CountdownTimer() {
 export function TimestampConverter() {
   const { locale } = useFormat();
   const t = useT();
-  const [timestamp, setTimestamp] = useState(() => Math.floor(Date.now() / 1000).toString());
-  const [dateInput, setDateInput] = useState(() => new Date().toISOString().slice(0, 16));
+  const [timestamp, setTimestamp] = useState('');
+  const [dateInput, setDateInput] = useState('');
+
+  useEffect(() => {
+    const now = Date.now();
+    setTimestamp(Math.floor(now / 1000).toString());
+    setDateInput(new Date(now).toISOString().slice(0, 16));
+  }, []);
 
   const asMilliseconds = timestamp.length > 11 ? Number(timestamp) : Number(timestamp) * 1000;
   const date = new Date(asMilliseconds);
