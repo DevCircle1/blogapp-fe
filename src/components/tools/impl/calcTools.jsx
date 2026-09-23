@@ -109,6 +109,18 @@ export function AverageCalculator() {
 /* -------------------------------------------------------------- Fraction */
 const gcd = (a, b) => (b ? gcd(b, a % b) : Math.abs(a));
 
+function FractionInput({ value, onChange, label }) {
+  const t = useT();
+  return (
+    <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-4">
+      <Label>{label}</Label>
+      <Field className="mt-2 text-center" type="number" value={value.n} onChange={(e) => onChange({ ...value, n: e.target.value })} aria-label={t('{label} numerator', { label })} />
+      <div className="my-2 h-px bg-white/20" />
+      <Field className="text-center" type="number" value={value.d} onChange={(e) => onChange({ ...value, d: e.target.value })} aria-label={t('{label} denominator', { label })} />
+    </div>
+  );
+}
+
 export function FractionCalculator() {
   const { num } = useFormat();
   const t = useT();
@@ -133,15 +145,6 @@ export function FractionCalculator() {
     const remainder = Math.abs(sn % sd);
     return { sn, sd, decimal: sn / sd, whole, remainder };
   }, [a, b, operation]);
-
-  const FractionInput = ({ value, onChange, label }) => (
-    <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-4">
-      <Label>{label}</Label>
-      <Field className="mt-2 text-center" type="number" value={value.n} onChange={(e) => onChange({ ...value, n: e.target.value })} aria-label={t('{label} numerator', { label })} />
-      <div className="my-2 h-px bg-white/20" />
-      <Field className="text-center" type="number" value={value.d} onChange={(e) => onChange({ ...value, d: e.target.value })} aria-label={t('{label} denominator', { label })} />
-    </div>
-  );
 
   return (
     <>
