@@ -2,7 +2,8 @@ import { useMemo, useState } from 'react';
 import {
   Button, CopyButton, Field, Grid, Label, LabelledField, Panel, Segmented, Select, Stat, StatGrid, TextArea, Toggle,
 } from './uiKit.jsx';
-import { msg, useExtras, useT } from '../../../i18n/i18n.js';
+import { msg, useExtras, useI18n, useT } from '../../../i18n/i18n.js';
+import GscClient from '../flagship/gsc/GscClient.jsx';
 
 const clean = (value) => value.trim().replace(/\s+/g, ' ');
 const unique = (items) => [...new Set(items.map(clean).filter(Boolean))];
@@ -355,7 +356,7 @@ const parseKeywordMap = (input) => input.split(/\r?\n/).map((line, index) => {
   return { line: index + 1, url: clean(parts[0] || ''), keyword: clean(parts.slice(1).join(' ') || '') };
 }).filter((row) => row.url && row.keyword);
 
-export function KeywordCannibalizationChecker() {
+function KeywordMapChecker() {
   const t = useT();
   const { stopWordSet } = useSeoLanguage();
   const [input, setInput] = useState('');
@@ -382,6 +383,23 @@ export function KeywordCannibalizationChecker() {
       {conflicts.length > 0 && <div className="mt-6 space-y-3">{conflicts.map((item) => <Panel key={`${item.left.line}-${item.right.line}`} title={t('{kind} · {pct}% overlap', { kind: item.exact ? t('Exact target') : t('Related targets'), pct: Math.round(item.score * 100) })}><p className="break-all text-sm text-slate-400">{item.left.url} — <span className="text-white">{item.left.keyword}</span></p><p className="mt-2 break-all text-sm text-slate-400">{item.right.url} — <span className="text-white">{item.right.keyword}</span></p></Panel>)}</div>}
       {rows.length > 1 && !conflicts.length && <p className="mt-5 rounded-xl border border-emerald-400/20 bg-emerald-400/10 p-4 text-sm text-emerald-200">{t('No strong overlaps were found at this setting.')}</p>}
       <div className="mt-5"><CopyButton value={output} label={t('Copy conflict report')} /></div>
+    </>
+  );
+}
+
+/**
+ * English page: Search Console data first (the real-data path), with the manual
+ * keyword-map check kept as a second tab. Language versions keep the keyword-map
+ * tool alone, because the Search Console tool's copy is English only.
+ */
+export function KeywordCannibalizationChecker() {
+  const { lang } = useI18n();
+  const [tab, setTab] = useState('gsc');
+  if (lang !== 'en') return <KeywordMapChecker />;
+  return (
+    <>
+      <Segmented ariaLabel="Data source" value={tab} onChange={setTab} options={[{ value: 'gsc', label: 'Search Console data' }, { value: 'map', label: 'Keyword map (manual)' }]} />
+      <div className="mt-6">{tab === 'gsc' ? <GscClient mode="cannibalization" /> : <KeywordMapChecker />}</div>
     </>
   );
 }

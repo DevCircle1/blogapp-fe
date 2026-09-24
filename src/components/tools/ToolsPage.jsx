@@ -8,6 +8,7 @@ import { SITE_URL, SITE_NAME, breadcrumbSchema, faqSchema } from '../../seo/site
 import { LOCALES, LOCALIZED_LANGS, hubAlternates, hubPath } from '../../i18n/locales.js';
 
 const CATEGORY_BLURB = {
+  Career: 'Resume checking and job-search helpers: see what an applicant tracking system reads, and match your resume to a posting.',
   Calculator: 'Everyday maths: percentages, averages, ratios, fractions, ages, and unit conversions.',
   Finance: 'Loans, mortgages, interest, tax, margins, and the pricing maths behind a small business.',
   Health: 'BMI, calories, macros, body composition, hydration, and pregnancy dates, with the limits of each method stated plainly.',

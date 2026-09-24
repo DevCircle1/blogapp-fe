@@ -28,6 +28,15 @@
   status = 301
   force = true
 
+# The current tax year has no page of its own: the canonical calculator IS the
+# current year. When a new tax year is added, move this redirect to the year that
+# stops being current (and give that year its own page) so the URL keeps resolving.
+[[redirects]]
+  from = "/tools/salary-tax-calculator-pakistan/2026-27"
+  to = "/tools/salary-tax-calculator-pakistan"
+  status = 301
+  force = true
+
 # Without this, /.well-known/* falls through to the catch-all SPA rewrite
 # below and gets a 200 (the app shell) instead of a real 404. Crawlers and
 # tooling probe /.well-known/ for standardised metadata (e.g. an AI-agent

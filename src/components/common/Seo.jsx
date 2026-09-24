@@ -11,11 +11,12 @@ export default function Seo({
   noindex = false,
   schemas = [],
   lang = 'en',
+  suffix = true,
   alternates = [],
   children,
 }) {
   const canonical = absoluteUrl(path);
-  const fullTitle = title?.includes(SITE_NAME) || title?.includes('Talk and Tool')
+  const fullTitle = !suffix || title?.includes(SITE_NAME) || title?.includes('Talk and Tool')
     ? title
     : `${title} | ${SITE_NAME}`;
   const ogLocale = LOCALES[lang]?.ogLocale;

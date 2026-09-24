@@ -20,6 +20,8 @@ import pl from '../src/i18n/content/pl.js';
 import {
   assertCategorySlugs, categoryHubPage, categoryHubs, toolBreadcrumb,
 } from '../src/i18n/categories.js';
+import { FLAGSHIP_PAGES } from '../src/components/tools/flagship/registry.js';
+import { flagshipSchemas } from '../src/components/tools/flagship/schemas.js';
 import { PILLARS } from '../src/components/common/Terms/aboutUsContent.js';
 import { HELP_CENTER_CATEGORIES } from '../src/components/common/Terms/helpCenterContent.js';
 import { POPULAR_TOOLS } from '../src/components/common/Home/popularTools.js';
@@ -359,7 +361,7 @@ export const toolRoutes = premiumTools.map((tool) => {
   const path = `/tools/${tool.slug}`;
   return {
     path,
-    title: `${tool.title} | ${SITE_NAME}`,
+    title: tool.seoTitle || `${tool.title} | ${SITE_NAME}`,
     description: tool.description,
     priority: '0.8',
     changefreq: 'monthly',
@@ -395,6 +397,16 @@ export const standaloneRoutes = standaloneTools
     changefreq: 'monthly',
     ...STANDALONE_COPY[tool.slug],
   }));
+
+/** Flagship tools (bank statement converter, ...): one route per page in the registry. */
+export const flagshipRoutes = FLAGSHIP_PAGES.map((page) => ({
+  path: page.path,
+  title: page.title,
+  description: page.description,
+  priority: page.parent ? '0.7' : '0.9',
+  changefreq: 'monthly',
+  schemas: flagshipSchemas(page),
+}));
 
 /** /es, /pt, /fr, /de — each language's tool directory. */
 export const localizedHubRoutes = LOCALIZED_LANGS.map((lang) => {
@@ -508,6 +520,7 @@ export const allRoutes = [
   ...staticRoutes,
   ...standaloneRoutes,
   ...toolRoutes,
+  ...flagshipRoutes,
   ...localizedHubRoutes,
   ...categoryHubRoutes,
   ...localizedToolRoutes,

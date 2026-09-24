@@ -1,0 +1,112 @@
+import {
+  date, duration, group, list, number, prune, repeater, text, textarea, asList, oneOrMany, numeric,
+} from '../core.js';
+
+export default {
+  slug: 'recipe',
+  pageSlug: 'recipe-schema-generator',
+  name: 'Recipe',
+  label: 'Recipe',
+  previewKind: 'recipe',
+  status: {
+    richResult: 'eligible',
+    googleNotes: 'Recipe markup can make a recipe eligible for a rich result with image, rating, cooking time and calories, and for the recipe carousel. Google requires a name and an image.',
+    docsUrl: 'https://developers.google.com/search/docs/appearance/structured-data/recipe',
+    verifiedOn: '2026-09-24',
+  },
+  fields: [
+    text('name', 'Recipe name', { required: true, placeholder: 'Chicken Karahi' }),
+    list('image', 'Image URLs', { required: true, itemType: 'url', help: 'Photos of the finished dish, one URL per line. Several aspect ratios (16:9, 4:3, 1:1) are recommended.' }),
+    text('author', 'Author name', { recommended: true }),
+    date('datePublished', 'Date published', { recommended: true, placeholder: '2026-02-10' }),
+    textarea('description', 'Description', { recommended: true }),
+    duration('prepTime', 'Preparation time', { recommended: true, placeholder: 'PT20M', help: 'ISO 8601 duration: PT20M is 20 minutes, PT1H30M is 90 minutes.' }),
+    duration('cookTime', 'Cooking time', { recommended: true, placeholder: 'PT40M' }),
+    duration('totalTime', 'Total time', { placeholder: 'PT1H', help: 'Use this instead of prep and cook time if you only know the total.' }),
+    text('recipeYield', 'Servings', { recommended: true, placeholder: '4 servings' }),
+    text('recipeCategory', 'Category', { recommended: true, placeholder: 'Dinner' }),
+    text('recipeCuisine', 'Cuisine', { recommended: true, placeholder: 'Pakistani' }),
+    text('keywords', 'Keywords', { placeholder: 'chicken, curry, one-pot' }),
+    list('ingredients', 'Ingredients', { recommended: true, help: 'One ingredient per line, exactly as listed on the page.' }),
+    repeater('steps', 'Instructions', [textarea('text', 'Step', { required: true })], { recommended: true, itemLabel: 'Step' }),
+    text('calories', 'Calories per serving', { placeholder: '320 calories', help: 'Needs the servings field too.' }),
+    group('rating', 'Aggregate rating', [
+      number('ratingValue', 'Rating value', { placeholder: '4.8' }),
+      number('ratingCount', 'Number of ratings', { placeholder: '210' }),
+    ], { help: 'Only if the page shows real ratings.' }),
+  ],
+  check: (v) => {
+    const issues = [];
+    if (v.calories && !v.recipeYield) issues.push({ level: 'error', path: 'recipeYield', message: 'Calories are per serving, so Google needs the servings (recipeYield) to go with them.' });
+    if (v.rating && v.rating.ratingValue && !v.rating.ratingCount) issues.push({ level: 'error', path: 'rating.ratingCount', message: 'An aggregate rating needs the number of ratings.' });
+    if (v.totalTime && (v.prepTime || v.cookTime)) issues.push({ level: 'warning', path: 'totalTime', message: 'You gave total time and prep/cook time. Make sure they add up.' });
+    return issues;
+  },
+  build: (v) => prune({
+    '@context': 'https://schema.org',
+    '@type': 'Recipe',
+    name: v.name,
+    image: oneOrMany(asList(v.image)),
+    author: v.author ? { '@type': 'Person', name: v.author } : undefined,
+    datePublished: v.datePublished,
+    description: v.description,
+    prepTime: v.prepTime,
+    cookTime: v.cookTime,
+    totalTime: v.totalTime,
+    recipeYield: v.recipeYield,
+    recipeCategory: v.recipeCategory,
+    recipeCuisine: v.recipeCuisine,
+    keywords: v.keywords,
+    recipeIngredient: asList(v.ingredients),
+    recipeInstructions: (v.steps || []).filter((s) => s.text).map((s) => ({ '@type': 'HowToStep', text: s.text })),
+    nutrition: v.calories ? { '@type': 'NutritionInformation', calories: v.calories } : undefined,
+    aggregateRating: v.rating && v.rating.ratingValue ? { '@type': 'AggregateRating', ratingValue: numeric(v.rating.ratingValue), ratingCount: numeric(v.rating.ratingCount) } : undefined,
+  }),
+  example: {
+    name: 'Chicken Karahi',
+    image: ['https://example.com/img/chicken-karahi-16x9.jpg', 'https://example.com/img/chicken-karahi-1x1.jpg'],
+    author: 'Amina Rahman',
+    datePublished: '2026-02-10',
+    description: 'A quick, tomato-based karahi with ginger, green chilli and fresh coriander.',
+    prepTime: 'PT20M',
+    cookTime: 'PT40M',
+    recipeYield: '4 servings',
+    recipeCategory: 'Dinner',
+    recipeCuisine: 'Pakistani',
+    keywords: 'chicken, karahi, one-pot',
+    ingredients: ['1 kg chicken, cut into pieces', '6 ripe tomatoes, chopped', '3 tbsp oil', '2 tbsp ginger-garlic paste', '4 green chillies', 'Fresh coriander to serve'],
+    steps: [
+      { text: 'Heat the oil in a wok and fry the ginger-garlic paste for one minute.' },
+      { text: 'Add the chicken and cook on high heat until it changes colour.' },
+      { text: 'Add the tomatoes and chillies, cover and cook for 30 minutes, stirring occasionally.' },
+      { text: 'Finish with coriander and serve hot.' },
+    ],
+    calories: '320 calories',
+    rating: { ratingValue: '4.8', ratingCount: '210' },
+  },
+  copy: {
+    keyword: 'recipe schema generator',
+    lead: 'This recipe schema generator builds valid Recipe JSON-LD with ingredients, step-by-step instructions, cooking times in ISO 8601, servings, calories and ratings, and flags what Google requires and what it only recommends.',
+    tableIntro: 'Google requires only a name and an image for Recipe markup, but the recommended properties — times, yield, ingredients, instructions and nutrition — are what make a recipe eligible for the richer results.',
+    mistakes: [
+      'Writing durations in plain text such as “1 hour 30 minutes”. Times must be ISO 8601 durations: PT1H30M. PT20M is twenty minutes.',
+      'Adding calories without servings. Calories are per serving, so Google needs recipeYield to interpret the number.',
+      'Listing the ingredients or steps in the markup but not on the page. Everything in the markup should be visible to visitors.',
+      'Using one long block of text for the instructions. Splitting it into HowToStep entries makes each step clear.',
+      'Marking up something that is not a recipe — a restaurant menu, a list of recipes on a category page, or a general cooking article.',
+      'Adding ratings that visitors cannot see, or that you wrote yourself.',
+    ],
+    notes: [
+      'Recipe is one of the structured data types that Google displays most richly: a result can show a photo, a star rating, the cooking time and the calories, and eligible recipes can appear in a carousel. That makes complete, accurate markup worthwhile.',
+      'Where a recipe has a video, marking it up as a VideoObject inside the Recipe can help. Keep the markup a faithful summary of the page: ingredients and steps should be what visitors read.',
+    ],
+    example: 'A complete recipe with two images, six ingredients, four steps, times, calories and a rating, as generated on this page, is shown below.',
+    faqs: [
+      { q: 'Which properties are required for Recipe schema?', a: 'A name and an image. Author, date published, description, times, yield, ingredients, instructions, category, cuisine, calories, rating and video are recommended.' },
+      { q: 'How do I write cooking time in schema?', a: 'As an ISO 8601 duration: PT15M for 15 minutes, PT1H for an hour, PT1H30M for an hour and a half. The generator checks the format.' },
+      { q: 'Do I need both prep time and cook time?', a: 'Google recommends prepTime and cookTime together, or a totalTime on its own. Use whichever you can state accurately.' },
+      { q: 'How are instructions marked up?', a: 'As a list of HowToStep objects, each with the text of one step. You can group steps into sections, and steps can include images.' },
+      { q: 'Does Recipe markup guarantee a rich result?', a: 'No. It makes the recipe eligible; Google decides whether to show the rating, image and times.' },
+    ],
+  },
+};

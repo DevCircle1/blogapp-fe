@@ -44,7 +44,7 @@ export default function PremiumToolSuite() {
       <ToolPageView
         tool={tool}
         Tool={Tool}
-        seo={{ title: tool.title, description: tool.description, path, schemas, alternates: toolAlternates(tool.slug) }}
+        seo={{ title: tool.seoTitle || tool.title, suffix: !tool.seoTitle, description: tool.description, path, schemas, alternates: toolAlternates(tool.slug) }}
         labels={{
           breadcrumb: 'Breadcrumb',
           home: 'Home',

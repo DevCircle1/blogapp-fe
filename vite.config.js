@@ -2,6 +2,9 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 export default defineConfig(({ isSsrBuild }) => ({
   plugins: [react()],
+  // Workers (PDF parsing, tokenizing) lazy-load big libraries with dynamic import(),
+  // which the default IIFE worker format cannot code-split.
+  worker: { format: 'es' },
   ssr: {
     // react-helmet-async's CJS build (lib/index.js) assigns its named
     // exports through a dynamic Object.defineProperty loop rather than
