@@ -1,9 +1,13 @@
 import { useState, useEffect, useMemo } from 'react';
 import { publicRequest } from '../../services/api';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, Navigate } from 'react-router-dom';
 import Seo from '../common/Seo.jsx';
 import AdSlot from '../common/AdSlot.jsx';
 import { SITE_URL, SITE_NAME, breadcrumbSchema } from '../../seo/siteMeta.js';
+import {
+  DEFAULT_LANG, LOCALES, articlePath, blogPath, hubPath, postLang,
+} from '../../i18n/locales.js';
+import { blogChrome } from '../../i18n/blogChrome.js';
 
 /**
  * Post bodies come from the editor as HTML. Strip anything executable before it
@@ -56,12 +60,29 @@ const topicTags = (html) => {
 };
 const responseItems = (data) => (Array.isArray(data) ? data : data?.results || []);
 
-const BlogPostDetail = () => {
+/**
+ * hreflang set for a post that has translations: every approved post sharing
+ * its translation_key, plus x-default pointing at the English version.
+ */
+const translationAlternates = (post, allPosts) => {
+  if (!post?.translation_key) return [];
+  const versions = allPosts.filter((item) => item.translation_key === post.translation_key);
+  if (versions.length < 2) return [];
+  const english = versions.find((item) => postLang(item) === DEFAULT_LANG);
+  return [
+    ...versions.map((item) => ({ hreflang: LOCALES[postLang(item)].hreflang, path: articlePath(postLang(item), item.slug) })),
+    ...(english ? [{ hreflang: 'x-default', path: articlePath(DEFAULT_LANG, english.slug) }] : []),
+  ];
+};
+
+const BlogPostDetail = ({ lang = DEFAULT_LANG }) => {
   const [post, setPost] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [relatedPosts, setRelatedPosts] = useState([]);
   const [postCategory, setPostCategory] = useState(null);
+  const [alternates, setAlternates] = useState([]);
+  const chrome = blogChrome(lang);
   const { slug } = useParams();
 
   useEffect(() => {
@@ -73,27 +94,30 @@ const BlogPostDetail = () => {
         const [postResult, categoriesResult, postsResult] = await Promise.allSettled([
           publicRequest.get(`/posts/${slug}/`),
           publicRequest.get('/all-categories/'),
-          publicRequest.get('/posts/'),
+          publicRequest.get('/all-posts/'),
         ]);
 
         if (postResult.status === 'rejected') throw postResult.reason;
         if (cancelled) return;
 
         const currentPost = postResult.value.data;
+        const allPosts = postsResult.status === 'fulfilled' ? responseItems(postsResult.value.data) : [];
         const categories = categoriesResult.status === 'fulfilled' ? responseItems(categoriesResult.value.data) : [];
-        const matchingCategory = categories.find((item) => (
+        // Categories are English-language groupings, so only English posts sit in one.
+        const matchingCategory = lang === DEFAULT_LANG ? categories.find((item) => (
           responseItems(item.articles).some((article) => article.slug === slug)
-        ));
+        )) : null;
         const categoryPosts = matchingCategory
           ? responseItems(matchingCategory.articles).filter((item) => item.status === 'approved' && item.slug !== slug)
           : [];
-        const fallbackPosts = postsResult.status === 'fulfilled'
-          ? responseItems(postsResult.value.data).filter((item) => item.status !== 'draft' && item.slug !== slug)
-          : [];
+        const fallbackPosts = allPosts.filter((item) => (
+          item.status !== 'draft' && item.slug !== slug && postLang(item) === postLang(currentPost)
+        ));
 
         setPost(currentPost);
         setPostCategory(matchingCategory || null);
         setRelatedPosts((categoryPosts.length ? categoryPosts : fallbackPosts).slice(0, 3));
+        setAlternates(translationAlternates(currentPost, allPosts));
       } catch (err) {
         if (cancelled) return;
         setError('Failed to fetch blog post');
@@ -104,7 +128,7 @@ const BlogPostDetail = () => {
     };
     fetchPost();
     return () => { cancelled = true; };
-  }, [slug]);
+  }, [slug, lang]);
 
   const safeContent = useMemo(() => sanitiseHtml(post?.content), [post?.content]);
   const excerpt = useMemo(() => {
@@ -116,7 +140,7 @@ const BlogPostDetail = () => {
   if (isLoading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <Seo title="Loading article" description="Loading article" path={`/blogs/article/${slug}`} noindex />
+        <Seo title="Loading article" description="Loading article" path={articlePath(lang, slug)} lang={lang} noindex />
         <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-blue-500" />
       </div>
     );
@@ -125,23 +149,27 @@ const BlogPostDetail = () => {
   if (error || !post) {
     return (
       <div className="container mx-auto px-4 py-16 text-center">
-        <Seo title="Article not found" description="This article is not available." path={`/blogs/article/${slug}`} noindex />
-        <h1 className="text-2xl font-bold text-gray-800">Article not available</h1>
-        <p className="mt-3 text-gray-600">{error || 'This post may have been moved or removed.'}</p>
-        <Link to="/blogs" className="mt-6 inline-block text-blue-600 hover:underline">Back to all articles</Link>
+        <Seo title={chrome.notFoundTitle} description={chrome.notFoundBody} path={articlePath(lang, slug)} lang={lang} noindex />
+        <h1 className="text-2xl font-bold text-gray-800">{chrome.notFoundTitle}</h1>
+        <p className="mt-3 text-gray-600">{chrome.notFoundBody}</p>
+        <Link to={blogPath(lang)} className="mt-6 inline-block text-blue-600 hover:underline">{chrome.backToAll}</Link>
       </div>
     );
   }
 
-  const path = `/blogs/article/${slug}`;
+  // A post opened under another language's URL moves to its own, so each
+  // article has exactly one address and one html lang.
+  if (postLang(post) !== lang) return <Navigate to={articlePath(postLang(post), slug)} replace />;
+
+  const path = articlePath(lang, slug);
   const published = post.created_at ? new Date(post.created_at).toISOString() : undefined;
   const modified = post.updated_at ? new Date(post.updated_at).toISOString() : published;
   const keywords = topicTags(post.content);
 
   const categoryPath = postCategory?.slug ? `/blogs/category/${postCategory.slug}` : null;
   const breadcrumbs = [
-    { name: 'Home', path: '/' },
-    { name: 'Blog', path: '/blogs' },
+    { name: chrome.home, path: lang === DEFAULT_LANG ? '/' : hubPath(lang) },
+    { name: chrome.blog, path: blogPath(lang) },
     ...(categoryPath ? [{ name: postCategory.name, path: categoryPath }] : []),
     { name: post.title, path },
   ];
@@ -159,6 +187,7 @@ const BlogPostDetail = () => {
       mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}${path}` },
       wordCount: plainText(post.content).split(/\s+/).filter(Boolean).length,
       keywords: keywords.length ? keywords : undefined,
+      inLanguage: LOCALES[lang].htmlLang,
     },
     breadcrumbSchema(breadcrumbs),
   ];
@@ -172,13 +201,15 @@ const BlogPostDetail = () => {
         image={post.featured_image || undefined}
         type="article"
         schemas={schemas}
+        lang={lang}
+        alternates={alternates}
       />
 
       <nav aria-label="Breadcrumb" className="mb-6 text-sm text-gray-600">
         <ol className="flex flex-wrap items-center gap-2">
-          <li><Link to="/" className="hover:underline">Home</Link></li>
+          <li><Link to={breadcrumbs[0].path} className="hover:underline">{chrome.home}</Link></li>
           <li aria-hidden="true">/</li>
-          <li><Link to="/blogs" className="hover:underline">Blog</Link></li>
+          <li><Link to={blogPath(lang)} className="hover:underline">{chrome.blog}</Link></li>
           <li aria-hidden="true">/</li>
           {categoryPath && (
             <>
@@ -209,9 +240,9 @@ const BlogPostDetail = () => {
           <header className="mb-6">
             <h1 className="mb-2 text-3xl font-bold text-gray-800">{post.title}</h1>
             <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
-              <span>By {post.author_name || SITE_NAME}</span>
-              {post.created_at && <time dateTime={published}>{new Date(post.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</time>}
-              <span>{readingMinutes} min read</span>
+              <span>{chrome.by} {post.author_name || SITE_NAME}</span>
+              {post.created_at && <time dateTime={published}>{new Date(post.created_at).toLocaleDateString(LOCALES[lang].intl, { year: 'numeric', month: 'long', day: 'numeric' })}</time>}
+              <span>{readingMinutes} {chrome.minRead}</span>
             </div>
           </header>
 
@@ -222,17 +253,17 @@ const BlogPostDetail = () => {
           {relatedPosts.length > 0 && (
             <aside className="mt-10 border-t border-gray-200 pt-8" aria-labelledby="related-articles-heading">
               <h2 id="related-articles-heading" className="text-2xl font-bold text-gray-800">
-                More {postCategory?.name ? `${postCategory.name} ` : ''}guides
+                {postCategory?.name ? `More ${postCategory.name} guides` : chrome.moreGuides}
               </h2>
               <div className="mt-4 grid gap-4 sm:grid-cols-3">
                 {relatedPosts.map((item) => (
                   <Link
                     key={item.slug}
-                    to={`/blogs/article/${item.slug}`}
+                    to={articlePath(lang, item.slug)}
                     className="rounded-xl border border-gray-200 p-4 transition hover:border-blue-400 hover:shadow-sm"
                   >
                     <strong className="line-clamp-2 text-gray-800">{item.title}</strong>
-                    <span className="mt-2 block text-sm font-semibold text-blue-600">Read this guide →</span>
+                    <span className="mt-2 block text-sm font-semibold text-blue-600">{chrome.readGuide}</span>
                   </Link>
                 ))}
               </div>
@@ -245,9 +276,9 @@ const BlogPostDetail = () => {
           )}
 
           <footer className="mt-10 border-t border-gray-200 pt-6">
-            <Link to="/blogs" className="text-blue-600 hover:underline">← Read more articles</Link>
+            <Link to={blogPath(lang)} className="text-blue-600 hover:underline">{chrome.backToAll}</Link>
             <span className="mx-3 text-gray-300">|</span>
-            <Link to="/tools" className="text-blue-600 hover:underline">Browse free online tools</Link>
+            <Link to={lang === DEFAULT_LANG ? '/tools' : hubPath(lang)} className="text-blue-600 hover:underline">{chrome.browseTools}</Link>
           </footer>
         </div>
       </article>

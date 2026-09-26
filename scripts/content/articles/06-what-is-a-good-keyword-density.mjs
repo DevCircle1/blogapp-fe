@@ -1,6 +1,7 @@
 export default {
   slug: 'what-is-a-good-keyword-density',
   title: 'What Is a Good Keyword Density? (And How to Check It)',
+  translationKey: 'keyword-density',
   category: 'seo',
   theme: 'seo',
   tags: ['keyword density', 'keyword density checker', 'keyword stuffing', 'on-page seo', 'word frequency', 'seo writing'],

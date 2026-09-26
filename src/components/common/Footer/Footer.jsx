@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Globe } from 'lucide-react';
 import { publicRequest } from '../../../services/api';
 import {
-  ALL_LANGS, CHROME, LOCALES, hubPath, langFromPath, toolPath,
+  ALL_LANGS, CHROME, LOCALES, blogPath, hubPath, langFromPath, toolPath,
 } from '../../../i18n/locales.js';
 
 const POPULAR_TOOLS = [
@@ -108,7 +108,7 @@ export default function Footer() {
           <h3 className="text-lg font-semibold text-gray-900">{copy.footer.company}</h3>
           <ul className="mt-4 space-y-2 text-sm">
             <li><Link to="/about-us" className="hover:text-gray-900 transition">{copy.footer.about}</Link></li>
-            <li><Link to="/blogs" className="hover:text-gray-900 transition">{copy.footer.blog}</Link></li>
+            <li><Link to={blogPath(lang)} className="hover:text-gray-900 transition">{copy.footer.blog}</Link></li>
             <li><Link to="/help-center" className="hover:text-gray-900 transition">{copy.footer.help}</Link></li>
             <li><Link to="/contact-us" className="hover:text-gray-900 transition">{copy.footer.contact}</Link></li>
             <li><Link to="/terms-and-conditions" className="hover:text-gray-900 transition">{copy.footer.terms}</Link></li>

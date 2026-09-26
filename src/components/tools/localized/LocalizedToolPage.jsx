@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import Seo from '../../common/Seo.jsx';
 import ToolPageView from '../ToolPageView.jsx';
+import ToolGuides from '../ToolGuides.jsx';
 import { TOOL_COMPONENTS } from '../toolComponents.js';
 import { getRelatedTools, getToolBySlug } from '../toolCatalog.js';
 import { toolPageSchemas } from '../../../seo/toolSchema.js';
@@ -77,6 +78,7 @@ export default function LocalizedToolPage({ lang }) {
       <ToolPageView
         tool={tool}
         Tool={Tool}
+        guides={<ToolGuides lang={lang} path={path} />}
         seo={{ title: tool.title, description: tool.description, path, schemas, lang, alternates: toolAlternates(slug) }}
         labels={{
           breadcrumb: chrome.breadcrumb,

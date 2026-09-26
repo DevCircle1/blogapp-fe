@@ -1,6 +1,6 @@
 import { matchRoutes } from 'react-router-dom';
 import { lazyRoute } from './lazyRoute.js';
-import { LOCALIZED_LANGS } from './i18n/locales.js';
+import { BLOG_SEGMENTS, LOCALIZED_LANGS, blogPath } from './i18n/locales.js';
 import { preloadLocaleBundle } from './i18n/loadBundle.js';
 
 const RegisterForm = lazyRoute(() => import('./components/auth/RegisterForm/RegisterForm.jsx'));
@@ -15,6 +15,7 @@ const WriteBlog = lazyRoute(() => import('./components/blogs/WriteBlogs.jsx'));
 const BlogPostDetail = lazyRoute(() => import('./components/blogs/BlogPostDetail.jsx'));
 const BlogCategories = lazyRoute(() => import('./components/blogs/BlogCategories.jsx'));
 const CategoryBlogPosts = lazyRoute(() => import('./components/blogs/CategoryBlogPosts.jsx'));
+const LocalizedBlogIndex = lazyRoute(() => import('./components/blogs/LocalizedBlogIndex.jsx'));
 const TermsAndConditions = lazyRoute(() => import('./components/common/Terms/Terms.jsx'));
 const AboutUs = lazyRoute(() => import('./components/common/Terms/AboutUs.jsx'));
 const ContactUs = lazyRoute(() => import('./components/common/Terms/ContactUs.jsx'));
@@ -47,6 +48,7 @@ const page = (path, Component) => ({ path, Component, preload: Component.preload
 
 const withPath = (path, Component) => ({ path, Component, props: { path }, preload: Component.preload });
 const withView = (path, Component, view) => ({ path, Component, props: { view }, preload: Component.preload });
+const inLang = (path, Component, lang) => ({ path, Component, props: { lang }, preload: Component.preload });
 
 // A localized page also suspends on its language bundle, so that has to be in
 // hand before hydrating too.
@@ -142,6 +144,12 @@ export const APP_ROUTES = [
   page('/q/:id', QuestionDetail),
   page('/my-answers', MyAnswers),
   page('/word-game', WordleGame),
+  // Localized blogs (/de/ratgeber, /es/guias). Static segments, so they win
+  // over the /<lang>/:toolSlug tool pages below.
+  ...Object.keys(BLOG_SEGMENTS).flatMap((lang) => [
+    inLang(blogPath(lang), LocalizedBlogIndex, lang),
+    inLang(`${blogPath(lang)}/:slug`, BlogPostDetail, lang),
+  ]),
   // Language versions of the tool catalogue: /es, /es/<localized-slug>, …
   ...LOCALIZED_LANGS.map((lang) => localized(`/${lang}`, LocalizedToolsHub, lang)),
   ...LOCALIZED_LANGS.map((lang) => localized(`/${lang}/:toolSlug`, LocalizedToolPage, lang)),

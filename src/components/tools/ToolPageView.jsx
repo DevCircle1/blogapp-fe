@@ -9,7 +9,7 @@ import RelatedTools from './RelatedTools.jsx';
  * the localized routes pass different copy, links, and structured data, but
  * share this markup so the language versions never drift apart structurally.
  */
-export default function ToolPageView({ tool, Tool, seo, labels, related, languages = [] }) {
+export default function ToolPageView({ tool, Tool, seo, labels, related, languages = [], guides = null }) {
   return (
     <div className="min-h-screen bg-slate-950 px-4 py-10 text-white">
       <Seo {...seo} />
@@ -89,6 +89,7 @@ export default function ToolPageView({ tool, Tool, seo, labels, related, languag
           </article>
 
           <aside>
+            {guides}
             <RelatedTools heading={labels.related} items={related} browseAllLabel={labels.browseAll} browseAllPath={labels.toolsPath} />
             <AdSlot placement="toolFooter" className="mt-8" />
           </aside>

@@ -63,6 +63,24 @@ const alternatesFor = (pathFor) => [
   { hreflang: 'x-default', path: pathFor(DEFAULT_LANG) },
 ];
 
+/* ------------------------------------------------------------------- blog */
+/**
+ * Languages with their own blog section, and the keyword that names it in the
+ * URL (/de/ratgeber, /es/guias). English keeps its existing /blogs URLs. A
+ * language missing here has no localized blog; its nav links go to /blogs.
+ */
+export const BLOG_SEGMENTS = { de: 'ratgeber', es: 'guias' };
+export const BLOG_LANGS = [DEFAULT_LANG, ...Object.keys(BLOG_SEGMENTS)];
+
+export const blogPath = (lang) => (BLOG_SEGMENTS[lang] ? `/${lang}/${BLOG_SEGMENTS[lang]}` : '/blogs');
+
+export const articlePath = (lang, slug) => (
+  BLOG_SEGMENTS[lang] ? `${blogPath(lang)}/${slug}` : `/blogs/article/${slug}`
+);
+
+/** A post's language; rows written before the language column existed are English. */
+export const postLang = (post) => post?.language || DEFAULT_LANG;
+
 export const toolAlternates = (slug) => alternatesFor((lang) => toolPath(lang, slug));
 export const hubAlternates = () => alternatesFor(hubPath);
 
@@ -101,7 +119,7 @@ export const resolveCurrency = (lang) => {
  */
 export const CHROME = {
   es: {
-    nav: { Home: 'Inicio', Blogs: 'Blog', Tools: 'Herramientas', 'Contact Us': 'Contacto', 'Write Blogs': 'Escribir', 'Job Alerts': 'Empleo', Game: 'Juego', Login: 'Entrar', Register: 'Registrarse' },
+    nav: { Home: 'Inicio', Blogs: 'Guías', Tools: 'Herramientas', 'Contact Us': 'Contacto', 'Write Blogs': 'Escribir', 'Job Alerts': 'Empleo', Game: 'Juego', Login: 'Entrar', Register: 'Registrarse' },
     tagline: 'Calculadoras, conversores y herramientas online gratis que funcionan en tu navegador, sin registro.',
     popularTools: 'Herramientas populares',
     allTools: 'Todas las herramientas →',
@@ -111,7 +129,7 @@ export const CHROME = {
       ['word-counter', 'Contador de palabras'], ['loan-calculator', 'Calculadora de préstamos'],
     ],
     footer: {
-      company: 'Empresa', about: 'Quiénes somos', blog: 'Blog', help: 'Centro de ayuda', contact: 'Contacto',
+      company: 'Empresa', about: 'Quiénes somos', blog: 'Guías', help: 'Centro de ayuda', contact: 'Contacto',
       terms: 'Términos del servicio', privacy: 'Política de privacidad', stayUpdated: 'Novedades',
       emailPlaceholder: 'Tu correo electrónico', subscribe: 'Suscribirme', subscribing: 'Enviando…',
       newsletterNote: 'Recibe las novedades y las herramientas nuevas en tu correo.',
@@ -158,7 +176,7 @@ export const CHROME = {
     },
   },
   de: {
-    nav: { Home: 'Start', Blogs: 'Blog', Tools: 'Tools', 'Contact Us': 'Kontakt', 'Write Blogs': 'Schreiben', 'Job Alerts': 'Jobs', Game: 'Spiel', Login: 'Anmelden', Register: 'Registrieren' },
+    nav: { Home: 'Start', Blogs: 'Ratgeber', Tools: 'Tools', 'Contact Us': 'Kontakt', 'Write Blogs': 'Schreiben', 'Job Alerts': 'Jobs', Game: 'Spiel', Login: 'Anmelden', Register: 'Registrieren' },
     tagline: 'Kostenlose Online-Rechner, Umrechner und Tools, die direkt im Browser laufen – ohne Anmeldung.',
     popularTools: 'Beliebte Tools',
     allTools: 'Alle Tools →',
@@ -168,7 +186,7 @@ export const CHROME = {
       ['word-counter', 'Wörter zählen'], ['loan-calculator', 'Kreditrechner'],
     ],
     footer: {
-      company: 'Unternehmen', about: 'Über uns', blog: 'Blog', help: 'Hilfe', contact: 'Kontakt',
+      company: 'Unternehmen', about: 'Über uns', blog: 'Ratgeber', help: 'Hilfe', contact: 'Kontakt',
       terms: 'Nutzungsbedingungen', privacy: 'Datenschutz', stayUpdated: 'Auf dem Laufenden bleiben',
       emailPlaceholder: 'Ihre E-Mail-Adresse', subscribe: 'Abonnieren', subscribing: 'Wird gesendet…',
       newsletterNote: 'Neuigkeiten und neue Tools direkt in Ihr Postfach.',

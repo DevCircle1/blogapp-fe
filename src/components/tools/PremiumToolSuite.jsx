@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import Seo from '../common/Seo.jsx';
 import ToolPageView from './ToolPageView.jsx';
+import ToolGuides from './ToolGuides.jsx';
 import { TOOL_COMPONENTS } from './toolComponents.js';
 import { getToolBySlug, getRelatedTools } from './toolCatalog.js';
 import { toolPageSchemas } from '../../seo/toolSchema.js';
@@ -44,6 +45,7 @@ export default function PremiumToolSuite() {
       <ToolPageView
         tool={tool}
         Tool={Tool}
+        guides={<ToolGuides lang="en" path={path} />}
         seo={{ title: tool.seoTitle || tool.title, suffix: !tool.seoTitle, description: tool.description, path, schemas, alternates: toolAlternates(tool.slug) }}
         labels={{
           breadcrumb: 'Breadcrumb',

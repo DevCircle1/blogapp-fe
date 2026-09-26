@@ -1,6 +1,7 @@
 export default {
   slug: 'loan-monthly-payment-formula',
   title: 'Loan Monthly Payment Formula: How to Calculate EMI by Hand',
+  translationKey: 'loan-payment-formula',
   category: 'finance',
   theme: 'finance',
   tags: ['loan payment formula', 'emi formula', 'monthly payment calculator', 'amortization', 'mortgage payment', 'excel pmt'],

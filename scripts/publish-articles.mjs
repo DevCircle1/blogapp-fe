@@ -7,6 +7,10 @@
  *   npm run blog:publish -- --dry-run    validate and write the images locally only
  *   npm run blog:publish -- --only=slug  one article
  *
+ * English articles sit directly in articles/; other languages in a folder named
+ * after the language (articles/de, articles/es) and publish to that language's
+ * blog. Articles that are versions of each other share a translationKey.
+ *
  * Articles are matched on slug, so re-running updates posts in place rather than
  * duplicating them. Needs SUPABASE_SECRET_KEY in .env (never a VITE_ variable).
  */
@@ -17,6 +21,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { tmpdir } from 'node:os';
 import { renderCoverSvg, renderInfographicSvg, toPng } from './content/images.mjs';
 import { allRoutes } from './routes.mjs';
+import { BLOG_SEGMENTS, DEFAULT_LANG, articlePath } from '../src/i18n/locales.js';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const args = Object.fromEntries(process.argv.slice(2).map((arg) => {
@@ -66,11 +71,17 @@ const upload = async (path, png) => {
 
 /* ------------------------------------------------------------------ load */
 const articleDir = join(root, 'content', 'articles');
-const files = readdirSync(articleDir).filter((file) => file.endsWith('.mjs')).sort();
+const listFiles = (lang) => {
+  const dir = lang === DEFAULT_LANG ? articleDir : join(articleDir, lang);
+  return existsSync(dir) ? readdirSync(dir).filter((file) => file.endsWith('.mjs')).sort().map((file) => ({ lang, dir, file })) : [];
+};
+const files = [DEFAULT_LANG, ...Object.keys(BLOG_SEGMENTS)].flatMap(listFiles);
+const slugOf = (file) => file.replace(/^\d+-/, '').replace(/\.mjs$/, '');
 const articles = [];
-for (const file of files) {
-  const article = (await import(pathToFileURL(join(articleDir, file)).href)).default;
-  if (!args.only || args.only === article.slug) articles.push({ ...article, file });
+for (const { lang, dir, file } of files) {
+  const article = (await import(pathToFileURL(join(dir, file)).href)).default;
+  const label = lang === DEFAULT_LANG ? file : `${lang}/${file}`;
+  if (!args.only || args.only === article.slug) articles.push({ ...article, lang, file: label });
 }
 if (!articles.length) {
   console.error(args.only ? `No article with slug "${args.only}".` : 'No articles found.');
@@ -79,11 +90,15 @@ if (!articles.length) {
 
 /* -------------------------------------------------------------- validate */
 const canRead = Boolean(SUPABASE_URL && KEY);
-const existingPosts = canRead ? await rest('posts?select=id,slug,author_id,status') : [];
+// The language columns come from supabase/blog_languages.sql; before that runs,
+// every stored post is English.
+const hasLanguageColumns = canRead && await rest('posts?select=language,translation_key&limit=1').then(() => true, () => false);
+const existingPosts = !canRead ? []
+  : await rest(`posts?select=id,slug,author_id,status${hasLanguageColumns ? ',language' : ''}`);
 const knownPaths = new Set([
   ...allRoutes.map((route) => route.path),
-  ...existingPosts.map((post) => `/blogs/article/${post.slug}`),
-  ...files.map((file) => `/blogs/article/${file.replace(/^\d+-/, '').replace(/\.mjs$/, '')}`),
+  ...existingPosts.map((post) => articlePath(post.language || DEFAULT_LANG, post.slug)),
+  ...files.map(({ lang, file }) => articlePath(lang, slugOf(file))),
 ]);
 
 const problems = [];
@@ -97,12 +112,26 @@ for (const article of articles) {
   if (article.tags.length < 4) problems.push(`${where} needs at least 4 tags`);
   for (const [, href] of article.html.matchAll(/href="([^"]+)"/g)) {
     if (href.startsWith('/') && !knownPaths.has(href.split('#')[0])) problems.push(`${where} broken internal link ${href}`);
+    // A German reader sent to an English page is a dead end, and the link
+    // does nothing for the German page it should be supporting.
+    const inSection = href === `/${article.lang}` || href.startsWith(`/${article.lang}/`);
+    if (article.lang !== DEFAULT_LANG && href.startsWith('/') && !inSection) {
+      problems.push(`${where} links to ${href}, outside the ${article.lang} section`);
+    }
   }
   const words = plain(article.html).split(' ').length;
-  if (words < 700) problems.push(`${where} only ${words} words`);
+  // A stub check, not a length target. German compounds and Spanish clitics
+  // carry the same content in fewer words than English.
+  const minWords = article.lang === DEFAULT_LANG ? 700 : 600;
+  if (words < minWords) problems.push(`${where} only ${words} words`);
 }
 if (problems.length) {
   console.error(`Validation failed:\n  ${problems.join('\n  ')}`);
+  process.exit(1);
+}
+const needsLanguageColumns = articles.some((article) => article.lang !== DEFAULT_LANG || article.translationKey);
+if (!dryRun && needsLanguageColumns && !hasLanguageColumns) {
+  console.error('These articles need the posts.language and posts.translation_key columns.\nRun supabase/blog_languages.sql in the Supabase SQL editor, then publish again.');
   process.exit(1);
 }
 
@@ -120,8 +149,8 @@ if (!dryRun && !authorId) {
 const hash = (buffer) => createHash('sha256').update(buffer).digest('hex').slice(0, 10);
 
 for (const article of articles) {
-  const cover = toPng(renderCoverSvg({ title: article.coverTitle || article.title, kicker: article.cover.kicker, theme: article.theme, visual: article.cover.visual }));
-  const info = renderInfographicSvg(article.infographic, article.theme);
+  const cover = toPng(renderCoverSvg({ title: article.coverTitle || article.title, kicker: article.cover.kicker, theme: article.theme, visual: article.cover.visual, lang: article.lang }));
+  const info = renderInfographicSvg(article.infographic, article.theme, article.lang);
   const infoPng = toPng(info.svg);
 
   const coverName = `${article.slug}-${hash(cover)}.png`;
@@ -144,11 +173,13 @@ for (const article of articles) {
     excerpt: article.description,
     featured_image: coverUrl,
     status: 'approved',
+    ...(hasLanguageColumns ? { language: article.lang, translation_key: article.translationKey || null } : {}),
   };
+  const url = articlePath(article.lang, article.slug);
 
   if (dryRun) {
     const description = plain(content).slice(0, 157);
-    console.log(`✓ ${article.slug}\n    title (${article.title.length}): ${article.title}\n    description: ${description}…\n    words: ${plain(content).split(' ').length}`);
+    console.log(`✓ ${url}\n    title (${article.title.length}): ${article.title}\n    description: ${description}…\n    words: ${plain(content).split(' ').length}`);
     continue;
   }
 
@@ -157,10 +188,10 @@ for (const article of articles) {
   const existing = existingPosts.find((post) => post.slug === article.slug);
   if (existing) {
     await rest(`posts?id=eq.${existing.id}`, { method: 'PATCH', body: JSON.stringify({ ...record, category_id: categoryId, updated_at: new Date().toISOString() }) });
-    console.log(`↻ updated  /blogs/article/${article.slug}`);
+    console.log(`↻ updated  ${url}`);
   } else {
     await rest('posts', { method: 'POST', body: JSON.stringify({ ...record, category_id: categoryId, author_id: authorId }) });
-    console.log(`+ created  /blogs/article/${article.slug}`);
+    console.log(`+ created  ${url}`);
   }
 }
 

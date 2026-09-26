@@ -1,6 +1,7 @@
 export default {
   slug: 'how-to-calculate-due-date-from-last-period',
   title: 'How to Calculate Your Due Date From Your Last Period',
+  translationKey: 'due-date-from-last-period',
   category: 'health',
   theme: 'health',
   tags: ['pregnancy due date calculator', 'due date from last period', 'naegeles rule', 'how many weeks pregnant', 'estimated due date', 'gestational age'],

@@ -17,6 +17,13 @@ export const THEMES = {
   career: { accent: '#60a5fa', deep: '#172554', label: 'Careers' },
 };
 
+/** Topic label printed on the images, in the article's language. */
+const THEME_LABELS = {
+  de: { seo: 'SEO', finance: 'Finanzen', health: 'Gesundheit', math: 'Mathe', dev: 'Entwickler', career: 'Karriere' },
+  es: { seo: 'SEO', finance: 'Finanzas', health: 'Salud', math: 'Matemáticas', dev: 'Desarrollo', career: 'Empleo' },
+};
+const themeLabel = (themeKey, lang) => THEME_LABELS[lang]?.[themeKey] || THEMES[themeKey].label;
+
 const esc = (value) => String(value)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
@@ -100,7 +107,7 @@ const visuals = {
     const cell = 44;
     const startX = PANEL.x + (PANEL.w - cell * 7) / 2;
     const startY = PANEL.y + 110;
-    const heads = ['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, i) => `<text x="${startX + i * cell + cell / 2}" y="${startY - 16}" font-family="${FONT}" font-size="15" font-weight="700" fill="#94a3b8" text-anchor="middle">${d}</text>`).join('');
+    const heads = (v.weekdays || ['M', 'T', 'W', 'T', 'F', 'S', 'S']).map((d, i) => `<text x="${startX + i * cell + cell / 2}" y="${startY - 16}" font-family="${FONT}" font-size="15" font-weight="700" fill="#94a3b8" text-anchor="middle">${d}</text>`).join('');
     const cells = Array.from({ length: 35 }, (_, i) => {
       const day = i - (v.offset || 0) + 1;
       if (day < 1 || day > (v.days || 30)) return '';
@@ -122,8 +129,8 @@ const visuals = {
     }).join('')}`,
 };
 
-export function renderCoverSvg({ title, kicker, theme: themeKey, visual }) {
-  const t = THEMES[themeKey];
+export function renderCoverSvg({ title, kicker, theme: themeKey, visual, lang = 'en' }) {
+  const t = { ...THEMES[themeKey], label: themeLabel(themeKey, lang) };
   // Bold Segoe UI averages ~0.62em per character; keep the title clear of the
   // right-hand panel (x = 760) with some breathing room.
   const budget = (fontSize) => Math.floor(620 / (fontSize * 0.62));
@@ -209,8 +216,8 @@ function infoBars(g, t, top) {
 // Darker accents for text and fills on the light infographic background.
 const INK_ACCENT = { seo: '#6d28d9', finance: '#047857', health: '#be123c', math: '#b45309', dev: '#0e7490', career: '#1d4ed8' };
 
-export function renderInfographicSvg(g, themeKey) {
-  const t = { ...THEMES[themeKey], ink: INK_ACCENT[themeKey] };
+export function renderInfographicSvg(g, themeKey, lang = 'en') {
+  const t = { ...THEMES[themeKey], label: themeLabel(themeKey, lang), ink: INK_ACCENT[themeKey] };
   const titleLines = wrap(g.title, 52);
   let top = 118 + titleLines.length * 46;
   const subtitleLines = g.subtitle ? wrap(g.subtitle, 90) : [];

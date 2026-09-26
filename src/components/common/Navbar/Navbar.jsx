@@ -12,7 +12,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";
 import logo from "../../../assets/logo.png";
-import { CHROME, hubPath, langFromPath } from "../../../i18n/locales.js";
+import { CHROME, blogPath, hubPath, langFromPath } from "../../../i18n/locales.js";
 const navigation = [
   { name: "Home", href: "/", current: false },
   { name: "Blogs", href: "/blogs", current: false },
@@ -35,7 +35,7 @@ export default function Navbar() {
   const lang = langFromPath(location.pathname);
   const labels = CHROME[lang]?.nav;
   const updatedNavigation = navigation.map((item) => {
-    const href = item.href === "/tools" ? hubPath(lang) : item.href;
+    const href = item.href === "/tools" ? hubPath(lang) : item.href === "/blogs" ? blogPath(lang) : item.href;
     return {
       ...item,
       href,

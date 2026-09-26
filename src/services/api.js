@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { DEFAULT_LANG, postLang } from '../i18n/locales.js';
 
 const response = (data) => ({ data });
 const asError = (error) => {
@@ -19,6 +20,9 @@ const currentUser = async (required = false) => {
 const cleanPath = (url) => url.split('?')[0].replace(/^\/+|\/+$/g, '');
 const queryParams = (url) => new URL(url, window.location.origin).searchParams;
 const approvedPosts = () => supabase.from('posts').select('*').eq('status', 'approved').order('created_at', { ascending: false });
+// Filtered here rather than in the query so listings keep working on a
+// database that predates the language column (every row is English there).
+const postsIn = async (lang) => (await run(approvedPosts())).filter((post) => postLang(post) === lang);
 const dailyWords = ['crane', 'plant', 'sound', 'light', 'stone', 'grape', 'chair', 'smile', 'bread', 'ocean'];
 const wordleStoreKey = 'talkandtool-wordle-games';
 const getWordleGames = () => JSON.parse(localStorage.getItem(wordleStoreKey) || '{}');
@@ -49,7 +53,7 @@ const scoreGuess = (guess, answer) => {
 const categoriesWithPosts = async () => {
   const [categories, posts] = await Promise.all([
     run(supabase.from('categories').select('*').order('name')),
-    run(approvedPosts()),
+    postsIn(DEFAULT_LANG),
   ]);
   return categories.map((category) => {
     const articles = posts.filter((post) => String(post.category_id) === String(category.id));
@@ -61,7 +65,21 @@ const get = async (url, isPrivate) => {
   const path = cleanPath(url);
   const user = isPrivate ? await currentUser(true) : null;
 
-  if (path === 'posts') return response(await run(approvedPosts()));
+  if (path === 'posts') return response(await postsIn(DEFAULT_LANG));
+  if (path === 'all-posts') return response(await run(approvedPosts()));
+  if (path.startsWith('localized-posts/')) return response(await postsIn(path.split('/')[1]));
+  if (path.startsWith('guides/')) {
+    // Articles in one language that link to a given page, e.g. the German
+    // guides that point at /de/woerter-zaehlen. Needs the language column, so
+    // an older database simply has no guides to show.
+    const lang = path.split('/')[1];
+    const target = queryParams(url).get('path');
+    const { data, error } = await supabase.from('posts').select('slug,title,language')
+      .eq('status', 'approved').eq('language', lang)
+      .ilike('content', `%href="${target}"%`)
+      .order('created_at', { ascending: false }).limit(4);
+    return response(error ? [] : data);
+  }
   if (path.startsWith('posts/')) {
     const slug = path.split('/')[1];
     return response(await run(supabase.from('posts').select('*').eq('slug', slug).single()));
