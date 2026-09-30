@@ -2,7 +2,6 @@ import { matchRoutes } from 'react-router-dom';
 import { lazyRoute } from './lazyRoute.js';
 import { BLOG_SEGMENTS, LOCALIZED_LANGS, blogPath } from './i18n/locales.js';
 import { preloadLocaleBundle } from './i18n/loadBundle.js';
-
 const RegisterForm = lazyRoute(() => import('./components/auth/RegisterForm/RegisterForm.jsx'));
 const LoginForm = lazyRoute(() => import('./components/auth/LoginForm/LoginForm.jsx'));
 const ForgetPassword = lazyRoute(() => import('./components/auth/ForgetPassowrdForm/ForgetPassword.jsx'));
@@ -21,13 +20,8 @@ const AboutUs = lazyRoute(() => import('./components/common/Terms/AboutUs.jsx'))
 const ContactUs = lazyRoute(() => import('./components/common/Terms/ContactUs.jsx'));
 const HelpCenter = lazyRoute(() => import('./components/common/Terms/HelpCenter.jsx'));
 const PrivacyPolicy = lazyRoute(() => import('./components/common/Terms/PrivacyPolicy.jsx'));
-const JobAlert = lazyRoute(() => import('./components/common/Terms/JobAlerts.jsx'));
 const HomePage = lazyRoute(() => import('./components/common/Home/HomePage.jsx'));
 const CodeShare = lazyRoute(() => import('./components/tools/CodeShare.jsx'));
-const Q = lazyRoute(() => import('./components/tools/Q.jsx'));
-const CreateQuestion = lazyRoute(() => import('./components/tools/CreateQuestion.jsx'));
-const QuestionDetail = lazyRoute(() => import('./components/tools/QuestionDetail.jsx'));
-const MyAnswers = lazyRoute(() => import('./components/tools/MyAnswers.jsx'));
 const WordleGame = lazyRoute(() => import('./components/tools/WordleGame.jsx'));
 const PremiumToolSuite = lazyRoute(() => import('./components/tools/PremiumToolSuite.jsx'));
 const LocalizedToolPage = lazyRoute(() => import('./components/tools/localized/LocalizedToolPage.jsx'));
@@ -136,13 +130,8 @@ export const APP_ROUTES = [
   page('/contact-us', ContactUs),
   page('/help-center', HelpCenter),
   page('/privacy-policy', PrivacyPolicy),
-  page('/job-alert', JobAlert),
   page('/codes', CodeShare),
   page('/codes/:id', CodeShare),
-  page('/ask-anything', Q),
-  page('/create', CreateQuestion),
-  page('/q/:id', QuestionDetail),
-  page('/my-answers', MyAnswers),
   page('/word-game', WordleGame),
   // Localized blogs (/de/ratgeber, /es/guias). Static segments, so they win
   // over the /<lang>/:toolSlug tool pages below.

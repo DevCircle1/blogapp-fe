@@ -22,6 +22,7 @@ import {
 } from '../src/i18n/locales.js';
 import { categoryHubs, toolBreadcrumb } from '../src/i18n/categories.js';
 import { premiumTools } from '../src/components/tools/toolCatalog.js';
+import { REMOVED_PATHS } from './removed-paths.mjs';
 
 const DIST = 'dist';
 const CONTROL = /<(textarea|input|select|button)\b/;
@@ -60,6 +61,27 @@ for (const routePath of toolRoutes.keys()) {
   if (!routeByPath.has(routePath)) problem(routePath, 'is a catalogue tool page but is not in the route list, so no page was generated');
 }
 
+// A removed feature (scripts/removed-paths.mjs) must leave no trace: no
+// internal link to it on any page, nothing in the sitemap, and a 404 rule for
+// every one of its URLs.
+const linksToRemoved = (href) => {
+  if (!href.startsWith('/') && !href.startsWith(SITE_URL)) return false;
+  const target = href.slice(href.startsWith(SITE_URL) ? SITE_URL.length : 0).split(/[?#]/)[0].replace(/(.)\/$/, '$1');
+  return REMOVED_PATHS.some((pattern) => (pattern.endsWith('/*') ? target.startsWith(pattern.slice(0, -1)) : target === pattern));
+};
+{
+  const sitemap = await readFile(path.join(DIST, 'sitemap.xml'), 'utf8').catch(() => '');
+  for (const [, loc] of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
+    if (linksToRemoved(loc)) problem('/sitemap.xml', `lists ${loc}, which belongs to a removed feature`);
+  }
+  const redirects = await readFile(path.join(DIST, '_redirects'), 'utf8').catch(() => '');
+  REMOVED_PATHS.forEach((pattern) => {
+    if (!redirects.includes(`${pattern}  /404.html  404!`)) problem('/_redirects', `has no 404 rule for ${pattern}`);
+  });
+  const notFound = await readFile(path.join(DIST, '404.html'), 'utf8').catch(() => '');
+  if (!notFound.includes('noindex') || notFound.includes('rel="canonical"')) problem('/404.html', 'is missing, or is not noindex without a canonical');
+}
+
 let checkedTools = 0;
 let exempt = 0;
 const exemptTools = [];
@@ -77,6 +99,11 @@ for (const route of allRoutes) {
   if (rootStart === -1 || html.slice(rootStart + rootTag.length, rootStart + rootTag.length + 6) === '</div>') {
     problem(route.path, '#root is missing or empty');
     continue;
+  }
+
+  if (html.includes('\0')) problem(route.path, 'contains a NUL byte (see src/entry-server.jsx)');
+  for (const [, href] of html.matchAll(/href="([^"]+)"/g)) {
+    if (linksToRemoved(href)) problem(route.path, `links to ${href}, which belongs to a removed feature`);
   }
 
   const legacy = LEGACY_ROUTES.has(route.path);

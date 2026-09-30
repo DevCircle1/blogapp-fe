@@ -156,7 +156,7 @@ export const staticRoutes = [
     heading: 'Contact Talk & Tool',
     body: "Have questions, suggestions, or want to learn more about our services? We'd love to hear from you.",
     extraParagraphs: [
-      'Reach out to us for information about our blogs, tools, job notification services, or any other inquiries.',
+      'Reach out to us for information about our blogs, tools, or any other inquiries.',
       "We read every message that comes through this form, whether it's a bug report on a calculator, a suggestion for a tool we haven't built yet, a correction to something on the blog, or a business enquiry. If you are looking for an answer to a common question instead, the help centre covers account, tool, and publishing questions without waiting for a reply.",
     ],
     sections: [

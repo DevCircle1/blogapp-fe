@@ -7,7 +7,7 @@ import { FLAGSHIP_PAGES } from '../../src/components/tools/flagship/registry.js'
 import { premiumTools, standaloneTools } from '../../src/components/tools/toolCatalog.js';
 
 const known = new Set([
-  '/', '/tools', '/blogs', '/job-alert',
+  '/', '/tools', '/blogs',
   ...premiumTools.map((tool) => `/tools/${tool.slug}`),
   ...standaloneTools.map((tool) => tool.link),
   ...FLAGSHIP_PAGES.map((page) => page.path),

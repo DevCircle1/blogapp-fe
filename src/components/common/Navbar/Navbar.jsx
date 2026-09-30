@@ -19,7 +19,6 @@ const navigation = [
   { name: "Tools", href: "/tools", current: false },
   { name: "Contact Us", href: "/contact-us", current: false },
   { name: "Write Blogs", href: "/write-blogs", current: false, requiresAuth: true },
-  { name: "Job Alerts", href: "/job-alert", current: false, requiresAuth: false },
   { name: "Game", href: "/word-game", current: false },
 ];
 function classNames(...classes) {
@@ -139,14 +138,6 @@ export default function Navbar() {
                             Your profile
                           </a>
                         </MenuItem> */}
-                        <MenuItem>
-                          <NavLink
-                            to="/job-alert"
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500/10"
-                          >
-                            Job Alerts
-                          </NavLink>
-                        </MenuItem>
                         <MenuItem>
                           <button
                             onClick={logoutUser}

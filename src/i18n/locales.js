@@ -119,7 +119,7 @@ export const resolveCurrency = (lang) => {
  */
 export const CHROME = {
   es: {
-    nav: { Home: 'Inicio', Blogs: 'Guías', Tools: 'Herramientas', 'Contact Us': 'Contacto', 'Write Blogs': 'Escribir', 'Job Alerts': 'Empleo', Game: 'Juego', Login: 'Entrar', Register: 'Registrarse' },
+    nav: { Home: 'Inicio', Blogs: 'Guías', Tools: 'Herramientas', 'Contact Us': 'Contacto', 'Write Blogs': 'Escribir', Game: 'Juego', Login: 'Entrar', Register: 'Registrarse' },
     tagline: 'Calculadoras, conversores y herramientas online gratis que funcionan en tu navegador, sin registro.',
     popularTools: 'Herramientas populares',
     allTools: 'Todas las herramientas →',
@@ -138,7 +138,7 @@ export const CHROME = {
     },
   },
   pt: {
-    nav: { Home: 'Início', Blogs: 'Blog', Tools: 'Ferramentas', 'Contact Us': 'Contato', 'Write Blogs': 'Escrever', 'Job Alerts': 'Vagas', Game: 'Jogo', Login: 'Entrar', Register: 'Cadastrar' },
+    nav: { Home: 'Início', Blogs: 'Blog', Tools: 'Ferramentas', 'Contact Us': 'Contato', 'Write Blogs': 'Escrever', Game: 'Jogo', Login: 'Entrar', Register: 'Cadastrar' },
     tagline: 'Calculadoras, conversores e ferramentas online grátis que funcionam direto no navegador, sem cadastro.',
     popularTools: 'Ferramentas populares',
     allTools: 'Todas as ferramentas →',
@@ -157,7 +157,7 @@ export const CHROME = {
     },
   },
   fr: {
-    nav: { Home: 'Accueil', Blogs: 'Blog', Tools: 'Outils', 'Contact Us': 'Contact', 'Write Blogs': 'Écrire', 'Job Alerts': 'Emplois', Game: 'Jeu', Login: 'Connexion', Register: 'Inscription' },
+    nav: { Home: 'Accueil', Blogs: 'Blog', Tools: 'Outils', 'Contact Us': 'Contact', 'Write Blogs': 'Écrire', Game: 'Jeu', Login: 'Connexion', Register: 'Inscription' },
     tagline: 'Calculateurs, convertisseurs et outils en ligne gratuits qui fonctionnent dans votre navigateur, sans inscription.',
     popularTools: 'Outils populaires',
     allTools: 'Tous les outils →',
@@ -176,7 +176,7 @@ export const CHROME = {
     },
   },
   de: {
-    nav: { Home: 'Start', Blogs: 'Ratgeber', Tools: 'Tools', 'Contact Us': 'Kontakt', 'Write Blogs': 'Schreiben', 'Job Alerts': 'Jobs', Game: 'Spiel', Login: 'Anmelden', Register: 'Registrieren' },
+    nav: { Home: 'Start', Blogs: 'Ratgeber', Tools: 'Tools', 'Contact Us': 'Kontakt', 'Write Blogs': 'Schreiben', Game: 'Spiel', Login: 'Anmelden', Register: 'Registrieren' },
     tagline: 'Kostenlose Online-Rechner, Umrechner und Tools, die direkt im Browser laufen – ohne Anmeldung.',
     popularTools: 'Beliebte Tools',
     allTools: 'Alle Tools →',
@@ -195,7 +195,7 @@ export const CHROME = {
     },
   },
   it: {
-    nav: { Home: 'Home', Blogs: 'Blog', Tools: 'Strumenti', 'Contact Us': 'Contatti', 'Write Blogs': 'Scrivi', 'Job Alerts': 'Lavoro', Game: 'Gioco', Login: 'Accedi', Register: 'Registrati' },
+    nav: { Home: 'Home', Blogs: 'Blog', Tools: 'Strumenti', 'Contact Us': 'Contatti', 'Write Blogs': 'Scrivi', Game: 'Gioco', Login: 'Accedi', Register: 'Registrati' },
     tagline: 'Calcolatrici, convertitori e strumenti online gratuiti che funzionano nel browser, senza registrazione.',
     popularTools: 'Strumenti popolari',
     allTools: 'Tutti gli strumenti →',
@@ -214,7 +214,7 @@ export const CHROME = {
     },
   },
   nl: {
-    nav: { Home: 'Home', Blogs: 'Blog', Tools: 'Tools', 'Contact Us': 'Contact', 'Write Blogs': 'Schrijven', 'Job Alerts': 'Vacatures', Game: 'Spel', Login: 'Inloggen', Register: 'Registreren' },
+    nav: { Home: 'Home', Blogs: 'Blog', Tools: 'Tools', 'Contact Us': 'Contact', 'Write Blogs': 'Schrijven', Game: 'Spel', Login: 'Inloggen', Register: 'Registreren' },
     tagline: 'Gratis rekenmachines, converters en online tools die direct in je browser werken, zonder registratie.',
     popularTools: 'Populaire tools',
     allTools: 'Alle tools →',
@@ -233,7 +233,7 @@ export const CHROME = {
     },
   },
   pl: {
-    nav: { Home: 'Strona główna', Blogs: 'Blog', Tools: 'Narzędzia', 'Contact Us': 'Kontakt', 'Write Blogs': 'Pisz', 'Job Alerts': 'Praca', Game: 'Gra', Login: 'Zaloguj się', Register: 'Zarejestruj się' },
+    nav: { Home: 'Strona główna', Blogs: 'Blog', Tools: 'Narzędzia', 'Contact Us': 'Kontakt', 'Write Blogs': 'Pisz', Game: 'Gra', Login: 'Zaloguj się', Register: 'Zarejestruj się' },
     tagline: 'Darmowe kalkulatory, konwertery i narzędzia online działające w przeglądarce, bez rejestracji.',
     popularTools: 'Popularne narzędzia',
     allTools: 'Wszystkie narzędzia →',

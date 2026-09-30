@@ -1,6 +1,5 @@
 import { SCHEMA_TYPES } from '../../../../lib/schema/registry.js';
 import { toJson } from '../../../../lib/schema/core.js';
-
 export const HUB_PATH = '/tools/schema-markup-generator';
 const pathFor = (type) => `/tools/${type.pageSlug}`;
 
@@ -93,9 +92,7 @@ const typePage = (type) => {
       'Paste it into your page, then check it with Google’s Rich Results Test.',
     ],
     faqs: type.copy.faqs,
-    related: type.slug === 'job-posting'
-      ? [{ to: '/job-alert', label: 'Job Alerts', description: 'Get new job openings by email.' }, ...RELATED.slice(0, 2)]
-      : RELATED,
+    related: RELATED,
     siblingsHeading: 'Schema generators',
     siblings: [{ to: HUB_PATH, label: 'All schema types' }, ...SIBLINGS.filter((item) => item.to !== pathFor(type))],
     disclaimer: 'Valid markup makes a page eligible for a rich result; it does not guarantee one. Google decides what to show. Test your page with Google’s Rich Results Test before relying on it.',

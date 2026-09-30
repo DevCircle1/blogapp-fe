@@ -97,7 +97,7 @@ const ContactUs = () => {
                   Have questions, suggestions, or want to learn more about our services? We'd love to hear from you.
                 </p>
                 <p>
-                  Reach out to us for information about our blogs, tools, job notification services, or any other inquiries.
+                  Reach out to us for information about our blogs, tools, or any other inquiries.
                 </p>
               </div>
               

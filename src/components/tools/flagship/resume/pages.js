@@ -6,7 +6,6 @@ export const FRIENDLY_PATH = '/tools/is-my-resume-ats-friendly';
 const META = 'See exactly what an ATS extracts from your resume. Full results free, no sign-up, no paywall. Your file never leaves your browser.';
 
 const RELATED = [
-  { to: '/job-alert', label: 'Job Alerts', description: 'Get new openings by email once your resume is ready.' },
   { to: '/tools/word-counter', label: 'Word Counter', description: 'Check the length of your summary and bullets.' },
   { to: '/tools/seo-title-meta-checker', label: 'Title & Meta Checker', description: 'Tighten the wording of headlines and descriptions.' },
 ];

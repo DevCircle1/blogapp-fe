@@ -27,7 +27,11 @@ export function render(path) {
       if (settled) return;
       settled = true;
       if (firstError) reject(firstError);
-      else resolve(Buffer.concat(chunks).toString('utf8'));
+      // React 18's stream writer pads with a zero byte when a multibyte UTF-8
+      // character (’, é, ß, …) straddles the edge of its internal buffer. That
+      // byte is never real content; left in, browsers show it as U+FFFD and
+      // hydration sees a text mismatch.
+      else resolve(Buffer.concat(chunks).toString('utf8').replace(/\0/g, ''));
     });
 
     const fail = (error) => {

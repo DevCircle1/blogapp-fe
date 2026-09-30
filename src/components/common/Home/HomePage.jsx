@@ -15,7 +15,6 @@ import {
 } from "react-icons/fi";
 import { publicRequest } from "../../../services/api";
 import { POPULAR_TOOLS } from "./popularTools.js";
-
 export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [featuredBlogs, setFeaturedBlogs] = useState([]);
@@ -412,24 +411,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-indigo-50 via-blue-50 to-purple-50">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Got a Question in Mind?
-          </h2>
-          <p className="text-lg text-gray-600 mb-8">
-            Don’t wait—ask anything and get expert answers from the Talk & Tool
-            community. Whether it’s coding, design, or business, we’ve got you covered.
-          </p>
-          <Link
-            to="/ask-anything"
-            className="inline-flex items-center space-x-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-10 py-4 rounded-full font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
-          >
-            <span>Ask a Question</span>
-            <FiArrowRight className="h-5 w-5" />
-          </Link>
-        </div>
-      </section>
       {/* CTA Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
@@ -437,10 +418,15 @@ export default function HomePage() {
             Ready to Explore More?
           </h2>
           <p className="text-xl text-gray-600 mb-8">
-            Join thousands of developers and designers who are already using
-            Talk and Tool to enhance their skills and productivity.
+            The tools are free and need no sign-up, and most run entirely in
+            your browser. Our guides explain the maths and methods behind them.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/blogs">
+              <button className="bg-blue-600 text-white px-8 py-4 rounded-full font-semibold hover:bg-blue-700 transition-all duration-300">
+                Read the Guides
+              </button>
+            </Link>
             <Link to="/about-us">
               <button className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-full font-semibold hover:border-blue-500 hover:text-blue-600 transition-all duration-300">
                 Learn More

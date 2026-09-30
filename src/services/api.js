@@ -1,6 +1,5 @@
 import { supabase } from './supabase';
 import { DEFAULT_LANG, postLang } from '../i18n/locales.js';
-
 const response = (data) => ({ data });
 const asError = (error) => {
   const wrapped = error instanceof Error ? error : new Error(error?.message || 'Supabase request failed');
@@ -17,8 +16,7 @@ const currentUser = async (required = false) => {
   if (required && !user) throw asError({ status: 401, message: 'Please sign in to continue.' });
   return user;
 };
-const cleanPath = (url) => url.split('?')[0].replace(/^\/+|\/+$/g, '');
-const queryParams = (url) => new URL(url, window.location.origin).searchParams;
+const cleanPath = (url) => url.split('?')[0].replace(/^\/+|\/+$/g, '');const queryParams = (url) => new URL(url, window.location.origin).searchParams;
 const approvedPosts = () => supabase.from('posts').select('*').eq('status', 'approved').order('created_at', { ascending: false });
 // Filtered here rather than in the query so listings keep working on a
 // database that predates the language column (every row is English there).
@@ -63,7 +61,7 @@ const categoriesWithPosts = async () => {
 
 const get = async (url, isPrivate) => {
   const path = cleanPath(url);
-  const user = isPrivate ? await currentUser(true) : null;
+  if (isPrivate) await currentUser(true);
 
   if (path === 'posts') return response(await postsIn(DEFAULT_LANG));
   if (path === 'all-posts') return response(await run(approvedPosts()));
@@ -96,27 +94,10 @@ const get = async (url, isPrivate) => {
     if (!category) throw asError({ status: 404, message: 'Category not found.' });
     return response(category);
   }
-  if (path === 'questions/latest') {
-    const questions = await run(supabase.from('questions').select('id, content, created_at, answers(count)').order('created_at', { ascending: false }));
-    return response(questions.map((item) => ({ ...item, answer_count: item.answers?.[0]?.count || 0 })));
-  }
-  if (path === 'questions/my_questions') {
-    const questions = await run(supabase.from('questions').select('id, content, created_at, answers(count)').eq('user_id', user.id).order('created_at', { ascending: false }));
-    return response(questions.map((item) => ({ ...item, answer_count: item.answers?.[0]?.count || 0 })));
-  }
-  if (path.startsWith('questions/')) {
-    const id = path.split('/')[1];
-    return response(await run(supabase.from('questions').select('id, content, user_id, created_at, answers(id, content, created_at)').eq('id', id).single()));
-  }
-  if (path === 'answers/my_answers') {
-    const answers = await run(supabase.from('answers').select('*, question:questions(id, content)').eq('user_id', user.id).order('created_at', { ascending: false }));
-    return response(answers);
-  }
   if (path.startsWith('codes/')) {
     const id = path.split('/')[1];
     return response(await run(supabase.from('code_shares').select('*').eq('id', id).single()));
   }
-  if (path === 'job-alerts') return response(await run(supabase.from('job_alerts').select('*').eq('is_active', true).order('created_at', { ascending: false })));
   if (path === 'daily-word/attempts') {
     const params = queryParams(url);
     const key = `${params.get('player_id')}:${params.get('date')}`;
@@ -161,15 +142,6 @@ const post = async (url, payload, isPrivate) => {
       ...(featuredImage ? { featured_image: featuredImage } : {}),
     };
     return response(await run(supabase.from('posts').insert(record).select().single()));
-  }
-  if (path === 'questions') {
-    const record = { content: payload.content, user_id: user.id, user_email: user.email };
-    return response(await run(supabase.from('questions').insert(record).select().single()));
-  }
-  if (path === 'answers') {
-    const answerUser = user || await currentUser(false);
-    const record = { question_id: payload.question, content: payload.content, ...(answerUser ? { user_id: answerUser.id } : {}) };
-    return response(await run(supabase.from('answers').insert(record).select().single()));
   }
   if (path === 'codes') return response(await run(supabase.from('code_shares').insert(payload).select().single()));
   if (path === 'subscribe') return response(await run(supabase.from('subscribers').insert({ email: payload.email }).select().single()));

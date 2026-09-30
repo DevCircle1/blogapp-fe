@@ -9,7 +9,6 @@
  */
 import { CHROME, LOCALES, ALL_LANGS, hubPath, toolPath } from '../src/i18n/locales.js';
 import { escapeHtml } from './html.mjs';
-
 export const LEGACY_ROUTES = new Map([
   ['/blogs', 'fetches its categories in an effect, so the server render is a spinner with no heading'],
   ['/check-ip', 'fetches IP data in an effect, so the server render is a loading skeleton with no heading'],
@@ -28,9 +27,9 @@ const HREFLANG_NAMES = Object.fromEntries(Object.values(LOCALES).map((locale) =>
 // Footer.jsx change their layout, update these to match.
 const NAV_ITEMS = [
   ['Home', '/'], ['Blogs', '/blogs'], ['Tools', '/tools'], ['Contact Us', '/contact-us'],
-  ['Write Blogs', '/write-blogs'], ['Job Alerts', '/job-alert'], ['Game', '/word-game'],
+  ['Write Blogs', '/write-blogs'], ['Game', '/word-game'],
 ];
-const EN_NAV = { Home: 'Home', Blogs: 'Blogs', Tools: 'Tools', 'Contact Us': 'Contact Us', 'Write Blogs': 'Write Blogs', 'Job Alerts': 'Job Alerts', Game: 'Game', Login: 'Login', Register: 'Register' };
+const EN_NAV = { Home: 'Home', Blogs: 'Blogs', Tools: 'Tools', 'Contact Us': 'Contact Us', 'Write Blogs': 'Write Blogs', Game: 'Game', Login: 'Login', Register: 'Register' };
 const EN_POPULAR = [
   ['/tools/word-counter', 'Word Counter'], ['/tools/percentage-calculator', 'Percentage Calculator'],
   ['/tools/loan-calculator', 'Loan Calculator'], ['/tools/bmi-calculator', 'BMI Calculator'],
