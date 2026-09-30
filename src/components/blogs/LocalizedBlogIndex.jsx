@@ -5,11 +5,8 @@ import Seo from '../common/Seo.jsx';
 import { SITE_NAME, SITE_URL, breadcrumbSchema } from '../../seo/siteMeta.js';
 import { LOCALES, articlePath, blogPath, hubPath } from '../../i18n/locales.js';
 import { blogChrome } from '../../i18n/blogChrome.js';
-
-const excerptOf = (html) => {
-  const text = (html || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
-  return text.length > 150 ? `${text.slice(0, 150).trimEnd()}…` : text;
-};
+import { useSeed } from '../../context/seed.js';
+import { localizedIndexView } from '../../lib/blog/views.js';
 
 /**
  * The article list for one localized blog (/de/ratgeber, /es/guias): every
@@ -18,13 +15,15 @@ const excerptOf = (html) => {
  */
 export default function LocalizedBlogIndex({ lang }) {
   const chrome = blogChrome(lang);
-  const [posts, setPosts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // Seeded by the prerender (src/context/seed.js); the fetch refreshes it.
+  const seed = useSeed(`blogIndex:${lang}`);
+  const [posts, setPosts] = useState(seed ?? []);
+  const [isLoading, setIsLoading] = useState(!seed);
 
   useEffect(() => {
     let cancelled = false;
     publicRequest.get(`/localized-posts/${lang}/`)
-      .then((response) => { if (!cancelled) setPosts(response.data || []); })
+      .then((response) => { if (!cancelled) setPosts(localizedIndexView(response.data || [])); })
       .catch((error) => console.error('Error fetching posts:', error))
       .finally(() => { if (!cancelled) setIsLoading(false); });
     return () => { cancelled = true; };
@@ -104,7 +103,7 @@ export default function LocalizedBlogIndex({ lang }) {
                 </div>
                 <div className="p-6">
                   <h2 className="mb-3 line-clamp-2 text-xl font-bold text-gray-800">{post.title}</h2>
-                  <p className="line-clamp-3 text-sm leading-6 text-gray-600">{post.excerpt || excerptOf(post.content)}</p>
+                  <p className="line-clamp-3 text-sm leading-6 text-gray-600">{post.excerpt}</p>
                   <span className="mt-4 block text-sm font-semibold text-blue-600">{chrome.readGuide}</span>
                 </div>
               </Link>

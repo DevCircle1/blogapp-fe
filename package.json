@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && npm run build:ssr && npm run sitemap && npm run prerender && npm run verify",
+    "build": "vite build && npm run build:ssr && npm run blog:data && npm run sitemap && npm run prerender && npm run verify",
     "build:ssr": "vite build --ssr src/entry-server.jsx --outDir dist-ssr",
+    "blog:data": "node scripts/blog-data.mjs",
     "sitemap": "node scripts/generate-sitemap.mjs",
     "prerender": "node scripts/prerender.mjs",
     "verify": "node scripts/verify-prerender.mjs",
@@ -63,6 +64,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.3.0",
+    "linkedom": "^0.18.13",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.17",
     "vite": "^7.1.2"

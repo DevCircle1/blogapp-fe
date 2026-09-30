@@ -4,15 +4,18 @@ import App from './App.jsx'
 import { preloadRoute } from './appRoutes.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import AuthProvider from './context/AuthContext';
+import { SeedContext, readEmbeddedSeed } from './context/seed.js';
 import './index.css'
 
 const container = document.getElementById('root');
 const app = (
-  <BrowserRouter>
-    <AuthProvider>
-      <App />
-    </AuthProvider>
-  </BrowserRouter>
+  <SeedContext.Provider value={readEmbeddedSeed()}>
+    <BrowserRouter>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </BrowserRouter>
+  </SeedContext.Provider>
 );
 
 // Pages rendered by src/entry-server.jsx mark their root with this attribute,

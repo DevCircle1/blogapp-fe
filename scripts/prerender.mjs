@@ -30,6 +30,9 @@ import { LOCALES } from '../src/i18n/locales.js';
 import { REMOVED_PATHS } from './removed-paths.mjs';
 import { escapeHtml } from './html.mjs';
 import { LEGACY_ROUTES, legacyRootHtml } from './prerender-legacy.mjs';
+import { readBlogData } from './blog-data.mjs';
+import { blogPages } from './blog-pages.mjs';
+import { SEED_ELEMENT_ID } from '../src/context/seed.js';
 import { render } from '../dist-ssr/entry-server.js';
 
 const DIST = 'dist';
@@ -73,13 +76,34 @@ const headFor = (route) => {
   ].join('\n    ');
 };
 
+/**
+ * The <head> tags the page's own <Seo> declared, as react-helmet-async
+ * collected them during the server render. They carry data-rh, so Helmet
+ * adopts them on hydration instead of adding a second copy. null when the page
+ * declared no title (headFor's routes.mjs metadata is the fallback then).
+ */
+const HELMET_PARTS = ['title', 'priority', 'base', 'meta', 'link', 'style', 'script', 'noscript'];
+const helmetHead = (helmet) => {
+  const parts = HELMET_PARTS.map((part) => helmet?.[part]?.toString() || '').filter(Boolean);
+  if (!parts.some((part) => part.includes('<title'))) return null;
+  // Helmet keeps React's prop spelling (hrefLang). HTML attribute names are
+  // case-insensitive, but tools that pattern-match the markup expect hreflang.
+  return parts.join('\n    ').replace(/ hrefLang="/g, ' hreflang="');
+};
+
+// A page's seed as inline JSON. "<" is escaped so no string in it can close
+// the script element early.
+const seedScript = (seed) => (
+  `<script id="${SEED_ELEMENT_ID}" type="application/json">${JSON.stringify(seed).replace(/</g, '\\u003c')}</script>`
+);
+
 const exists = (file) => access(file).then(() => true, () => false);
 
 const run = async () => {
   // app.html is the neutral shell Netlify rewrites unmatched paths to. It must
-  // stay canonical-free and index-neutral, because genuinely dynamic routes
-  // (blog articles, category pages) are served from it and set their own tags
-  // once React mounts. It is also this script's pristine input: the first run
+  // stay canonical-free and index-neutral, because any route without a
+  // prerendered page is served from it and sets its own tags once React
+  // mounts. It is also this script's pristine input: the first run
   // saves it, later runs read it, so index.html (overwritten below with the
   // prerendered homepage) is never mistaken for the template.
   const shellFile = path.join(DIST, 'app.html');
@@ -103,18 +127,30 @@ const run = async () => {
     throw new Error(`The shell no longer contains ${ROOT_PLACEHOLDER}; nothing to render into.`);
   }
 
+  // Every blog post, non-empty category and guide index gets a page of its
+  // own, rendered with the build-time snapshot and seeded with it.
+  const blog = blogPages(await readBlogData());
+  const routes = [...allRoutes, ...blog.routes];
+
   // Render everything first; write only if every route succeeded.
   const pages = [];
   const failures = [];
-  for (const route of allRoutes) {
+  for (const route of routes) {
     try {
       // data-ssr-rendered tells src/main.jsx this markup came from the real
       // component tree and can be hydrated in place. Legacy markup does not
       // match that tree, so it stays unmarked and is replaced instead.
-      const root = LEGACY_ROUTES.has(route.path)
-        ? `<div id="root">${legacyRootHtml(route)}</div>`
-        : `<div id="root" data-ssr-rendered="true">${await render(route.path)}</div>`;
-      pages.push({ route, root });
+      if (LEGACY_ROUTES.has(route.path)) {
+        pages.push({ route, root: `<div id="root">${legacyRootHtml(route)}</div>`, head: headFor(route) });
+        continue;
+      }
+      const seed = blog.seeds.get(route.path);
+      const { html, helmet } = await render(route.path, { seed });
+      pages.push({
+        route,
+        root: `<div id="root" data-ssr-rendered="true">${html}</div>${seed ? seedScript(seed) : ''}`,
+        head: helmetHead(helmet) ?? headFor(route),
+      });
     } catch (error) {
       failures.push({ path: route.path, message: String(error?.message || error).split('\n')[0] });
     }
@@ -125,7 +161,7 @@ const run = async () => {
   // NotFound because no route matches those paths.
   let notFoundRoot = null;
   try {
-    notFoundRoot = `<div id="root" data-ssr-rendered="true">${await render('/404')}</div>`;
+    notFoundRoot = `<div id="root" data-ssr-rendered="true">${(await render('/404')).html}</div>`;
   } catch (error) {
     failures.push({ path: '/404', message: String(error?.message || error).split('\n')[0] });
   }
@@ -134,10 +170,10 @@ const run = async () => {
     throw new Error(`${failures.length} route(s) failed to render; nothing was written.`);
   }
 
-  for (const { route, root } of pages) {
+  for (const { route, root, head } of pages) {
     const html = base
       .replace('<html lang="en">', `<html lang="${LOCALES[route.lang || 'en'].htmlLang}">`)
-      .replace('</head>', () => `  ${headFor(route)}\n  </head>`)
+      .replace('</head>', () => `  ${head}\n  </head>`)
       .replace(ROOT_PLACEHOLDER, () => root);
 
     // Written as "<route>.html" rather than "<route>/index.html": Netlify
@@ -156,15 +192,22 @@ const run = async () => {
     .replace('</head>', () => `  <title>Page Not Found | ${escapeHtml(SITE_NAME)}</title>\n    <meta name="robots" content="noindex, nofollow">\n  </head>`)
     .replace(ROOT_PLACEHOLDER, () => notFoundRoot), 'utf8');
 
-  // Removed features (scripts/removed-paths.mjs) answer with a real 404
-  // instead of the SPA fallback's 200. Netlify applies _redirects before the
-  // rules in netlify.toml, so these win over the /* catch-all there.
+  // Real 404s instead of the SPA fallback's 200. Netlify applies _redirects
+  // before the rules in netlify.toml, so these win over the /* catch-all.
+  //  - Removed features (scripts/removed-paths.mjs): forced (!), always 404.
+  //  - Blog URLs (scripts/blog-pages.mjs): not forced, so a prerendered file
+  //    at the path is served first; only unknown posts, empty categories and
+  //    empty guide indexes fall through to the 404.
   await writeFile(path.join(DIST, '_redirects'), [
-    '# Generated by scripts/prerender.mjs from scripts/removed-paths.mjs. Do not edit.',
+    '# Generated by scripts/prerender.mjs. Do not edit.',
+    '# Removed features (scripts/removed-paths.mjs)',
     ...REMOVED_PATHS.map((pattern) => `${pattern}  /404.html  404!`),
+    '# Blog URLs without a prerendered page (scripts/blog-pages.mjs)',
+    ...blog.notFound.map((pattern) => `${pattern}  /404.html  404`),
     '',
   ].join('\n'), 'utf8');
   console.log(`[prerender] Removed features answer 404 at: ${REMOVED_PATHS.join(', ')}`);
+  console.log(`[prerender] Blog: ${blog.routes.length} pages; unknown URLs answer 404 under ${blog.notFound.join(', ')}`);
 
   const legacy = pages.filter(({ route }) => LEGACY_ROUTES.has(route.path)).length;
   console.log(`[prerender] Wrote ${pages.length} pages (${pages.length - legacy} server-rendered, ${legacy} legacy) plus the app.html fallback shell.`);

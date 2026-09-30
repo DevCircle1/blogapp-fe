@@ -90,14 +90,6 @@ export const staticRoutes = [
     changefreq: 'daily',
     heading: 'Guides, tutorials and practical how-tos',
     body: 'Articles and guides organised by topic, covering the tools on this site and the ideas behind them.',
-    // New copy, written for the prerendered snapshot specifically: the
-    // category grid on the live page is populated from the API at runtime, so
-    // there is no static list of categories to mirror here.
-    extraParagraphs: [
-      'Every guide explains the method behind a result, not just the number — the same standard the calculators on this site hold themselves to. Recent topics include walkthroughs for the finance, health, and developer tools, plus general explainers on the maths and formulas they use.',
-      'Articles are grouped into categories that update as new posts are published, spanning technology, health, travel, education, and more — browse by topic below or use the search on any tool page to find a related guide.',
-      'Most posts pair directly with a tool on the site: a guide on compound interest links to the loan calculator, a piece on password entropy links to the password generator, and so on, so you can read the reasoning and then use the result straight away.',
-    ],
   },
   {
     path: '/about-us',

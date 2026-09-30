@@ -10,19 +10,29 @@
  * one), must have a page whose HTML contains the tool's own interactive root: a
  * <section data-tool-root="<slug>"> with at least one real form control inside.
  * Every page must additionally be free of loading fallbacks and of React's
- * client-render markers, must have a heading, and must be marked for hydration
+ * client-render markers, must have a heading, must have exactly one <title>,
+ * description and canonical (its own URL), and must be marked for hydration
  * unless it is a declared legacy route.
+ *
+ * The blog (scripts/blog-pages.mjs) must be in the static HTML, not fetched
+ * after load: every post page carries its title, its complete article body and
+ * BlogPosting JSON-LD; the homepage, /blogs, category pages and guide indexes
+ * carry their post titles and real links. No page may link to a blog URL that
+ * has no page, and every sitemap URL must have one.
  */
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { allRoutes, CONTENT, SITE_URL } from './routes.mjs';
 import { LEGACY_ROUTES } from './prerender-legacy.mjs';
 import {
-  ALL_LANGS, LOCALIZED_LANGS, hubPath, toolPath,
+  ALL_LANGS, BLOG_SEGMENTS, LOCALIZED_LANGS, blogPath, hubPath, toolPath,
 } from '../src/i18n/locales.js';
 import { categoryHubs, toolBreadcrumb } from '../src/i18n/categories.js';
 import { premiumTools } from '../src/components/tools/toolCatalog.js';
 import { REMOVED_PATHS } from './removed-paths.mjs';
+import { readBlogData } from './blog-data.mjs';
+import { blogPages } from './blog-pages.mjs';
+import { SEED_ELEMENT_ID } from '../src/context/seed.js';
 
 const DIST = 'dist';
 const CONTROL = /<(textarea|input|select|button)\b/;
@@ -51,6 +61,24 @@ const toolSection = (html, slug) => {
 const problems = [];
 const problem = (routePath, message) => problems.push(`${routePath}: ${message}`);
 
+const blog = blogPages(await readBlogData());
+const routes = [...allRoutes, ...blog.routes];
+const generated = new Set(routes.map((route) => route.path));
+
+// Text as React writes it into HTML, for finding a title in the markup.
+const asHtmlText = (text) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
+const count = (html, needle) => html.split(needle).length - 1;
+
+// Internal URLs that only exist as blog pages: a link to one must have a page.
+const sitePath = (href) => href.slice(href.startsWith(SITE_URL) ? SITE_URL.length : 0).split(/[?#]/)[0].replace(/(.)\/$/, '$1');
+const isBlogUrl = (href) => {
+  if (!href.startsWith('/') && !href.startsWith(SITE_URL)) return false;
+  const target = sitePath(href);
+  return target.startsWith('/blogs/article/') || target.startsWith('/blogs/category/')
+    || Object.keys(BLOG_SEGMENTS).some((lang) => target === blogPath(lang) || target.startsWith(`${blogPath(lang)}/`));
+};
+
 const routeByPath = new Map(allRoutes.map((route) => [route.path, route]));
 const toolRoutes = new Map();
 for (const tool of premiumTools) {
@@ -78,14 +106,21 @@ const linksToRemoved = (href) => {
   REMOVED_PATHS.forEach((pattern) => {
     if (!redirects.includes(`${pattern}  /404.html  404!`)) problem('/_redirects', `has no 404 rule for ${pattern}`);
   });
+  blog.notFound.forEach((pattern) => {
+    if (!redirects.includes(`${pattern}  /404.html  404\n`)) problem('/_redirects', `has no (non-forced) 404 rule for ${pattern}`);
+  });
+  for (const [, loc] of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
+    if (!generated.has(sitePath(loc) || '/')) problem('/sitemap.xml', `lists ${loc}, which has no generated page`);
+  }
   const notFound = await readFile(path.join(DIST, '404.html'), 'utf8').catch(() => '');
   if (!notFound.includes('noindex') || notFound.includes('rel="canonical"')) problem('/404.html', 'is missing, or is not noindex without a canonical');
 }
 
 let checkedTools = 0;
 let exempt = 0;
+let checkedBlog = 0;
 const exemptTools = [];
-for (const route of allRoutes) {
+for (const route of routes) {
   let html;
   try {
     html = await readFile(fileFor(route.path), 'utf8');
@@ -104,6 +139,42 @@ for (const route of allRoutes) {
   if (html.includes('\0')) problem(route.path, 'contains a NUL byte (see src/entry-server.jsx)');
   for (const [, href] of html.matchAll(/href="([^"]+)"/g)) {
     if (linksToRemoved(href)) problem(route.path, `links to ${href}, which belongs to a removed feature`);
+    else if (isBlogUrl(href) && !generated.has(sitePath(href))) problem(route.path, `links to ${href}, which has no page (it answers 404)`);
+  }
+
+  // One of each, and the canonical is this page's own URL.
+  const head = html.slice(0, html.indexOf('</head>'));
+  [['<title', '<title>'], ['name="description"', 'meta description'], ['rel="canonical"', 'canonical']].forEach(([needle, label]) => {
+    const found = count(head, needle);
+    if (found !== 1) problem(route.path, `has ${found} ${label} tags in <head> (expected 1)`);
+  });
+  const canonical = head.match(/rel="canonical" href="([^"]+)"/)?.[1];
+  const ownUrl = `${SITE_URL}${route.path === '/' ? '/' : route.path}`;
+  if (canonical && canonical !== ownUrl) problem(route.path, `canonical is ${canonical}, expected ${ownUrl}`);
+
+  const expected = blog.expect.get(route.path);
+  if (expected) {
+    checkedBlog += 1;
+    const body = html.slice(html.indexOf('<body'));
+    expected.texts.forEach((text) => {
+      if (!body.includes(asHtmlText(text))) problem(route.path, `does not contain "${text}" in its static HTML`);
+    });
+    expected.links.forEach((link) => {
+      if (!body.includes(`href="${link}"`)) problem(route.path, `does not link to ${link}`);
+    });
+    if (expected.body && !body.includes(expected.body)) problem(route.path, 'does not contain the complete article body');
+    if (expected.article) {
+      const title = expected.texts[0];
+      const posting = [...head.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>(.*?)<\/script>/g)]
+        .map(([, json]) => { try { return JSON.parse(json); } catch { return null; } })
+        .find((schema) => schema?.['@type'] === 'BlogPosting');
+      if (!posting) problem(route.path, 'has no BlogPosting JSON-LD in <head>');
+      else if (posting.headline !== title || !posting.datePublished || !posting.dateModified || !posting.author?.name) {
+        problem(route.path, 'BlogPosting JSON-LD lacks headline, datePublished, dateModified or author');
+      }
+      if (!head.includes(`<title data-rh="true">${asHtmlText(title)}`)) problem(route.path, 'the <title> is not the post title');
+    }
+    if (!html.includes(`<script id="${SEED_ELEMENT_ID}" type="application/json">`)) problem(route.path, 'has no embedded seed, so it would not hydrate from the same data');
   }
 
   const legacy = LEGACY_ROUTES.has(route.path);
@@ -219,4 +290,4 @@ if (problems.length) {
 }
 if (exemptTools.length) console.warn(`[verify] ${exemptTools.length} tool pages are EXEMPT from the interactive-root check as legacy routes (see scripts/prerender-legacy.mjs): ${[...new Set(exemptTools.map((p) => toolRoutes.get(p)))].join(', ')}`);
 console.log(`[verify] category hubs: ${hubCount} in ${hubLanguages.join(', ') || 'no language'}; ${breadcrumbCount} tool-page breadcrumbs checked.`);
-console.log(`[verify] ${allRoutes.length} pages OK: ${checkedTools} tool pages contain their interactive root, ${allRoutes.length - exempt} hydrate, ${exempt} legacy.`);
+console.log(`[verify] ${routes.length} pages OK: ${checkedTools} tool pages contain their interactive root, ${checkedBlog} blog pages contain their posts (${blog.routes.length} blog-only pages), ${routes.length - exempt} hydrate, ${exempt} legacy.`);

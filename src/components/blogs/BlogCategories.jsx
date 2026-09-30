@@ -3,18 +3,21 @@ import { publicRequest } from '../../services/api';
 import { Link } from 'react-router-dom';
 import Seo from '../common/Seo.jsx';
 import { SITE_NAME, breadcrumbSchema } from '../../seo/siteMeta.js';
+import { useSeed } from '../../context/seed.js';
+import { blogCategoriesView } from '../../lib/blog/views.js';
 
 const BlogCategories = () => {
-  const [categories, setCategories] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // Seeded by the prerender (src/context/seed.js); the fetch refreshes it.
+  const seed = useSeed('blogs');
+  const [categories, setCategories] = useState(seed ?? []);
+  const [isLoading, setIsLoading] = useState(!seed);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        setIsLoading(true);
         const response = await publicRequest.get('/all-categories/');
-        setCategories(response.data);
+        setCategories(blogCategoriesView(response.data));
       } catch (err) {
         setError('Failed to fetch categories');
         console.error('Error fetching categories:', err);
@@ -94,15 +97,13 @@ const BlogCategories = () => {
                         <svg className="w-4 h-4 mr-1 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
-                        {category.articles.filter(article => article.status === 'approved').length} published
+                        {category.published} published
                       </span>
                     </div>
 
                     {/* Recent Articles Preview */}
                     <div className="space-y-2">
-                      {category.articles
-                        .filter(article => article.status === 'approved')
-                        .slice(0, 2)
+                      {category.preview
                         .map((article) => (
                           <div key={article.slug} className="flex items-center space-x-3 p-2 rounded-lg bg-gray-50 group-hover:bg-blue-50 transition-colors duration-300">
                             {article.featured_image ? (
@@ -123,10 +124,10 @@ const BlogCategories = () => {
                         ))}
                     </div>
 
-                    {category.articles.filter(article => article.status === 'approved').length > 2 && (
+                    {category.published > 2 && (
                       <div className="text-center mt-3">
                         <span className="text-blue-600 text-sm font-medium">
-                          +{category.articles.filter(article => article.status === 'approved').length - 2} more
+                          +{category.published - 2} more
                         </span>
                       </div>
                     )}

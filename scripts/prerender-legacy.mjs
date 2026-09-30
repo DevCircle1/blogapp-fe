@@ -10,7 +10,6 @@
 import { CHROME, LOCALES, ALL_LANGS, hubPath, toolPath } from '../src/i18n/locales.js';
 import { escapeHtml } from './html.mjs';
 export const LEGACY_ROUTES = new Map([
-  ['/blogs', 'fetches its categories in an effect, so the server render is a spinner with no heading'],
   ['/check-ip', 'fetches IP data in an effect, so the server render is a loading skeleton with no heading'],
   ['/word-game', "reads localStorage and today's date while rendering"],
   ['/text-to-html', 'ReactQuill touches document while rendering'],
