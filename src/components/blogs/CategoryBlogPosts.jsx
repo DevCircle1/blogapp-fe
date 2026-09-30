@@ -3,27 +3,35 @@ import { publicRequest } from '../../services/api';
 import { Link, useParams, useLocation } from 'react-router-dom';
 import Seo from '../common/Seo.jsx';
 import { SITE_URL, SITE_NAME, breadcrumbSchema } from '../../seo/siteMeta.js';
+import { useSeed } from '../../context/seed.js';
+import { categoryView } from '../../lib/blog/views.js';
 
 const CategoryBlogPosts = () => {
-  const [posts, setPosts] = useState([]);
-  const [category, setCategory] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
   const { categorySlug } = useParams();
+  // Seeded by the prerender (src/context/seed.js); the fetch refreshes it.
+  const seed = useSeed(`category:${categorySlug}`);
+  const [posts, setPosts] = useState(seed?.posts ?? []);
+  const [category, setCategory] = useState(seed?.category ?? null);
+  const [isLoading, setIsLoading] = useState(!seed);
+  const [error, setError] = useState(null);
   const location = useLocation();
   const categoryName = location.state?.categoryName;
 
   useEffect(() => {
+    // Moving to another category: show its seed at once, or the loading state,
+    // never the previous category's posts.
+    if (seed) {
+      setCategory(seed.category);
+      setPosts(seed.posts);
+    } else {
+      setIsLoading(true);
+    }
     const fetchCategoryPosts = async () => {
       try {
-        setIsLoading(true);
         const response = await publicRequest.get(`/all-categories/${categorySlug}/`);
-        const categoryData = response.data;
-        setCategory(categoryData);
-        const approvedPosts = categoryData.articles.filter(
-          (post) => post.status === 'approved'
-        );
-        setPosts(approvedPosts);
+        const view = categoryView(response.data);
+        setCategory(view.category);
+        setPosts(view.posts);
       } catch (err) {
         setError('Failed to fetch category posts');
         console.error('Error fetching category posts:', err);
@@ -32,6 +40,8 @@ const CategoryBlogPosts = () => {
       }
     };
     fetchCategoryPosts();
+    // seed is looked up from categorySlug, so it changes only with it.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categorySlug]);
 
   if (isLoading) {
@@ -151,7 +161,7 @@ const CategoryBlogPosts = () => {
                   {/* Date Badge */}
                   <div className="absolute top-4 right-4 bg-white bg-opacity-90 backdrop-blur-sm rounded-full px-3 py-1">
                     <span className="text-sm font-semibold text-gray-700">
-                      {new Date(post.created_at).toLocaleDateString()}
+                      {post.date}
                     </span>
                   </div>
                 </div>

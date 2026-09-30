@@ -1,5 +1,6 @@
 import { supabase } from './supabase';
-import { DEFAULT_LANG, postLang } from '../i18n/locales.js';
+import { DEFAULT_LANG } from '../i18n/locales.js';
+import { categoriesWithPosts as attachPosts, postsIn as postsInLang } from '../lib/blog/views.js';
 const response = (data) => ({ data });
 const asError = (error) => {
   const wrapped = error instanceof Error ? error : new Error(error?.message || 'Supabase request failed');
@@ -16,11 +17,12 @@ const currentUser = async (required = false) => {
   if (required && !user) throw asError({ status: 401, message: 'Please sign in to continue.' });
   return user;
 };
-const cleanPath = (url) => url.split('?')[0].replace(/^\/+|\/+$/g, '');const queryParams = (url) => new URL(url, window.location.origin).searchParams;
+const cleanPath = (url) => url.split('?')[0].replace(/^\/+|\/+$/g, '');
+const queryParams = (url) => new URL(url, window.location.origin).searchParams;
 const approvedPosts = () => supabase.from('posts').select('*').eq('status', 'approved').order('created_at', { ascending: false });
 // Filtered here rather than in the query so listings keep working on a
 // database that predates the language column (every row is English there).
-const postsIn = async (lang) => (await run(approvedPosts())).filter((post) => postLang(post) === lang);
+const postsIn = async (lang) => postsInLang(await run(approvedPosts()), lang);
 const dailyWords = ['crane', 'plant', 'sound', 'light', 'stone', 'grape', 'chair', 'smile', 'bread', 'ocean'];
 const wordleStoreKey = 'talkandtool-wordle-games';
 const getWordleGames = () => JSON.parse(localStorage.getItem(wordleStoreKey) || '{}');
@@ -53,10 +55,7 @@ const categoriesWithPosts = async () => {
     run(supabase.from('categories').select('*').order('name')),
     postsIn(DEFAULT_LANG),
   ]);
-  return categories.map((category) => {
-    const articles = posts.filter((post) => String(post.category_id) === String(category.id));
-    return { ...category, articles, total_articles: articles.length };
-  });
+  return attachPosts(categories, posts);
 };
 
 const get = async (url, isPrivate) => {

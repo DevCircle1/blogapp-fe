@@ -10,7 +10,9 @@ import ScrollToTop from './components/common/ScrollToTop.jsx';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function App() {
+// helmetContext is passed only by the server render (src/entry-server.jsx),
+// which reads the collected <head> tags from it afterwards.
+function App({ helmetContext }) {
   const location = useLocation();
 
   // The prerendered HTML ships this route's structured data so crawlers get it
@@ -37,7 +39,7 @@ function App() {
   }, [location.pathname, location.search]);
 
   return (
-    <HelmetProvider>
+    <HelmetProvider context={helmetContext}>
       {/* Derived from the URL rather than set by each page's <Seo>, so pages
           without one still report a language and nothing is left stale when
           navigating out of a language section. */}

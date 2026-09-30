@@ -8,88 +8,64 @@ import {
   DEFAULT_LANG, LOCALES, articlePath, blogPath, hubPath, postLang,
 } from '../../i18n/locales.js';
 import { blogChrome } from '../../i18n/blogChrome.js';
-
-/**
- * Post bodies come from the editor as HTML. Strip anything executable before it
- * reaches dangerouslySetInnerHTML — a stored script in a post body would run
- * with full access to the visitor's session.
- */
-const sanitiseHtml = (html) => {
-  if (typeof window === 'undefined' || !html) return html || '';
-  const template = document.createElement('template');
-  template.innerHTML = html;
-  template.content.querySelectorAll('script, style, iframe, object, embed, link, meta, form').forEach((node) => node.remove());
-  template.content.querySelectorAll('*').forEach((node) => {
-    [...node.attributes].forEach((attribute) => {
-      const name = attribute.name.toLowerCase();
-      const value = attribute.value.trim().toLowerCase();
-      if (name.startsWith('on') || value.startsWith('javascript:')) node.removeAttribute(attribute.name);
-    });
-    if (node.tagName === 'A') {
-      const href = node.getAttribute('href');
-      if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
-
-      // Editorial links to this site should remain crawlable and pass context
-      // between related pages. Only untrusted off-site links receive UGC and
-      // nofollow attributes.
-      try {
-        const url = new URL(href, SITE_URL);
-        if (url.origin === new URL(SITE_URL).origin) {
-          node.removeAttribute('rel');
-          node.removeAttribute('target');
-        } else {
-          node.setAttribute('rel', 'nofollow ugc noopener');
-          node.setAttribute('target', '_blank');
-        }
-      } catch {
-        node.removeAttribute('href');
-      }
-    }
-    if (node.tagName === 'IMG') {
-      node.setAttribute('loading', 'lazy');
-      node.setAttribute('decoding', 'async');
-    }
-  });
-  return template.innerHTML;
-};
+import { useSeed } from '../../context/seed.js';
+import { sanitiseHtml } from '../../lib/blog/sanitize.js';
+import { formatDate, postView, responseItems } from '../../lib/blog/views.js';
 
 const plainText = (html) => (html || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 const topicTags = (html) => {
   const match = (html || '').match(/data-topic-tags=["']([^"']+)["']/i);
   return match ? match[1].split(',').map((tag) => tag.trim()).filter(Boolean) : [];
 };
-const responseItems = (data) => (Array.isArray(data) ? data : data?.results || []);
 
 /**
- * hreflang set for a post that has translations: every approved post sharing
- * its translation_key, plus x-default pointing at the English version.
+ * The body to render. A seeded post (src/context/seed.js) was sanitised at
+ * build time (scripts/blog-data.mjs) and is used as is, so the first client
+ * render matches the prerendered HTML. A fetched one is sanitised here. The
+ * server never renders a body that has not been sanitised.
  */
-const translationAlternates = (post, allPosts) => {
-  if (!post?.translation_key) return [];
-  const versions = allPosts.filter((item) => item.translation_key === post.translation_key);
-  if (versions.length < 2) return [];
-  const english = versions.find((item) => postLang(item) === DEFAULT_LANG);
-  return [
-    ...versions.map((item) => ({ hreflang: LOCALES[postLang(item)].hreflang, path: articlePath(postLang(item), item.slug) })),
-    ...(english ? [{ hreflang: 'x-default', path: articlePath(DEFAULT_LANG, english.slug) }] : []),
-  ];
+const bodyOf = (post) => {
+  if (!post?.content) return '';
+  if (post.sanitised) return post.content;
+  return typeof document === 'undefined' ? '' : sanitiseHtml(post.content, document);
+};
+
+// Same markup once parsed? The build's serialiser and the browser's order
+// attributes differently, so the strings can differ for an identical body.
+// Parsed into (inert) templates and compared as DOM trees instead.
+const sameBody = (a, b) => {
+  const [left, right] = [a, b].map((html) => {
+    const template = document.createElement('template');
+    template.innerHTML = html;
+    return template.content;
+  });
+  return left.isEqualNode(right);
 };
 
 const BlogPostDetail = ({ lang = DEFAULT_LANG }) => {
-  const [post, setPost] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [relatedPosts, setRelatedPosts] = useState([]);
-  const [postCategory, setPostCategory] = useState(null);
-  const [alternates, setAlternates] = useState([]);
-  const chrome = blogChrome(lang);
   const { slug } = useParams();
+  const seed = useSeed(`post:${lang}:${slug}`);
+  const [post, setPost] = useState(seed?.post ?? null);
+  const [isLoading, setIsLoading] = useState(!seed);
+  const [error, setError] = useState(null);
+  const [relatedPosts, setRelatedPosts] = useState(seed?.relatedPosts ?? []);
+  const [postCategory, setPostCategory] = useState(seed?.postCategory ?? null);
+  const [alternates, setAlternates] = useState(seed?.alternates ?? []);
+  const chrome = blogChrome(lang);
 
   useEffect(() => {
     let cancelled = false;
+    // Moving to another post: show its seed at once, or the loading state.
+    if (seed) {
+      setPost(seed.post);
+      setRelatedPosts(seed.relatedPosts);
+      setPostCategory(seed.postCategory);
+      setAlternates(seed.alternates);
+    } else {
+      setIsLoading(true);
+    }
     const fetchPost = async () => {
       try {
-        setIsLoading(true);
         setError(null);
         const [postResult, categoriesResult, postsResult] = await Promise.allSettled([
           publicRequest.get(`/posts/${slug}/`),
@@ -100,24 +76,19 @@ const BlogPostDetail = ({ lang = DEFAULT_LANG }) => {
         if (postResult.status === 'rejected') throw postResult.reason;
         if (cancelled) return;
 
-        const currentPost = postResult.value.data;
+        const fetched = postResult.value.data;
         const allPosts = postsResult.status === 'fulfilled' ? responseItems(postsResult.value.data) : [];
         const categories = categoriesResult.status === 'fulfilled' ? responseItems(categoriesResult.value.data) : [];
-        // Categories are English-language groupings, so only English posts sit in one.
-        const matchingCategory = lang === DEFAULT_LANG ? categories.find((item) => (
-          responseItems(item.articles).some((article) => article.slug === slug)
-        )) : null;
-        const categoryPosts = matchingCategory
-          ? responseItems(matchingCategory.articles).filter((item) => item.status === 'approved' && item.slug !== slug)
-          : [];
-        const fallbackPosts = allPosts.filter((item) => (
-          item.status !== 'draft' && item.slug !== slug && postLang(item) === postLang(currentPost)
-        ));
+        const view = postView({ post: fetched, lang, categories, allPosts });
 
-        setPost(currentPost);
-        setPostCategory(matchingCategory || null);
-        setRelatedPosts((categoryPosts.length ? categoryPosts : fallbackPosts).slice(0, 3));
-        setAlternates(translationAlternates(currentPost, allPosts));
+        // Keep the prerendered body when the post has not changed since the
+        // build, rather than replacing identical markup (and its images).
+        const unchanged = seed && seed.post.title === fetched.title
+          && sameBody(seed.post.content, sanitiseHtml(fetched.content, document));
+        setPost(unchanged ? seed.post : fetched);
+        setPostCategory(view.postCategory);
+        setRelatedPosts(view.relatedPosts);
+        setAlternates(view.alternates);
       } catch (err) {
         if (cancelled) return;
         setError('Failed to fetch blog post');
@@ -128,9 +99,11 @@ const BlogPostDetail = ({ lang = DEFAULT_LANG }) => {
     };
     fetchPost();
     return () => { cancelled = true; };
+    // seed is looked up from slug and lang, so it changes only with them.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug, lang]);
 
-  const safeContent = useMemo(() => sanitiseHtml(post?.content), [post?.content]);
+  const safeContent = useMemo(() => bodyOf(post), [post]);
   const excerpt = useMemo(() => {
     const text = plainText(post?.content);
     return text.length > 157 ? `${text.slice(0, 157).trimEnd()}…` : text;
@@ -241,7 +214,7 @@ const BlogPostDetail = ({ lang = DEFAULT_LANG }) => {
             <h1 className="mb-2 text-3xl font-bold text-gray-800">{post.title}</h1>
             <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
               <span>{chrome.by} {post.author_name || SITE_NAME}</span>
-              {post.created_at && <time dateTime={published}>{new Date(post.created_at).toLocaleDateString(LOCALES[lang].intl, { year: 'numeric', month: 'long', day: 'numeric' })}</time>}
+              {post.created_at && <time dateTime={published}>{formatDate(post.created_at, LOCALES[lang].intl, { year: 'numeric', month: 'long', day: 'numeric' })}</time>}
               <span>{readingMinutes} {chrome.minRead}</span>
             </div>
           </header>
