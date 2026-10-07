@@ -118,11 +118,11 @@ const keywordPage = {
   path: KEYWORD_PATH,
   toolId: 'resume-keyword-scanner',
   slug: 'resume-keyword-scanner',
-  title: 'Resume Keyword Scanner — Match Your Resume to a Job',
+  title: 'Free Resume Keyword Scanner — Match Your Resume to a Job',
   h1: 'Resume Keyword Scanner',
   crumb: 'Resume Keyword Scanner',
   appName: 'Resume Keyword Scanner',
-  lead: 'This resume keyword scanner compares your resume with a job description and shows which of the posting’s skills and phrases you already cover, which are missing and which are buried. It runs entirely in your browser, and it is designed to help you surface real experience, not to add keywords you do not have.',
+  lead: 'This free resume keyword scanner compares your resume with a job description and shows which of the posting’s skills and phrases you already cover, which are missing and which are buried. It runs entirely in your browser, and it is designed to help you surface real experience, not to add keywords you do not have.',
   sections: [
     {
       heading: 'How the resume keyword scanner matches your resume',
@@ -153,6 +153,7 @@ const keywordPage = {
     'Where you genuinely have the experience, bring it forward in your skills or summary and re-check.',
   ],
   faqs: [
+    { q: 'What is a resume keyword scanner?', a: 'A resume keyword scanner compares the text of your resume with a job posting and lists the skills and phrases the posting asks for that your resume covers, misses or mentions only in passing. Recruiters search applicant tracking systems by these terms, so the gaps show where a search would skip you. This one is free, needs no account and scans your resume in your browser.' },
     { q: 'How do I match my resume to a job description?', a: 'Compare the skills and phrases the posting repeats with your resume, and make sure the ones you genuinely have are visible in your skills section, summary or job titles. This scanner automates the comparison.' },
     { q: 'How many keywords should match?', a: 'There is no magic number. Cover the requirements you truly meet, in the posting’s own wording where it is accurate, and do not chase a 100% match.' },
     { q: 'Does the scanner work for any job?', a: 'It recognises a built-in vocabulary of common technical, business, finance and healthcare skills and also picks up phrases repeated in the posting, so it works for most professional roles, though very specialised jargon may be missed.' },

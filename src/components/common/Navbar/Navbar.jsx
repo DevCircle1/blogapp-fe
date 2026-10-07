@@ -10,7 +10,6 @@ import {
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
-import { toast } from "react-toastify";
 import logo from "../../../assets/logo.png";
 import { CHROME, blogPath, hubPath, langFromPath } from "../../../i18n/locales.js";
 const navigation = [
@@ -18,8 +17,6 @@ const navigation = [
   { name: "Blogs", href: "/blogs", current: false },
   { name: "Tools", href: "/tools", current: false },
   { name: "Contact Us", href: "/contact-us", current: false },
-  { name: "Write Blogs", href: "/write-blogs", current: false, requiresAuth: true },
-  { name: "Game", href: "/word-game", current: false },
 ];
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -43,12 +40,6 @@ export default function Navbar() {
     };
   });
 
-  const handleNavigation = (item, e) => {
-    if (item.requiresAuth && !isAuthenticated) {
-      e.preventDefault();
-      toast.info(`Please log in first to access ${item.name.toLowerCase()}`);
-    }
-  };
   return (
     <Disclosure
       as="nav"
@@ -85,21 +76,14 @@ export default function Navbar() {
                     <NavLink
                       key={item.name}
                       to={item.href}
-                      onClick={(e) => handleNavigation(item, e)}
                       className={classNames(
                         item.current
                           ? "bg-blue-500/20 text-gray-900 shadow-sm"
                           : "text-gray-600 hover:bg-blue-500/10 hover:text-gray-900",
-                        "rounded-md px-3 py-2 text-sm font-medium transition-colors duration-200",
-                        item.requiresAuth && !isAuthenticated
-                          ? "opacity-80 cursor-not-allowed"
-                          : ""
+                        "rounded-md px-3 py-2 text-sm font-medium transition-colors duration-200"
                       )}
                     >
                       {item.label}
-                      {item.requiresAuth && !isAuthenticated && (
-                        <span className="ml-1 text-xs">🔒</span>
-                      )}
                     </NavLink>
                   ))}
                 </div>
@@ -130,14 +114,17 @@ export default function Navbar() {
                         <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400 to-indigo-500 opacity-0 hover:opacity-40 transition-all duration-300"></div>
                       </MenuButton>
                       <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-xl bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 border border-gray-200 overflow-hidden">
-                        {/* <MenuItem> */}
-                          {/* <a
-                            href="/profile"
+                        {/* Writing is for signed-in authors only, so it lives here
+                            rather than in the public navigation every visitor and
+                            crawler sees. */}
+                        <MenuItem>
+                          <NavLink
+                            to="/write-blogs"
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500/10"
                           >
-                            Your profile
-                          </a>
-                        </MenuItem> */}
+                            Write an article
+                          </NavLink>
+                        </MenuItem>
                         <MenuItem>
                           <button
                             onClick={logoutUser}
@@ -149,36 +136,10 @@ export default function Navbar() {
                       </MenuItems>
                     </Menu>
                   </>
-                ) : (
-                  <div className="flex space-x-2">
-                    <NavLink
-                      to="/login"
-                      className={({ isActive }) =>
-                        classNames(
-                          isActive
-                            ? "bg-blue-500/20 text-gray-900"
-                            : "text-gray-600 hover:bg-blue-500/10 hover:text-gray-900",
-                          "px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200"
-                        )
-                      }
-                    >
-                      {labels?.Login ?? "Login"}
-                    </NavLink>
-                    <NavLink
-                      to="/signup"
-                      className={({ isActive }) =>
-                        classNames(
-                          isActive
-                            ? "bg-blue-500/20 text-gray-900"
-                            : "text-gray-600 hover:bg-blue-500/10 hover:text-gray-900",
-                          "px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200"
-                        )
-                      }
-                    >
-                      {labels?.Register ?? "Register"}
-                    </NavLink>
-                  </div>
-                )}
+                ) : null}
+                {/* No Login/Register for visitors: every tool works without an
+                    account, and the links only made a tools site look like a
+                    sign-up funnel. Authors still reach /login directly. */}
               </div>
             </div>
           </div>
@@ -190,21 +151,14 @@ export default function Navbar() {
                   key={item.name}
                   as={NavLink}
                   to={item.href}
-                  onClick={(e) => handleNavigation(item, e)}
                   className={classNames(
                     item.current
                       ? "bg-blue-500/20 text-gray-900"
                       : "text-gray-600 hover:bg-blue-500/10 hover:text-gray-900",
-                    "block rounded-md px-3 py-2 text-base font-medium transition-colors duration-200",
-                    item.requiresAuth && !isAuthenticated
-                      ? "opacity-80 cursor-not-allowed"
-                      : ""
+                    "block rounded-md px-3 py-2 text-base font-medium transition-colors duration-200"
                   )}
                 >
                   {item.label}
-                  {item.requiresAuth && !isAuthenticated && (
-                    <span className="ml-1 text-xs">🔒</span>
-                  )}
                 </DisclosureButton>
               ))}
             </div>

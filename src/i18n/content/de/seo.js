@@ -1,9 +1,9 @@
 export const seoTools = {
   'low-competition-keyword-finder': {
-    title: 'Keywords mit wenig Konkurrenz finden',
+    title: 'Keyword-Generator: Keywords mit wenig Konkurrenz finden',
     shortTitle: 'Keywords mit wenig Konkurrenz',
-    description: 'Erzeugen Sie konkrete Longtail-Keyword-Ideen und ordnen Sie sie nach einem nachvollziehbaren Chancenwert aus Intention und Genauigkeit.',
-    intro: 'Allgemeine Keywords sind meist überlaufen. Ein praktischer Weg zu leichter erreichbaren Chancen ist, die Suchanfrage zu verengen: eine Zielgruppe, ein Problem, einen Ort, einen Anwendungsfall oder eine Frage ergänzen. Dieses Tool erzeugt solche Varianten auf Deutsch und bewertet ihre Genauigkeit. Es nutzt keine Live-Daten zu Suchvolumen, Links oder Rankings – der Wert liefert also eine Auswahlliste und keinen Beleg, dass ein Keyword leicht ist.',
+    description: 'Kostenloser Keyword-Generator auf Deutsch: Erzeugen Sie konkrete Longtail-Keywords mit wenig Konkurrenz, sortiert nach Intention und Genauigkeit.',
+    intro: 'Allgemeine Keywords sind meist überlaufen. Ein praktischer Weg zu leichter erreichbaren Chancen ist, die Suchanfrage zu verengen: eine Zielgruppe, ein Problem, einen Ort, einen Anwendungsfall oder eine Frage ergänzen. Dieser Keyword-Generator erzeugt solche Varianten auf Deutsch – mit deutschen Fragewörtern, Vergleichen und Ortsbezügen statt übersetzter englischer Muster – und bewertet ihre Genauigkeit. Es nutzt keine Live-Daten zu Suchvolumen, Links oder Rankings – der Wert liefert also eine Auswahlliste und keinen Beleg, dass ein Keyword leicht ist.',
     steps: [
       'Geben Sie ein allgemeines Thema ein, etwa „E-Mail-Marketing“.',
       'Ergänzen Sie eine Zielgruppe oder eine Stadt, wenn das die Seite wirklich beschreibt, die Sie veröffentlichen könnten.',

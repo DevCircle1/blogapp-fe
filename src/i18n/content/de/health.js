@@ -20,9 +20,9 @@ export const healthTools = {
     disclaimer: 'Der BMI ist ein allgemeines Screening-Maß und keine Diagnose. Er berücksichtigt weder Muskelmasse noch Knochendichte oder Fettverteilung. Sprechen Sie über Ihre Gesundheit mit einer qualifizierten Fachperson.',
   },
   'calorie-calculator': {
-    title: 'Kalorienbedarf berechnen (Grund- und Gesamtumsatz)',
+    title: 'Kalorienbedarf-Rechner: Grund- und Gesamtumsatz berechnen',
     shortTitle: 'Kalorienbedarf',
-    description: 'Berechnen Sie Ihren Grundumsatz und Ihren täglichen Kalorienbedarf nach Alter, Geschlecht, Größe, Gewicht und Aktivität.',
+    description: 'Kalorienbedarf-Rechner: Grundumsatz und täglichen Kalorienbedarf nach Alter, Geschlecht, Größe, Gewicht und Aktivität berechnen – mit der Mifflin-St-Jeor-Formel.',
     intro: 'Der Grundumsatz ist das, was der Körper in völliger Ruhe verbraucht; der Gesamtumsatz rechnet Bewegung, Sport und Verdauung hinzu. Dieser Rechner nutzt die Mifflin-St-Jeor-Formel, die heute in der Ernährungsberatung bevorzugt wird, und zeigt den Erhaltungsbedarf zusammen mit den üblichen Zielen für Defizit und Überschuss.',
     steps: [
       'Geben Sie Alter, Geschlecht, Größe und Gewicht ein.',

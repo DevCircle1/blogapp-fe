@@ -96,8 +96,8 @@ const striking = {
   path: STRIKING_PATH,
   toolId: 'striking-distance-keywords',
   slug: 'striking-distance-keywords',
-  title: 'Striking Distance Keywords — Find Page 2 Wins',
-  description: 'Upload your Google Search Console export to find page-two keywords using your real data. Free, no subscription, no login — it runs in your browser.',
+  title: 'Striking Distance Keywords Tool — Free Page-2 Finder',
+  description: 'Find your striking distance keywords (positions 11–20) in your Search Console export, sorted by clicks to gain. Free, no login, runs in your browser.',
   h1: 'Striking Distance Keywords Finder',
   crumb: 'Striking Distance Keywords',
   parent: undefined,
@@ -142,7 +142,13 @@ const striking = {
     { q: 'Do I need a Query + Page export?', a: 'No. A plain Queries export works. A Query + Page export additionally shows which of your pages ranks for each query, which saves a lookup.' },
     PRIVACY_FAQ,
   ],
-  siblings: SIBLINGS.filter((item) => item.to !== STRIKING_PATH),
+  // The guide ranks for the informational side of the same query; linking it
+  // from the static sidebar (not only the after-mount guides box) tells Google
+  // the two pages are tool and explainer, not competing copies.
+  siblings: [
+    { to: '/blogs/article/striking-distance-keywords', label: 'Guide: what striking distance keywords are and how to push them', description: 'How to choose which page-two queries to work on, with a worked example.' },
+    ...SIBLINGS.filter((item) => item.to !== STRIKING_PATH),
+  ],
   disclaimer: 'Opportunity figures are estimates from a generic click-through curve, intended for ordering work rather than forecasting traffic.',
 };
 

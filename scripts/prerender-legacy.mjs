@@ -26,7 +26,6 @@ const HREFLANG_NAMES = Object.fromEntries(Object.values(LOCALES).map((locale) =>
 // Footer.jsx change their layout, update these to match.
 const NAV_ITEMS = [
   ['Home', '/'], ['Blogs', '/blogs'], ['Tools', '/tools'], ['Contact Us', '/contact-us'],
-  ['Write Blogs', '/write-blogs'], ['Game', '/word-game'],
 ];
 const EN_NAV = { Home: 'Home', Blogs: 'Blogs', Tools: 'Tools', 'Contact Us': 'Contact Us', 'Write Blogs': 'Write Blogs', Game: 'Game', Login: 'Login', Register: 'Register' };
 const EN_POPULAR = [
@@ -63,10 +62,6 @@ const navHtml = (route) => {
           <div class="hidden sm:flex flex-shrink-0 items-center sm:absolute sm:left-0"><img alt="Talk &amp; Tool" src="/3.png" width="96" height="96" class="h-8 w-auto sm:h-24"></div>
           <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-center flex-wrap"><div class="flex flex-wrap space-x-4">${links}</div></div>
           <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            <div class="flex space-x-2">
-              <a href="/login" class="px-3 py-2 text-sm font-medium rounded-md text-gray-600">${escapeHtml(nav.Login ?? 'Login')}</a>
-              <a href="/signup" class="px-3 py-2 text-sm font-medium rounded-md text-gray-600">${escapeHtml(nav.Register ?? 'Register')}</a>
-            </div>
           </div>
         </div>
       </div>
