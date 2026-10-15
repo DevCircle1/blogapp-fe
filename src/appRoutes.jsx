@@ -74,6 +74,7 @@ export const APP_ROUTES = [
   withPath('/tools/content-decay-checker', GscPage),
   withPath('/tools/striking-distance-keywords', GscPage),
   withPath('/tools/gsc-ctr-analyzer', GscPage),
+  withPath('/tools/search-console-regex-generator', GscPage),
   withPath('/tools/ats-resume-checker', ResumePage),
   page('/tools/ats-resume-checker/:role', ResumePage),
   withPath('/tools/resume-keyword-scanner', ResumePage),

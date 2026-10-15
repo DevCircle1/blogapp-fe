@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { ShieldCheck, Sparkles } from 'lucide-react';
 import Seo from '../../common/Seo.jsx';
 import AdSlot from '../../common/AdSlot.jsx';
+import ToolGuides from '../ToolGuides.jsx';
 import { flagshipBreadcrumb, flagshipSchemas } from './schemas.js';
 
 /**
@@ -138,6 +139,7 @@ export default function FlagshipShell({ page, children, privacy, afterTool }) {
           </article>
 
           <aside className="min-w-0">
+            <ToolGuides lang="en" path={page.path} />
             {page.siblings?.length > 0 && (
               <>
                 <h2 className="text-xl font-bold">{page.siblingsHeading || 'More like this'}</h2>

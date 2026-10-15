@@ -144,7 +144,9 @@ const run = async () => {
         pages.push({ route, root: `<div id="root">${legacyRootHtml(route)}</div>`, head: headFor(route) });
         continue;
       }
-      const seed = blog.seeds.get(route.path);
+      const guides = blog.guidesFor(route.path);
+      const blogSeed = blog.seeds.get(route.path);
+      const seed = guides.length ? { ...blogSeed, [`guides:${route.path}`]: guides } : blogSeed;
       const { html, helmet } = await render(route.path, { seed });
       pages.push({
         route,

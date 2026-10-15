@@ -4,15 +4,18 @@ import { BookOpen } from 'lucide-react';
 import { publicRequest } from '../../services/api';
 import { articlePath } from '../../i18n/locales.js';
 import { blogChrome } from '../../i18n/blogChrome.js';
+import { useSeed } from '../../context/seed.js';
 
 /**
  * Articles in the page's language that link to this tool page, listed in the
- * tool sidebar so each guide and its tool link to each other. Loaded after
- * mount, so the prerendered markup is unchanged and nothing renders when a
- * tool has no guides yet.
+ * tool sidebar so each guide and its tool link to each other. The prerender
+ * seeds the list (scripts/blog-pages.mjs guideIndex) so the links are in the
+ * static HTML; it is refetched after mount to pick up newer guides, and
+ * nothing renders when a tool has no guides yet.
  */
 export default function ToolGuides({ lang, path }) {
-  const [guides, setGuides] = useState([]);
+  const seeded = useSeed(`guides:${path}`);
+  const [guides, setGuides] = useState(seeded || []);
 
   useEffect(() => {
     let cancelled = false;

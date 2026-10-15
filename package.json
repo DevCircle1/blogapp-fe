@@ -16,7 +16,7 @@
     "preview": "vite preview",
     "smoke": "node scripts/smoke-tools.mjs",
     "blog:publish": "node scripts/publish-articles.mjs",
-    "check:tools": "node scripts/checks/statement.mjs && node scripts/checks/llm.mjs && node scripts/checks/gsc.mjs && node scripts/checks/resume.mjs && node scripts/checks/tax.mjs && node scripts/checks/whatsapp.mjs && node scripts/checks/csv.mjs && node scripts/checks/schema.mjs && node scripts/checks/subtitles.mjs && node scripts/checks/image.mjs && node scripts/checks/flagship.mjs"
+    "check:tools": "node scripts/checks/statement.mjs && node scripts/checks/llm.mjs && node scripts/checks/gsc.mjs && node scripts/checks/gscRegex.mjs && node scripts/checks/resume.mjs && node scripts/checks/tax.mjs && node scripts/checks/whatsapp.mjs && node scripts/checks/csv.mjs && node scripts/checks/schema.mjs && node scripts/checks/subtitles.mjs && node scripts/checks/image.mjs && node scripts/checks/flagship.mjs"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.7",

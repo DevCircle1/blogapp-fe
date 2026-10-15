@@ -129,5 +129,26 @@ export const blogPages = ({ posts, categories }) => {
     });
   }
 
-  return { routes, seeds, expect, notFound };
+  return { routes, seeds, expect, notFound, guidesFor: guideIndex(posts) };
+};
+
+/**
+ * Per page path, the articles in that page's language that link to it — the
+ * same list ToolGuides fetches after mount, newest first and capped at four.
+ * Seeded into tool pages so the guide links are in the prerendered HTML
+ * instead of appearing only once the browser has run the fetch.
+ */
+const guideIndex = (posts) => {
+  const newestFirst = [...posts].sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
+  const pathLang = (path) => {
+    const first = path.split('/')[1];
+    return first && first !== DEFAULT_LANG && LOCALES[first] ? first : DEFAULT_LANG;
+  };
+  return (path) => {
+    const lang = pathLang(path);
+    return newestFirst
+      .filter((post) => postLang(post) === lang && post.html.includes(`href="${path}"`))
+      .slice(0, 4)
+      .map(({ slug, title, language }) => ({ slug, title, language }));
+  };
 };

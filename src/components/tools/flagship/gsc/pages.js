@@ -2,6 +2,7 @@ export const CANNIBAL_PATH = '/tools/keyword-cannibalization-checker';
 export const DECAY_PATH = '/tools/content-decay-checker';
 export const STRIKING_PATH = '/tools/striking-distance-keywords';
 export const CTR_PATH = '/tools/gsc-ctr-analyzer';
+export const REGEX_PATH = '/tools/search-console-regex-generator';
 
 const PRIVACY_FAQ = {
   q: 'Is my Search Console data uploaded anywhere?',
@@ -27,6 +28,7 @@ const SIBLINGS = [
   { to: DECAY_PATH, label: 'Content decay checker' },
   { to: STRIKING_PATH, label: 'Striking distance keywords finder' },
   { to: CTR_PATH, label: 'Search Console CTR analyzer' },
+  { to: REGEX_PATH, label: 'Search Console regex generator' },
 ];
 
 const common = {
@@ -207,5 +209,67 @@ const ctr = {
   disclaimer: 'Expected CTRs come from a generic curve; use the list to find outliers, then check each result in the live search page.',
 };
 
-export const GSC_PAGES = [decay, striking, ctr].map((page) => ({ ...page, parent: undefined }));
-export const GSC_MODE_BY_PATH = { [DECAY_PATH]: 'decay', [STRIKING_PATH]: 'striking', [CTR_PATH]: 'ctr' };
+const regex = {
+  ...common,
+  path: REGEX_PATH,
+  toolId: 'search-console-regex-generator',
+  slug: 'search-console-regex-generator',
+  title: 'Search Console Regex Generator — Build & Test GSC Filters',
+  description: 'Generate a regex for the Google Search Console Performance filter: question queries, brand vs non-brand, long-tail, folders. Checks RE2 rules and tests it.',
+  h1: 'Search Console Regex Generator',
+  crumb: 'Search Console Regex Generator',
+  appName: 'Search Console Regex Generator',
+  lead: 'This Search Console regex generator builds a regular expression for the Custom (regex) filter in Google Search Console without you memorising the syntax. Pick what you want to see, fill in a few words, check the pattern against Search Console’s RE2 rules and test it on your own queries before you paste it.',
+  sections: [
+    {
+      heading: 'How regex filters work in Search Console',
+      paragraphs: [
+        'In the Performance report, open the Query or Page filter, choose Custom (regex), and pick Matches regex or Doesn’t match regex. Search Console runs the pattern with Google’s RE2 engine and keeps every row the pattern matches anywhere in the text — there is no need for .* at either end unless you anchor with ^ or $.',
+        'Two rules catch most people out. Matching is case-sensitive unless the pattern starts with (?i), so this generator adds it by default. And RE2 is deliberately smaller than the regex engines in JavaScript or Python: lookaheads, lookbehinds and backreferences are not supported, and a pattern that uses them simply returns no rows instead of an error. The checker flags those, along with the 4,096-character limit.',
+      ],
+    },
+    {
+      heading: 'Seven filters worth saving',
+      table: {
+        headers: ['Goal', 'Filter', 'Example pattern'],
+        rows: [
+          ['Question queries for FAQs and guides', 'Query · Matches', '(?i)^(who|what|when|where|why|how)\\b'],
+          ['Brand traffic', 'Query · Matches', '(?i)(talkandtool|talk and tool)'],
+          ['Non-brand traffic', 'Query · Doesn’t match', 'the brand pattern above'],
+          ['Long-tail queries of 5+ words', 'Query · Matches', '^(\\S+\\s+){4,}\\S+$'],
+          ['One section of the site', 'Page · Matches', '/(blog|guides)/'],
+          ['Queries with two words in any order', 'Query · Matches', '(?i)(keyword.*density|density.*keyword)'],
+          ['A fixed list of exact queries', 'Query · Matches', '(?i)^(word counter|word count)$'],
+        ],
+      },
+    },
+    {
+      heading: 'Using the filters to find work',
+      list: [
+        'Question queries show what people want answered. Each one with impressions but no clicks is a candidate for an FAQ entry or an H2 that answers it in two sentences.',
+        'Splitting brand from non-brand tells you whether SEO is growing or only your name is: non-brand clicks are the number that reflects content and rankings.',
+        'Long-tail queries are usually where a new site ranks first. Export them and look for groups that deserve their own page.',
+        'Filtering by folder lets you compare languages or sections, for example /de/ against /fr/, without exporting and summing pages yourself.',
+        'Combine a regex filter with the striking distance or CTR tools: export the filtered table and drop it into them.',
+      ],
+    },
+  ],
+  steps: [
+    'Choose what to filter, such as question queries or a folder of your site.',
+    'Type the words, brand names or folders it needs, separated by commas.',
+    'Paste a few real queries or URLs into the test box and check the split looks right.',
+    'Copy the regex, then in Search Console open Performance → + Add filter → Query (or Page) → Custom (regex) and paste it.',
+  ],
+  faqs: [
+    { q: 'What regex syntax does Google Search Console use?', a: 'RE2, Google’s open-source engine. It supports the usual building blocks — alternation with |, groups, character classes, anchors and quantifiers — but not lookarounds, backreferences or possessive quantifiers.' },
+    { q: 'Is the Search Console regex filter case-sensitive?', a: 'Yes by default. Start the pattern with (?i) to ignore case. This generator adds it unless you untick the option.' },
+    { q: 'How do I exclude brand queries in Search Console?', a: 'Build the brand pattern here, then choose Doesn’t match regex instead of Matches regex in the Query filter. Tick the preview option in the tester to see what that keeps.' },
+    { q: 'Why does my regex return no data?', a: 'Usually because it uses syntax RE2 does not support, such as a lookahead, or because it is case-sensitive and the queries are lowercase. Paste it into the box above and the checker tells you which.' },
+    { q: 'Is there a length limit?', a: 'Search Console accepts patterns up to 4,096 characters. The counter under the pattern shows how close you are.' },
+  ],
+  siblings: SIBLINGS.filter((item) => item.to !== REGEX_PATH),
+  disclaimer: 'The tester runs your pattern with the browser’s regex engine, which behaves like RE2 for everything RE2 supports; the checker flags the syntax where they differ.',
+};
+
+export const GSC_PAGES = [decay, striking, ctr, regex].map((page) => ({ ...page, parent: undefined }));
+export const GSC_MODE_BY_PATH = { [DECAY_PATH]: 'decay', [STRIKING_PATH]: 'striking', [CTR_PATH]: 'ctr', [REGEX_PATH]: 'regex' };
