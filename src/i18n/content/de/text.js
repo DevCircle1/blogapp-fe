@@ -22,9 +22,9 @@ export const textTools = {
     ],
   },
   'case-converter': {
-    title: 'Groß- und Kleinschreibung umwandeln – online',
+    title: 'Großbuchstaben in Kleinbuchstaben umwandeln – online',
     shortTitle: 'Groß-/Kleinschreibung',
-    description: 'Wandeln Sie Text in GROSSBUCHSTABEN, Kleinbuchstaben, Titel-Schreibweise, Satz-Schreibweise, camelCase, PascalCase, snake_case oder kebab-case.',
+    description: 'Großbuchstaben in Kleinbuchstaben umwandeln (und umgekehrt): Text in GROSSBUCHSTABEN, Kleinbuchstaben, Titel-, Satz-Schreibweise, camelCase oder snake_case umwandeln – kostenlos.',
     intro: 'Eine Überschrift neu zu tippen, weil sie in Großbuchstaben ankam, oder Variablen von snake_case in camelCase umzubenennen, ist verlorene Zeit. Dieser Konverter beherrscht acht Schreibweisen auf einmal: die redaktionellen für Schreibende und die Konventionen aus der Programmierung – und lässt Umlaute und ß dabei unversehrt.',
     steps: [
       'Fügen Sie Ihren Text in das Eingabefeld ein.',
@@ -37,6 +37,8 @@ export const textTools = {
       { q: 'Wann nutzt man camelCase und wann snake_case?', a: 'JavaScript, Java und Swift verwenden camelCase für Variablen; Python, Ruby und SQL bevorzugen snake_case. kebab-case gehört in URLs, CSS-Klassen und Dateinamen.' },
       { q: 'Bleiben Umlaute und ß erhalten?', a: 'Ja. Die Umwandlung ist Unicode-fähig: Aus „Größe“ wird „GRÖSSE“, weil das ß in Großbuchstaben traditionell zu SS wird, und Umlaute bleiben Umlaute.' },
       { q: 'Werden Satzzeichen oder Emojis verändert?', a: 'Nein. Satzzeichen, Zahlen und Emojis bleiben unverändert; nur Buchstaben ändern sich.' },
+      { q: 'Wie wandle ich Großbuchstaben in Kleinbuchstaben um?', a: 'Fügen Sie den Text in das Eingabefeld ein und klicken Sie auf „Kleinbuchstaben“. Aus „DAS IST EIN TEST“ wird sofort „das ist ein test“; für den umgekehrten Weg wählen Sie „GROSSBUCHSTABEN“.' },
+      { q: 'Kann ich einen Text in Großbuchstaben nachträglich in normale Schreibweise bringen?', a: 'Ja: Wandeln Sie ihn zuerst in Kleinbuchstaben um und wählen Sie dann die Satz-Schreibweise, damit jeder Satz mit einem Großbuchstaben beginnt. Substantive müssen Sie im Deutschen anschließend von Hand großschreiben, weil das Tool Wortarten nicht erkennt.' },
     ],
   },
   'remove-duplicate-lines': {

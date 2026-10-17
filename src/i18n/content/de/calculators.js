@@ -150,10 +150,10 @@ export const calculatorTools = {
     ],
   },
   'unit-converter': {
-    title: 'Einheiten umrechnen: Online-Umrechner',
+    title: 'Einheiten umrechnen: Einheitenumrechner online',
     shortTitle: 'Einheiten umrechnen',
-    description: 'Rechnen Sie Länge, Gewicht, Temperatur, Fläche, Volumen, Geschwindigkeit, Zeit und Datenmengen mit exakten Faktoren um.',
-    intro: 'Auch im metrischen System begegnen uns täglich Zoll bei Bildschirmen, Meilen in Lauf-Apps, Unzen in amerikanischen Rezepten und Grad Fahrenheit im US-Wetterbericht. Dieser Umrechner deckt acht Einheitenfamilien mit den international festgelegten Faktoren ab: Ein Zoll sind exakt 25,4 Millimeter und kein gerundeter Näherungswert.',
+    description: 'Einheitenumrechner online: Länge, Gewicht, Temperatur, Fläche, Volumen, Geschwindigkeit, Zeit und Datenmengen exakt umrechnen – z. B. cm in Zoll, km in Meilen, °C in °F. Kostenlos.',
+    intro: 'Auch im metrischen System begegnen uns täglich Zoll bei Bildschirmen, Meilen in Lauf-Apps, Unzen in amerikanischen Rezepten und Grad Fahrenheit im US-Wetterbericht. Dieser Einheitenumrechner deckt acht Einheitenfamilien mit den international festgelegten Faktoren ab: Ein Zoll sind exakt 25,4 Millimeter und kein gerundeter Näherungswert. Bei der Umrechnung von Einheiten lässt sich so jede Richtung rechnen – von Zentimeter in Zoll und Fuß, von Kilometer in Meilen, von Kilogramm in Pfund und Unzen, von Liter in Gallonen, von km/h in mph oder Knoten, von Quadratmeter in Hektar und Acre bis zu Byte, Megabyte und Gigabyte. Das Ergebnis erscheint sofort beim Tippen, ohne Anmeldung, und die Berechnung läuft vollständig in Ihrem Browser.',
     steps: [
       'Wählen Sie die Art der Messgröße: Länge, Gewicht, Fläche, Volumen, Geschwindigkeit, Zeit, Daten oder Temperatur.',
       'Wählen Sie die Ausgangseinheit und geben Sie den Wert ein.',
@@ -165,6 +165,11 @@ export const calculatorTools = {
       { q: 'Wie rechne ich Fahrenheit in Celsius um?', a: 'Ziehen Sie 32 ab und multiplizieren Sie mit 5/9. Deshalb lässt sich Temperatur nicht wie andere Einheiten mit einer einfachen Multiplikation umrechnen: Die beiden Skalen haben unterschiedliche Nullpunkte.' },
       { q: 'Sind ein Kilobyte 1000 oder 1024 Byte?', a: 'Dieses Tool nutzt die binäre Konvention, 1 KB = 1024 Byte, so wie Betriebssysteme Dateigrößen anzeigen. Festplattenhersteller rechnen mit 1000, weshalb eine „1-TB“-Platte als rund 931 GB erscheint.' },
       { q: 'Wie viele Zentimeter hat ein 55-Zoll-Fernseher?', a: 'Ein Zoll sind 2,54 cm, 55 Zoll also etwa 139,7 cm. Achtung: Bei Bildschirmen wird die Diagonale gemessen, nicht die Breite.' },
+      { q: 'Wie rechne ich Einheiten um?', a: 'Wählen Sie die Größe (z. B. Länge), die Ausgangs- und die Zieleinheit und geben Sie den Wert ein. Intern wird der Wert über eine Basiseinheit mit dem exakten Faktor umgerechnet: Aus 10 Zoll werden so 0,254 m und daraus 25,4 cm.' },
+      { q: 'Wie rechne ich Kilometer in Meilen um?', a: 'Teilen Sie die Kilometer durch 1,609344 oder multiplizieren Sie mit 0,621371. 10 km sind demnach rund 6,21 Meilen; 26,2 Meilen, ein Marathon, entsprechen 42,2 km.' },
+      { q: 'Wie viel sind 100 km/h in Meilen pro Stunde?', a: '100 km/h sind etwa 62,14 mph. Zum Vergleich: 60 mph entsprechen ungefähr 96,6 km/h, und ein Knoten sind 1,852 km/h.' },
+      { q: 'Wie viele Kilogramm sind ein Pfund?', a: 'Dieses Tool rechnet mit dem englischen Pfund (lb): 1 lb = 0,45359237 kg, also 453,6 g. Das alte deutsche Pfund mit 500 g ist davon verschieden; geben Sie dafür 500 Gramm ein.' },
+      { q: 'Welche Einheiten kann ich umrechnen?', a: 'Länge, Gewicht, Fläche, Volumen, Geschwindigkeit, Zeit, Datenmengen und Temperatur (Celsius, Fahrenheit, Kelvin) – jeweils mit metrischen und angloamerikanischen Einheiten wie Zoll, Fuß, Meile, Unze, Gallone und Acre.' },
     ],
   },
   'age-calculator': {

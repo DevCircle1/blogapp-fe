@@ -342,9 +342,9 @@ export const developerTools = {
     ],
   },
   'password-strength-checker': {
-    title: 'Passwortstärke prüfen',
+    title: 'Passwort prüfen: Passwortstärke testen',
     shortTitle: 'Passwortstärke prüfen',
-    description: 'Prüfen Sie, wie sicher Ihr Passwort ist: Entropie in Bit, geschätzte Knackzeit und die Muster, die es schwächen.',
+    description: 'Passwort prüfen und Passwortstärke testen: Wie sicher ist Ihr Passwort? Entropie in Bit, geschätzte Knackzeit und schwächende Muster – kostenlos, nichts wird gespeichert.',
     intro: 'Passwortanzeigen belohnen meist das Falsche: Ein Großbuchstabe und ein Ausrufezeichen ergeben eine gute Note, während das Wort darunter in jedem Angriffswörterbuch steht. Dieser Prüfer berechnet die Entropie aus dem tatsächlichen Zeichenraum, bestraft verbreitete Muster – auch Wörter wie „Passwort“ oder Tastaturreihen wie qwertz – und schätzt die Knackzeit auf realistischer Hardware.',
     steps: [
       'Geben Sie ein Passwort ein, oder eines, das dem Ihren ähnelt.',
@@ -357,6 +357,8 @@ export const developerTools = {
       { q: 'Warum schneidet „P@ssw0rt1“ schlecht ab?', a: 'Weil genau diese Ersetzungen das Erste sind, was jedes Knackprogramm ausprobiert. Entscheidend ist das Wörterbuchwort darunter, und regelbasierte Angriffe erzeugen die Varianten in Millisekunden.' },
       { q: 'Wie wird die Knackzeit geschätzt?', a: 'Aus der Entropie und einer angenommenen Offline-Angriffsrate gegen eine schnelle Hashfunktion. Das ist eine Größenordnung: Eine Seite mit bcrypt oder Argon2 lässt sich ungleich langsamer angreifen.' },
       { q: 'Sind Passphrasen besser als Passwörter?', a: 'Ja, wenn die Wörter zufällig gewählt sind. Vier oder fünf zufällige Wörter ergeben hohe Entropie und lassen sich gut merken. Einen selbst ausgedachten Merksatz zu nehmen zerstört den Vorteil fast vollständig.' },
+      { q: 'Wie sicher ist mein Passwort?', a: 'Geben Sie es oben ein: Der Prüfer zeigt die Entropie in Bit und die geschätzte Knackzeit. Als grobe Orientierung gelten unter 50 Bit als schwach, über 75 Bit als gut; entscheidend ist, dass das Passwort lang und nicht aus Wörtern, Namen oder Tastaturreihen aufgebaut ist.' },
+      { q: 'Wie lang sollte ein sicheres Passwort sein?', a: 'Mindestens 12 Zeichen, besser 16 oder mehr. Die Länge wirkt stärker als Sonderzeichen: Jedes zusätzliche Zeichen vervielfacht die Zahl der Möglichkeiten, die ein Angreifer durchprobieren muss.' },
     ],
   },
   'credit-card-validator': {
