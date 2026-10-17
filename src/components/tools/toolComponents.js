@@ -6,6 +6,7 @@ import * as text from './impl/textTools.jsx';
 import * as date from './impl/dateTools.jsx';
 import * as health from './impl/healthTools.jsx';
 import * as seo from './impl/seoTools.jsx';
+import * as extra from './extra/ExtraTools.jsx';
 
 /**
  * Interactive component for every catalogue slug. One implementation serves
@@ -97,4 +98,15 @@ export const TOOL_COMPONENTS = {
   'seo-content-brief-generator': seo.SeoContentBriefGenerator,
   'keyword-cannibalization-checker': seo.KeywordCannibalizationChecker,
   'seo-title-meta-checker': seo.SeoTitleMetaChecker,
+  // Quick wins
+  'grade-calculator': extra.GradeCalculator,
+  'credit-card-payoff-calculator': extra.CreditCardPayoffCalculator,
+  'height-converter': extra.HeightConverter,
+  'text-to-binary-converter': extra.TextBinaryConverter,
+  'morse-code-translator': extra.MorseCodeTranslator,
+  'timesheet-hours-calculator': extra.TimesheetHoursCalculator,
+  'pace-calculator': extra.PaceCalculator,
+  'ovulation-calculator': extra.OvulationCalculator,
+  'scientific-notation-converter': extra.ScientificNotationConverter,
+  'area-calculator': extra.AreaCalculator,
 };

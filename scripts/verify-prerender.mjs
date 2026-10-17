@@ -25,7 +25,7 @@ import path from 'node:path';
 import { allRoutes, CONTENT, SITE_URL } from './routes.mjs';
 import { LEGACY_ROUTES } from './prerender-legacy.mjs';
 import {
-  ALL_LANGS, BLOG_SEGMENTS, LOCALIZED_LANGS, blogPath, hubPath, toolPath,
+  ALL_LANGS, BLOG_SEGMENTS, LOCALIZED_LANGS, blogPath, hubPath, toolPath, hasToolTranslation,
 } from '../src/i18n/locales.js';
 import { categoryHubs, toolBreadcrumb } from '../src/i18n/categories.js';
 import { premiumTools } from '../src/components/tools/toolCatalog.js';
@@ -83,7 +83,7 @@ const routeByPath = new Map(allRoutes.map((route) => [route.path, route]));
 const toolRoutes = new Map();
 for (const tool of premiumTools) {
   toolRoutes.set(`/tools/${tool.slug}`, tool.slug);
-  ALL_LANGS.filter((lang) => lang !== 'en').forEach((lang) => toolRoutes.set(toolPath(lang, tool.slug), tool.slug));
+  ALL_LANGS.filter((lang) => lang !== 'en' && hasToolTranslation(lang, tool.slug)).forEach((lang) => toolRoutes.set(toolPath(lang, tool.slug), tool.slug));
 }
 for (const routePath of toolRoutes.keys()) {
   if (!routeByPath.has(routePath)) problem(routePath, 'is a catalogue tool page but is not in the route list, so no page was generated');

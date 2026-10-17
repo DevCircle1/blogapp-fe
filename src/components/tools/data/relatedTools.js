@@ -17,28 +17,28 @@
  */
 export const RELATED_TOOLS = {
   // Calculator
-  'percentage-calculator': ['ratio-calculator', 'fraction-calculator', 'average-calculator', 'discount-calculator', 'sales-tax-calculator'],
-  'average-calculator': ['percentage-calculator', 'fraction-calculator', 'ratio-calculator', 'gpa-calculator', 'random-number-generator'],
-  'fraction-calculator': ['percentage-calculator', 'ratio-calculator', 'average-calculator', 'unit-converter'],
-  'ratio-calculator': ['fraction-calculator', 'percentage-calculator', 'unit-converter', 'average-calculator'],
-  'number-base-converter': ['roman-numeral-converter', 'hash-generator', 'base64-tool', 'unit-converter'],
+  'percentage-calculator': ['ratio-calculator', 'fraction-calculator', 'average-calculator', 'discount-calculator', 'sales-tax-calculator', 'scientific-notation-converter'],
+  'average-calculator': ['percentage-calculator', 'fraction-calculator', 'ratio-calculator', 'gpa-calculator', 'random-number-generator', 'grade-calculator'],
+  'fraction-calculator': ['percentage-calculator', 'ratio-calculator', 'average-calculator', 'unit-converter', 'scientific-notation-converter'],
+  'ratio-calculator': ['fraction-calculator', 'percentage-calculator', 'unit-converter', 'average-calculator', 'area-calculator'],
+  'number-base-converter': ['roman-numeral-converter', 'hash-generator', 'base64-tool', 'unit-converter', 'text-to-binary-converter'],
   'roman-numeral-converter': ['number-base-converter', 'unit-converter', 'percentage-calculator'],
-  'gpa-calculator': ['average-calculator', 'percentage-calculator', 'age-calculator'],
+  'gpa-calculator': ['average-calculator', 'percentage-calculator', 'age-calculator', 'grade-calculator'],
   'random-number-generator': ['uuid-generator', 'password-generator', 'average-calculator'],
-  'unit-converter': ['percentage-calculator', 'ratio-calculator', 'number-base-converter', 'fraction-calculator'],
-  'age-calculator': ['date-difference-calculator', 'countdown-timer', 'working-days-calculator', 'pregnancy-due-date-calculator', 'gpa-calculator'],
+  'unit-converter': ['percentage-calculator', 'ratio-calculator', 'number-base-converter', 'fraction-calculator', 'height-converter'],
+  'age-calculator': ['date-difference-calculator', 'countdown-timer', 'working-days-calculator', 'pregnancy-due-date-calculator', 'gpa-calculator', 'ovulation-calculator'],
 
   // Date & Time
   'date-difference-calculator': ['date-add-subtract', 'age-calculator', 'working-days-calculator', 'countdown-timer', 'pregnancy-due-date-calculator'],
   'date-add-subtract': ['date-difference-calculator', 'working-days-calculator', 'countdown-timer', 'timestamp-converter'],
-  'time-duration-calculator': ['date-difference-calculator', 'timestamp-converter', 'countdown-timer', 'working-days-calculator'],
-  'working-days-calculator': ['date-difference-calculator', 'date-add-subtract', 'time-duration-calculator', 'countdown-timer'],
+  'time-duration-calculator': ['date-difference-calculator', 'timestamp-converter', 'countdown-timer', 'working-days-calculator', 'timesheet-hours-calculator'],
+  'working-days-calculator': ['date-difference-calculator', 'date-add-subtract', 'time-duration-calculator', 'countdown-timer', 'timesheet-hours-calculator'],
   'countdown-timer': ['date-difference-calculator', 'date-add-subtract', 'timestamp-converter', 'pregnancy-due-date-calculator'],
   'timestamp-converter': ['date-difference-calculator', 'time-duration-calculator', 'date-add-subtract'],
 
   // Developer
   'json-studio': ['csv-to-json', 'json-to-csv', 'base64-tool', 'regex-tester'],
-  'base64-tool': ['url-encoder', 'html-encoder', 'hash-generator', 'json-studio'],
+  'base64-tool': ['url-encoder', 'html-encoder', 'hash-generator', 'json-studio', 'text-to-binary-converter'],
   'url-encoder': ['base64-tool', 'html-encoder', 'slug-generator', 'robots-txt-generator'],
   'jwt-inspector': ['base64-tool', 'hash-generator', 'uuid-generator', 'password-strength-checker'],
   'uuid-generator': ['hash-generator', 'random-number-generator', 'jwt-inspector', 'password-generator'],
@@ -63,9 +63,9 @@ export const RELATED_TOOLS = {
   'email-validator': ['password-strength-checker', 'password-generator', 'credit-card-validator', 'regex-tester'],
 
   // Finance
-  'loan-calculator': ['mortgage-calculator', 'compound-interest-calculator', 'simple-interest-calculator', 'savings-goal-calculator'],
+  'loan-calculator': ['mortgage-calculator', 'compound-interest-calculator', 'simple-interest-calculator', 'savings-goal-calculator', 'credit-card-payoff-calculator'],
   'mortgage-calculator': ['loan-calculator', 'compound-interest-calculator', 'savings-goal-calculator', 'inflation-calculator'],
-  'compound-interest-calculator': ['simple-interest-calculator', 'savings-goal-calculator', 'loan-calculator', 'inflation-calculator'],
+  'compound-interest-calculator': ['simple-interest-calculator', 'savings-goal-calculator', 'loan-calculator', 'inflation-calculator', 'credit-card-payoff-calculator'],
   'simple-interest-calculator': ['compound-interest-calculator', 'loan-calculator', 'savings-goal-calculator'],
   'tip-calculator': ['discount-calculator', 'sales-tax-calculator', 'percentage-calculator'],
   'discount-calculator': ['sales-tax-calculator', 'tip-calculator', 'margin-markup-calculator', 'percentage-calculator'],
@@ -73,19 +73,19 @@ export const RELATED_TOOLS = {
   'margin-markup-calculator': ['discount-calculator', 'sales-tax-calculator', 'roi-calculator', 'break-even-calculator'],
   'roi-calculator': ['break-even-calculator', 'margin-markup-calculator', 'compound-interest-calculator', 'inflation-calculator'],
   'break-even-calculator': ['roi-calculator', 'margin-markup-calculator', 'savings-goal-calculator'],
-  'savings-goal-calculator': ['compound-interest-calculator', 'simple-interest-calculator', 'inflation-calculator', 'loan-calculator'],
-  'salary-to-hourly-calculator': ['savings-goal-calculator', 'percentage-calculator', 'inflation-calculator'],
+  'savings-goal-calculator': ['compound-interest-calculator', 'simple-interest-calculator', 'inflation-calculator', 'loan-calculator', 'credit-card-payoff-calculator'],
+  'salary-to-hourly-calculator': ['savings-goal-calculator', 'percentage-calculator', 'inflation-calculator', 'timesheet-hours-calculator'],
   'inflation-calculator': ['savings-goal-calculator', 'compound-interest-calculator', 'roi-calculator'],
 
   // Health — curated by topic, not just category, since "Health" spans
   // both body-composition tools and the unrelated pregnancy calculator.
-  'bmi-calculator': ['ideal-weight-calculator', 'body-fat-calculator', 'calorie-calculator', 'macro-calculator'],
-  'calorie-calculator': ['macro-calculator', 'bmi-calculator', 'body-fat-calculator', 'water-intake-calculator'],
+  'bmi-calculator': ['ideal-weight-calculator', 'body-fat-calculator', 'calorie-calculator', 'macro-calculator', 'height-converter'],
+  'calorie-calculator': ['macro-calculator', 'bmi-calculator', 'body-fat-calculator', 'water-intake-calculator', 'pace-calculator'],
   'ideal-weight-calculator': ['bmi-calculator', 'body-fat-calculator', 'calorie-calculator', 'water-intake-calculator'],
   'body-fat-calculator': ['bmi-calculator', 'ideal-weight-calculator', 'calorie-calculator', 'macro-calculator'],
-  'water-intake-calculator': ['calorie-calculator', 'bmi-calculator', 'macro-calculator'],
+  'water-intake-calculator': ['calorie-calculator', 'bmi-calculator', 'macro-calculator', 'pace-calculator'],
   'macro-calculator': ['calorie-calculator', 'bmi-calculator', 'body-fat-calculator', 'ideal-weight-calculator', 'water-intake-calculator'],
-  'pregnancy-due-date-calculator': ['age-calculator', 'date-difference-calculator', 'countdown-timer', 'calorie-calculator', 'water-intake-calculator'],
+  'pregnancy-due-date-calculator': ['age-calculator', 'date-difference-calculator', 'countdown-timer', 'calorie-calculator', 'water-intake-calculator', 'ovulation-calculator'],
 
   // SEO
   'low-competition-keyword-finder': ['long-tail-keyword-generator', 'keyword-clustering-tool', 'search-intent-classifier', 'seo-content-brief-generator'],
@@ -98,7 +98,7 @@ export const RELATED_TOOLS = {
 
   // Text
   'word-counter': ['word-frequency-counter', 'case-converter', 'text-diff-checker', 'remove-line-breaks'],
-  'case-converter': ['word-counter', 'slug-generator', 'remove-line-breaks', 'find-and-replace'],
+  'case-converter': ['word-counter', 'slug-generator', 'remove-line-breaks', 'find-and-replace', 'morse-code-translator'],
   'remove-duplicate-lines': ['sort-text-lines', 'remove-line-breaks', 'find-and-replace', 'text-diff-checker'],
   'sort-text-lines': ['remove-duplicate-lines', 'remove-line-breaks', 'find-and-replace'],
   'find-and-replace': ['text-diff-checker', 'remove-duplicate-lines', 'case-converter', 'regex-tester'],
@@ -107,5 +107,17 @@ export const RELATED_TOOLS = {
   'slug-generator': ['case-converter', 'url-encoder', 'word-counter'],
   'word-frequency-counter': ['word-counter', 'text-diff-checker', 'case-converter'],
   'remove-line-breaks': ['remove-duplicate-lines', 'word-counter', 'case-converter'],
-  'reverse-text': ['case-converter', 'word-counter', 'find-and-replace'],
+  'reverse-text': ['case-converter', 'word-counter', 'find-and-replace', 'morse-code-translator'],
+
+  // Added with the quick-win tools
+  'grade-calculator': ['gpa-calculator', 'average-calculator', 'percentage-calculator', 'fraction-calculator'],
+  'credit-card-payoff-calculator': ['loan-calculator', 'compound-interest-calculator', 'savings-goal-calculator', 'simple-interest-calculator', 'inflation-calculator'],
+  'height-converter': ['unit-converter', 'bmi-calculator', 'ideal-weight-calculator', 'body-fat-calculator'],
+  'text-to-binary-converter': ['number-base-converter', 'base64-tool', 'hash-generator', 'morse-code-translator', 'url-encoder'],
+  'morse-code-translator': ['text-to-binary-converter', 'case-converter', 'reverse-text', 'word-counter'],
+  'timesheet-hours-calculator': ['time-duration-calculator', 'salary-to-hourly-calculator', 'working-days-calculator', 'date-difference-calculator'],
+  'pace-calculator': ['calorie-calculator', 'bmi-calculator', 'time-duration-calculator', 'unit-converter', 'water-intake-calculator'],
+  'ovulation-calculator': ['pregnancy-due-date-calculator', 'date-add-subtract', 'date-difference-calculator', 'age-calculator'],
+  'scientific-notation-converter': ['number-base-converter', 'unit-converter', 'percentage-calculator', 'fraction-calculator'],
+  'area-calculator': ['unit-converter', 'ratio-calculator', 'percentage-calculator', 'fraction-calculator', 'discount-calculator'],
 };

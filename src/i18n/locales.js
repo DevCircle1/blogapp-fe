@@ -81,7 +81,14 @@ export const articlePath = (lang, slug) => (
 /** A post's language; rows written before the language column existed are English. */
 export const postLang = (post) => post?.language || DEFAULT_LANG;
 
-export const toolAlternates = (slug) => alternatesFor((lang) => toolPath(lang, slug));
+/** Languages that have a translated page for the tool; English-only tools list no alternates. */
+export const hasToolTranslation = (lang, slug) => lang === DEFAULT_LANG || Boolean(TOOL_SLUGS[slug]?.[lang]);
+
+export const toolAlternates = (slug) => (
+  TOOL_SLUGS[slug]
+    ? alternatesFor((lang) => toolPath(lang, slug))
+    : []
+);
 export const hubAlternates = () => alternatesFor(hubPath);
 
 /* -------------------------------------------------- runtime locale choice */

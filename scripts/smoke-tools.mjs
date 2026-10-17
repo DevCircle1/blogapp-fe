@@ -29,8 +29,9 @@ import * as text from '<ROOT>/src/components/tools/impl/textTools.jsx';
 import * as dates from '<ROOT>/src/components/tools/impl/dateTools.jsx';
 import * as health from '<ROOT>/src/components/tools/impl/healthTools.jsx';
 import * as seo from '<ROOT>/src/components/tools/impl/seoTools.jsx';
+import * as extra from '<ROOT>/src/components/tools/extra/ExtraTools.jsx';
 
-const modules = { dev, security, calc, finance, text, dates, health, seo };
+const modules = { dev, security, calc, finance, text, dates, health, seo, extra };
 const bundles = {
   en: null,
   es: { dict: esUi.default, extras: esUi.extras || {} },
@@ -94,6 +95,7 @@ try {
     // esbuild's classic default would emit React.createElement into modules
     // that never import React.
     jsx: 'automatic',
+    define: { 'import.meta.env': '{}' },
     logLevel: 'error',
   });
   await import(pathToFileURL(outFile).href);

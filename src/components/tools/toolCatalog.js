@@ -5,6 +5,7 @@ import { healthTools } from './data/health.js';
 import { textTools } from './data/text.js';
 import { developerTools } from './data/developer.js';
 import { seoTools } from './data/seo.js';
+import { extraTools } from './data/extra.js';
 import { RELATED_TOOLS } from './data/relatedTools.js';
 import { SITE_URL } from '../../seo/siteMeta.js';
 
@@ -23,6 +24,7 @@ export const premiumTools = [
   ...datetimeTools,
   ...healthTools,
   ...seoTools,
+  ...extraTools,
 ];
 
 export const toolCategories = [...new Set(premiumTools.map((tool) => tool.category))].sort();

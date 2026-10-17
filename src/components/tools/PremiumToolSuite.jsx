@@ -6,7 +6,7 @@ import { TOOL_COMPONENTS } from './toolComponents.js';
 import { getToolBySlug, getRelatedTools } from './toolCatalog.js';
 import { toolPageSchemas } from '../../seo/toolSchema.js';
 import I18nProvider from '../../i18n/I18nProvider.jsx';
-import { LOCALES, LOCALIZED_LANGS, toolAlternates, toolPath } from '../../i18n/locales.js';
+import { LOCALES, LOCALIZED_LANGS, hasToolTranslation, toolAlternates, toolPath } from '../../i18n/locales.js';
 
 function ToolNotFound() {
   return (
@@ -64,7 +64,7 @@ export default function PremiumToolSuite() {
           alsoAvailable: 'Also available in:',
         }}
         related={getRelatedTools(tool.slug).map((item) => ({ path: `/tools/${item.slug}`, title: item.shortTitle, description: item.description }))}
-        languages={LOCALIZED_LANGS.map((lang) => ({
+        languages={LOCALIZED_LANGS.filter((lang) => hasToolTranslation(lang, tool.slug)).map((lang) => ({
           lang,
           name: LOCALES[lang].name,
           hreflang: LOCALES[lang].hreflang,
