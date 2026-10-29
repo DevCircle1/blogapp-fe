@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build && npm run build:ssr && npm run blog:data && npm run sitemap && npm run prerender && npm run verify",
+    "dev": "node api.js && vite",
+    "build": "node api.js && vite build && npm run build:ssr && npm run blog:data && npm run sitemap && npm run prerender && npm run verify",
     "build:ssr": "vite build --ssr src/entry-server.jsx --outDir dist-ssr",
     "blog:data": "node scripts/blog-data.mjs",
     "sitemap": "node scripts/generate-sitemap.mjs",

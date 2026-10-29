@@ -30,8 +30,9 @@ import * as dates from '<ROOT>/src/components/tools/impl/dateTools.jsx';
 import * as health from '<ROOT>/src/components/tools/impl/healthTools.jsx';
 import * as seo from '<ROOT>/src/components/tools/impl/seoTools.jsx';
 import * as extra from '<ROOT>/src/components/tools/extra/ExtraTools.jsx';
+import * as seoText from '<ROOT>/src/components/tools/extra/SeoTextTools.jsx';
 
-const modules = { dev, security, calc, finance, text, dates, health, seo, extra };
+const modules = { dev, security, calc, finance, text, dates, health, seo, extra, seoText };
 const bundles = {
   en: null,
   es: { dict: esUi.default, extras: esUi.extras || {} },
