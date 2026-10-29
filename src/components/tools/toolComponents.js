@@ -7,6 +7,7 @@ import * as date from './impl/dateTools.jsx';
 import * as health from './impl/healthTools.jsx';
 import * as seo from './impl/seoTools.jsx';
 import * as extra from './extra/ExtraTools.jsx';
+import * as seoText from './extra/SeoTextTools.jsx';
 
 /**
  * Interactive component for every catalogue slug. One implementation serves
@@ -109,4 +110,6 @@ export const TOOL_COMPONENTS = {
   'ovulation-calculator': extra.OvulationCalculator,
   'scientific-notation-converter': extra.ScientificNotationConverter,
   'area-calculator': extra.AreaCalculator,
+  'readability-score-checker': seoText.ReadabilityChecker,
+  'hreflang-tag-generator': seoText.HreflangGenerator,
 };

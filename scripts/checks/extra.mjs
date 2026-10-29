@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import * as e from '../../src/lib/extra/engines.js';
+import * as s from '../../src/lib/extra/seoText.js';
 
 const near = (a, b, tol = 0.01) => assert.ok(Math.abs(a - b) <= tol, `${a} !≈ ${b}`);
 
@@ -62,4 +63,46 @@ assert.equal(e.toScientific('abc'), null);
 near(e.shapeArea('circle', { a: 2 }), 12.566, 0.001);
 near(e.shapeArea('trapezoid', { a: 3, b: 5, c: 2 }), 8);
 near(e.areaConversions(100)['square feet'], 1076.39, 0.01);
+// readability
+assert.equal(s.countSyllables('the'), 1);
+assert.equal(s.countSyllables('simple'), 2);
+assert.equal(s.countSyllables('readability'), 5);
+assert.equal(s.countSyllables('make'), 1);
+assert.equal(s.splitSentences('Version 3.5 is out. Is it good? Yes!').length, 3);
+const easy = s.analyzeReadability('The cat sat on the mat. The dog ran to the park. We like to play.');
+assert.ok(easy.fleschReadingEase > 90, String(easy.fleschReadingEase));
+assert.equal(easy.sentences, 3);
+assert.equal(easy.words, 16);
+assert.equal(easy.band.label, 'Very easy');
+const hard = s.analyzeReadability('Notwithstanding the aforementioned considerations, organisational transformation necessitates comprehensive institutional collaboration.');
+assert.ok(hard.fleschReadingEase < 10 && hard.fleschKincaid > 15, JSON.stringify(hard));
+assert.equal(hard.smog, null);
+assert.equal(s.analyzeReadability(''), null);
+assert.equal(s.analyzeReadability(`${'word '.repeat(30)}.`).longSentences.length, 1);
+assert.equal(s.fleschBand(65).label, 'Plain English');
+// hreflang
+assert.equal(s.normalizeHreflang('en-gb').code, 'en-GB');
+assert.equal(s.normalizeHreflang('EN_us').code, 'en-US');
+assert.equal(s.normalizeHreflang('en-uk').code, 'en-GB');
+assert.equal(s.normalizeHreflang('x-DEFAULT').code, 'x-default');
+assert.ok(s.normalizeHreflang('jp').error.includes('ja'));
+assert.ok(s.normalizeHreflang('english').error);
+assert.ok(s.normalizeHreflang('en-GB-x').error);
+assert.ok(s.normalizeHreflang('').error);
+const hl = s.buildHreflang([
+  { code: 'en', url: 'https://example.com/' },
+  { code: 'de', url: 'https://example.com/de/' },
+  { code: 'es-mx', url: 'https://example.com/es-mx/' },
+], 'https://example.com/');
+assert.ok(hl.ok, hl.problems.join('|'));
+assert.equal(hl.entries.length, 4);
+assert.ok(hl.html.includes('hreflang="es-MX"'));
+assert.ok(hl.html.includes('hreflang="x-default" href="https://example.com/"'));
+assert.ok(hl.header.startsWith('Link: <https://example.com/>; rel="alternate"; hreflang="en"'));
+assert.equal((hl.sitemap.match(/<url>/g) || []).length, 3);
+assert.equal((hl.sitemap.match(/<xhtml:link/g) || []).length, 12);
+assert.ok(!s.buildHreflang([{ code: 'en', url: 'https://a.com/' }]).ok);
+assert.ok(!s.buildHreflang([{ code: 'en', url: 'https://a.com/' }, { code: 'en', url: 'https://a.com/b' }]).ok);
+assert.ok(!s.buildHreflang([{ code: 'en', url: '/relative' }, { code: 'de', url: 'https://a.com/de' }]).ok);
+assert.ok(s.buildHreflang([{ code: 'en', url: 'https://a.com/' }, { code: 'de', url: 'https://a.com/de/' }]).warnings.some((w) => w.includes('x-default')));
 console.log('extra engines: all checks passed');

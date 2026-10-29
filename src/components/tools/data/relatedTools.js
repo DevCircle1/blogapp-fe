@@ -52,8 +52,8 @@ export const RELATED_TOOLS = {
   'css-gradient-generator': ['color-converter', 'box-shadow-generator', 'html-encoder'],
   'box-shadow-generator': ['css-gradient-generator', 'color-converter', 'html-encoder'],
   'http-status-codes': ['user-agent-parser', 'robots-txt-generator', 'url-encoder'],
-  'meta-tag-generator': ['seo-title-meta-checker', 'robots-txt-generator', 'http-status-codes', 'keyword-cannibalization-checker'],
-  'robots-txt-generator': ['meta-tag-generator', 'http-status-codes', 'url-encoder', 'user-agent-parser'],
+  'meta-tag-generator': ['seo-title-meta-checker', 'robots-txt-generator', 'http-status-codes', 'keyword-cannibalization-checker', 'hreflang-tag-generator'],
+  'robots-txt-generator': ['meta-tag-generator', 'http-status-codes', 'url-encoder', 'user-agent-parser', 'hreflang-tag-generator'],
   'user-agent-parser': ['http-status-codes', 'robots-txt-generator', 'uuid-generator'],
 
   // Security
@@ -94,10 +94,12 @@ export const RELATED_TOOLS = {
   'search-intent-classifier': ['seo-content-brief-generator', 'keyword-clustering-tool', 'long-tail-keyword-generator'],
   'seo-content-brief-generator': ['search-intent-classifier', 'keyword-clustering-tool', 'long-tail-keyword-generator', 'seo-title-meta-checker'],
   'keyword-cannibalization-checker': ['keyword-clustering-tool', 'seo-content-brief-generator', 'low-competition-keyword-finder', 'seo-title-meta-checker'],
-  'seo-title-meta-checker': ['meta-tag-generator', 'keyword-cannibalization-checker', 'seo-content-brief-generator', 'robots-txt-generator'],
+  'seo-title-meta-checker': ['meta-tag-generator', 'keyword-cannibalization-checker', 'seo-content-brief-generator', 'robots-txt-generator', 'readability-score-checker'],
+  'readability-score-checker': ['word-counter', 'seo-content-brief-generator', 'word-frequency-counter', 'seo-title-meta-checker', 'search-intent-classifier'],
+  'hreflang-tag-generator': ['meta-tag-generator', 'robots-txt-generator', 'seo-title-meta-checker', 'http-status-codes', 'keyword-cannibalization-checker'],
 
   // Text
-  'word-counter': ['word-frequency-counter', 'case-converter', 'text-diff-checker', 'remove-line-breaks'],
+  'word-counter': ['word-frequency-counter', 'case-converter', 'text-diff-checker', 'remove-line-breaks', 'readability-score-checker'],
   'case-converter': ['word-counter', 'slug-generator', 'remove-line-breaks', 'find-and-replace', 'morse-code-translator'],
   'remove-duplicate-lines': ['sort-text-lines', 'remove-line-breaks', 'find-and-replace', 'text-diff-checker'],
   'sort-text-lines': ['remove-duplicate-lines', 'remove-line-breaks', 'find-and-replace'],
