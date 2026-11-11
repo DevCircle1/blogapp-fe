@@ -1,6 +1,7 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
-import { CopyToClipboard } from "react-copy-to-clipboard";
+import Link from 'next/link';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Share2, Copy, Home, RotateCcw, Settings } from "lucide-react";
@@ -353,7 +354,7 @@ const WordleGame = () => {
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center space-x-2">
             <Link
-              to="/"
+              href="/"
               className="p-2 rounded-lg bg-gray-800 hover:bg-gray-700"
             >
               <Home size={20} />

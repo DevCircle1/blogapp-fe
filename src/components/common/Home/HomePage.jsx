@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import Link from 'next/link';
 import { toast } from "react-toastify";
 import Seo from "../Seo.jsx";
 import { websiteSchema, organizationSchema } from "../../../seo/siteMeta.js";
@@ -129,14 +131,14 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
-              to="/tools"
+              href="/tools"
               className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center space-x-2"
             >
               <FiCode className="mr-2" />
               <span>Browse all tools</span>
             </Link>
             <Link
-              to="/blogs"
+              href="/blogs"
               className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-full font-semibold hover:border-blue-500 hover:text-blue-600 transition-all duration-300 transform hover:scale-105 flex items-center space-x-2"
             >
               <span>Read the blog</span>
@@ -232,7 +234,7 @@ export default function HomePage() {
           <div className="flex justify-between items-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold">Featured Blogs</h2>
             <Link
-              to="/blogs"
+              href="/blogs"
               className="text-blue-600 hover:text-blue-700 font-semibold flex items-center space-x-2"
             >
               <span>View All Blogs</span>
@@ -273,7 +275,7 @@ export default function HomePage() {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {featuredBlogs.map((blog) => (
                 <Link
-                  to={`/blogs/article/${blog.slug}`}
+                  href={`/blogs/article/${blog.slug}`}
                   key={blog.slug}
                   className="block"
                 >
@@ -326,7 +328,7 @@ export default function HomePage() {
           <div className="flex justify-between items-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold">Popular Tools</h2>
             <Link
-              to="/tools"
+              href="/tools"
               className="text-blue-600 hover:text-blue-700 font-semibold flex items-center space-x-2"
             >
               <span>Explore All Tools</span>
@@ -338,7 +340,7 @@ export default function HomePage() {
             {popularTools.map((tool) => (
               <Link
                 key={tool.id}
-                to={tool.path}
+                href={tool.path}
                 className="block bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 p-6 group"
               >
                 <div className="text-3xl mb-4">{tool.icon}</div>
@@ -357,7 +359,7 @@ export default function HomePage() {
 
           <div className="text-center mt-10">
             <Link
-              to="/tools"
+              href="/tools"
               className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
             >
               Browse all 70+ free tools
@@ -376,12 +378,12 @@ export default function HomePage() {
             your browser. Our guides explain the maths and methods behind them.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/blogs">
+            <Link href="/blogs">
               <button className="bg-blue-600 text-white px-8 py-4 rounded-full font-semibold hover:bg-blue-700 transition-all duration-300">
                 Read the Guides
               </button>
             </Link>
-            <Link to="/about-us">
+            <Link href="/about-us">
               <button className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-full font-semibold hover:border-blue-500 hover:text-blue-600 transition-all duration-300">
                 Learn More
               </button>

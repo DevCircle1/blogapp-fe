@@ -1,8 +1,11 @@
+'use client';
+
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { login } from "../../../services/auth";
-import { useNavigate, Link } from "react-router-dom";
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useAuth } from "../../../context/AuthContext";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import logo from "../../../assets/logo.png";
@@ -15,7 +18,7 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
+  const router = useRouter();
   const { loginUser } = useAuth();
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,7 +47,7 @@ export default function LoginForm() {
     if (response.success) {
       toast.success("Login successful");
       loginUser(response.data.session);
-      navigate("/");
+      router.push("/");
     } else {
       if (response.details) {
         const newErrors = {};
@@ -80,7 +83,7 @@ export default function LoginForm() {
           href="/"
           className="flex items-center mb-6 text-3xl font-semibold text-gray-900 dark:text-white"
         >
-          <img className="w-24 h-24" src={logo} alt="logo" />
+          <img className="w-24 h-24" src={logo.src} alt="logo" />
           <span className="-ml-6">Talk and Tool</span>
         </a>
         <div className="w-full bg-white rounded-lg shadow dark:border sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
@@ -147,7 +150,7 @@ export default function LoginForm() {
               </button>
               <div className="text-right text-sm font-light text-gray-500 dark:text-gray-400">
                 <Link
-                  to="/forget-password"
+                  href="/forget-password"
                   className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
                 >
                   Forgot password?
@@ -156,7 +159,7 @@ export default function LoginForm() {
               <p className="text-sm font-light text-gray-500 dark:text-gray-400 text-right">
                 Don't have an account?{" "}
                 <Link
-                  to="/signup"
+                  href="/signup"
                   className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                 >
                   Sign up here
@@ -164,7 +167,7 @@ export default function LoginForm() {
               </p>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400 text-center mt-4">
                 <Link
-                  to="/"
+                  href="/"
                   className="font-medium text-blue-600 hover:underline dark:text-blue-400"
                 >
                   ← Back to Home Page

@@ -1,5 +1,7 @@
+'use client';
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import Seo from '../Seo.jsx';
 import { SITE_URL, SITE_NAME, breadcrumbSchema } from '../../../seo/siteMeta.js';
 import { PILLARS } from './aboutUsContent.js';
@@ -61,7 +63,7 @@ const AboutUs = () => (
         <ul className="space-y-3 text-gray-700 leading-7">
           <li>
             <strong className="text-gray-900">Calculators</strong> — percentages, averages, ratios, fractions, ages,
-            GPA, and random numbers. <Link to="/tools" className="text-blue-600 hover:underline">Browse them all</Link>.
+            GPA, and random numbers. <Link href="/tools" className="text-blue-600 hover:underline">Browse them all</Link>.
           </li>
           <li>
             <strong className="text-gray-900">Finance tools</strong> — loan and mortgage repayments, compound
@@ -81,7 +83,7 @@ const AboutUs = () => (
           </li>
           <li>
             <strong className="text-gray-900">Guides</strong> — longer written pieces on our{' '}
-            <Link to="/blogs" className="text-blue-600 hover:underline">blog</Link>.
+            <Link href="/blogs" className="text-blue-600 hover:underline">blog</Link>.
           </li>
         </ul>
 
@@ -90,7 +92,7 @@ const AboutUs = () => (
           Talk &amp; Tool is funded by advertising, which is what keeps every tool free and unmetered. We do not sell
           subscriptions and we do not sell your data — the tools process your input inside your own browser, so there
           is nothing about your usage for us to pass on. Our{' '}
-          <Link to="/privacy-policy" className="text-blue-600 hover:underline">privacy policy</Link> sets out exactly
+          <Link href="/privacy-policy" className="text-blue-600 hover:underline">privacy policy</Link> sets out exactly
           what is collected and how to opt out of personalised advertising.
         </p>
 
@@ -100,7 +102,7 @@ const AboutUs = () => (
           verify the result by hand. The health and finance tools are general information rather than professional
           advice, and each one says so where it matters. If you find a result that looks wrong, we would genuinely
           like to know:{' '}
-          <Link to="/contact-us" className="text-blue-600 hover:underline">tell us about it</Link> and we will check
+          <Link href="/contact-us" className="text-blue-600 hover:underline">tell us about it</Link> and we will check
           and correct it.
         </p>
 
@@ -108,9 +110,9 @@ const AboutUs = () => (
           <h2 className="text-xl font-semibold text-gray-900 mb-3">Get in touch</h2>
           <p className="text-gray-700 leading-7">
             Suggestions for tools we should build, corrections, and business enquiries are all welcome through our{' '}
-            <Link to="/contact-us" className="text-blue-600 hover:underline">contact page</Link>. If you are looking
+            <Link href="/contact-us" className="text-blue-600 hover:underline">contact page</Link>. If you are looking
             for help using something on the site, the{' '}
-            <Link to="/help-center" className="text-blue-600 hover:underline">help centre</Link> covers the most
+            <Link href="/help-center" className="text-blue-600 hover:underline">help centre</Link> covers the most
             common questions.
           </p>
         </div>

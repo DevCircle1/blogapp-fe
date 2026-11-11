@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Disclosure,
   DisclosureButton,
@@ -8,7 +10,8 @@ import {
   MenuItems,
 } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { NavLink, useLocation } from "react-router-dom";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useAuth } from "../../../context/AuthContext";
 import logo from "../../../assets/logo.png";
 import { CHROME, blogPath, hubPath, langFromPath } from "../../../i18n/locales.js";
@@ -22,13 +25,14 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Navbar() {
+// `lang` overrides the language derived from the URL, for pages (the 404) whose content is not in the URL's language.
+export default function Navbar({ lang: forcedLang }) {
   const { isAuthenticated, user, logoutUser } = useAuth();
-  const location = useLocation();
+  const pathname = usePathname();
 
   // Inside a language section the labels follow that language and "Tools"
   // leads to its own directory (/es, /de, …) instead of the English one.
-  const lang = langFromPath(location.pathname);
+  const lang = forcedLang ?? langFromPath(pathname);
   const labels = CHROME[lang]?.nav;
   const updatedNavigation = navigation.map((item) => {
     const href = item.href === "/tools" ? hubPath(lang) : item.href === "/blogs" ? blogPath(lang) : item.href;
@@ -36,7 +40,7 @@ export default function Navbar() {
       ...item,
       href,
       label: labels?.[item.name] ?? item.name,
-      current: location.pathname === href,
+      current: pathname === href,
     };
   });
 
@@ -62,20 +66,20 @@ export default function Navbar() {
                 </DisclosureButton>
                 {/* Mobile Logo */}
                 <div className="ml-4 flex items-center">
-                  <img alt="Talk & Tool" src={logo} width={40} height={40} className="h-10 w-auto sm:h-10" />
+                  <img alt="Talk & Tool" src={logo.src} width={40} height={40} className="h-10 w-auto sm:h-10" />
                 </div>
               </div>
               {/* Desktop Logo */}
               <div className="hidden sm:flex flex-shrink-0 items-center sm:absolute sm:left-0">
-                <img alt="Talk & Tool" src={logo} width={96} height={96} className="h-8 w-auto sm:h-24" />
+                <img alt="Talk & Tool" src={logo.src} width={96} height={96} className="h-8 w-auto sm:h-24" />
               </div>
               {/* Center Navigation */}
               <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-center flex-wrap">
                 <div className="flex flex-wrap space-x-4">
                   {updatedNavigation.map((item) => (
-                    <NavLink
+                    <Link
                       key={item.name}
-                      to={item.href}
+                      href={item.href}
                       className={classNames(
                         item.current
                           ? "bg-blue-500/20 text-gray-900 shadow-sm"
@@ -84,7 +88,7 @@ export default function Navbar() {
                       )}
                     >
                       {item.label}
-                    </NavLink>
+                    </Link>
                   ))}
                 </div>
               </div>
@@ -118,12 +122,12 @@ export default function Navbar() {
                             rather than in the public navigation every visitor and
                             crawler sees. */}
                         <MenuItem>
-                          <NavLink
-                            to="/write-blogs"
+                          <Link
+                            href="/write-blogs"
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500/10"
                           >
                             Write an article
-                          </NavLink>
+                          </Link>
                         </MenuItem>
                         <MenuItem>
                           <button
@@ -149,8 +153,8 @@ export default function Navbar() {
               {updatedNavigation.map((item) => (
                 <DisclosureButton
                   key={item.name}
-                  as={NavLink}
-                  to={item.href}
+                  as={Link}
+                  href={item.href}
                   className={classNames(
                     item.current
                       ? "bg-blue-500/20 text-gray-900"

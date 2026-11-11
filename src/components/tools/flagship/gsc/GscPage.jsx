@@ -1,3 +1,5 @@
+'use client';
+
 import FlagshipShell from '../FlagshipShell.jsx';
 import GscClient from './GscClient.jsx';
 import RegexClient from './RegexClient.jsx';

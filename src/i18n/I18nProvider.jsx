@@ -1,3 +1,5 @@
+'use client';
+
 import { useMemo } from 'react';
 import { I18nContext } from './i18n.js';
 import { resolveCurrency, resolveIntl } from './locales.js';

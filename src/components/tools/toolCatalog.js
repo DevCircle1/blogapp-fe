@@ -14,7 +14,7 @@ export { SITE_URL };
 /**
  * Every entry here becomes an indexable page at /tools/<slug>.
  * Slugs are permanent: renaming one breaks an indexed URL, so add a redirect
- * in netlify.toml instead of editing a slug in place.
+ * in next.config.mjs instead of editing a slug in place.
  */
 export const premiumTools = [
   ...developerTools,

@@ -1,3 +1,5 @@
+'use client';
+
 import FlagshipShell from '../FlagshipShell.jsx';
 import CsvClient from './CsvClient.jsx';
 import { CSV_PAGES, CSV_MODE_BY_PATH } from './pages.js';

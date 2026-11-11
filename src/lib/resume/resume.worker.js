@@ -1,9 +1,11 @@
 import * as pdfjs from 'pdfjs-dist';
-import workerSrc from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 import { extractResumePdf } from './pdfResume.js';
 import { readDocx } from './docxResume.js';
 import { modelFromDocx, modelFromPdf } from './model.js';
 import { runChecks } from './checks.js';
+
+// Bundler-resolved URL of the pdf.js worker (replaces Vite's "?url" import).
+const workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString();
 
 pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
 

@@ -1,13 +1,13 @@
 # The ten spec tools — what was built and how to finish setup
 
-Built from `Downloads/files.zip`, adapted to this repo (Vite + React Router + a prerender step, not Next.js).
+Built from `Downloads/files.zip`, adapted to this repo (Next.js App Router, prerendered at build).
 72 new indexable pages, all prerendered into static HTML and listed in `sitemap.xml`.
 
 ## Layout
 
 - `src/components/tools/flagship/` — one folder per tool. Each has `pages.js` (all page copy, FAQ, titles),
   a `*Client.jsx` (the interactive part) and a `*Page.jsx`. `FlagshipShell.jsx` is the shared page chrome;
-  `registry.js` feeds `scripts/routes.mjs`, so the sitemap and the prerender never disagree with the app.
+  `registry.js` feeds `scripts/routes.mjs`, so the sitemap, the static params and `verify` never disagree with the app.
 - `src/lib/<tool>/` — the engines, pure JS, no DOM, tested in Node (`scripts/checks/*.mjs`).
 - Routes: `src/appRoutes.jsx`. Directory entries: `standaloneTools` in `src/components/tools/toolCatalog.js`.
 - Run every check: `npm run check:tools`. Build: `npm run build`.
@@ -25,7 +25,7 @@ Regenerate the seeded ones after editing the data files: `node scripts/llm-seed-
 | What | Where | When |
 |---|---|---|
 | LLM prices + "verified" date | `src/data/llmModels.js` (or the `llm_models` table) | weekly |
-| Pakistan tax slabs | `src/data/pkTaxYears.js` (or `tax_years`) | every federal budget; add a year, flip `isCurrent`, move the 301 in `netlify.toml` |
+| Pakistan tax slabs | `src/data/pkTaxYears.js` (or `tax_years`) | every federal budget; add a year, flip `isCurrent`, move the 301 in `next.config.mjs` |
 | Google rich-result eligibility | `src/lib/schema/types/*.js` `status` (or `schema_type_status`) | when Google changes support |
 
 ## Things that need a human decision or check

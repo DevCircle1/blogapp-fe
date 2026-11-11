@@ -1,5 +1,7 @@
+'use client';
+
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { publicRequest } from '../../services/api';
 import Seo from '../common/Seo.jsx';
 import { SITE_NAME, SITE_URL, breadcrumbSchema } from '../../seo/siteMeta.js';
@@ -68,7 +70,7 @@ export default function LocalizedBlogIndex({ lang }) {
         <div className="container mx-auto px-4 py-8">
           <nav aria-label="Breadcrumb" className="mb-4 text-sm text-gray-600">
             <ol className="flex flex-wrap items-center gap-2">
-              <li><Link to={hubPath(lang)} className="hover:underline">{chrome.home}</Link></li>
+              <li><Link href={hubPath(lang)} className="hover:underline">{chrome.home}</Link></li>
               <li aria-hidden="true">/</li>
               <li className="text-gray-800" aria-current="page">{chrome.blog}</li>
             </ol>
@@ -90,7 +92,7 @@ export default function LocalizedBlogIndex({ lang }) {
             {posts.map((post) => (
               <Link
                 key={post.id}
-                to={articlePath(lang, post.slug)}
+                href={articlePath(lang, post.slug)}
                 className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-lg transition hover:-translate-y-1 hover:shadow-2xl"
               >
                 <div className="relative overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50 pb-[56.25%]">

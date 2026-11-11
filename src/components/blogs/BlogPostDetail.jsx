@@ -1,6 +1,9 @@
+'use client';
+
 import { useState, useEffect, useMemo } from 'react';
 import { publicRequest } from '../../services/api';
-import { useParams, Link, Navigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useParams, redirect } from 'next/navigation';
 import Seo from '../common/Seo.jsx';
 import AdSlot from '../common/AdSlot.jsx';
 import { SITE_URL, SITE_NAME, breadcrumbSchema } from '../../seo/siteMeta.js';
@@ -125,14 +128,14 @@ const BlogPostDetail = ({ lang = DEFAULT_LANG }) => {
         <Seo title={chrome.notFoundTitle} description={chrome.notFoundBody} path={articlePath(lang, slug)} lang={lang} noindex />
         <h1 className="text-2xl font-bold text-gray-800">{chrome.notFoundTitle}</h1>
         <p className="mt-3 text-gray-600">{chrome.notFoundBody}</p>
-        <Link to={blogPath(lang)} className="mt-6 inline-block text-blue-600 hover:underline">{chrome.backToAll}</Link>
+        <Link href={blogPath(lang)} className="mt-6 inline-block text-blue-600 hover:underline">{chrome.backToAll}</Link>
       </div>
     );
   }
 
   // A post opened under another language's URL moves to its own, so each
   // article has exactly one address and one html lang.
-  if (postLang(post) !== lang) return <Navigate to={articlePath(postLang(post), slug)} replace />;
+  if (postLang(post) !== lang) redirect(articlePath(postLang(post), slug));
 
   const path = articlePath(lang, slug);
   const published = post.created_at ? new Date(post.created_at).toISOString() : undefined;
@@ -180,13 +183,13 @@ const BlogPostDetail = ({ lang = DEFAULT_LANG }) => {
 
       <nav aria-label="Breadcrumb" className="mb-6 text-sm text-gray-600">
         <ol className="flex flex-wrap items-center gap-2">
-          <li><Link to={breadcrumbs[0].path} className="hover:underline">{chrome.home}</Link></li>
+          <li><Link href={breadcrumbs[0].path} className="hover:underline">{chrome.home}</Link></li>
           <li aria-hidden="true">/</li>
-          <li><Link to={blogPath(lang)} className="hover:underline">{chrome.blog}</Link></li>
+          <li><Link href={blogPath(lang)} className="hover:underline">{chrome.blog}</Link></li>
           <li aria-hidden="true">/</li>
           {categoryPath && (
             <>
-              <li><Link to={categoryPath} className="hover:underline">{postCategory.name}</Link></li>
+              <li><Link href={categoryPath} className="hover:underline">{postCategory.name}</Link></li>
               <li aria-hidden="true">/</li>
             </>
           )}
@@ -232,7 +235,7 @@ const BlogPostDetail = ({ lang = DEFAULT_LANG }) => {
                 {relatedPosts.map((item) => (
                   <Link
                     key={item.slug}
-                    to={articlePath(lang, item.slug)}
+                    href={articlePath(lang, item.slug)}
                     className="rounded-xl border border-gray-200 p-4 transition hover:border-blue-400 hover:shadow-sm"
                   >
                     <strong className="line-clamp-2 text-gray-800">{item.title}</strong>
@@ -241,7 +244,7 @@ const BlogPostDetail = ({ lang = DEFAULT_LANG }) => {
                 ))}
               </div>
               {categoryPath && (
-                <Link to={categoryPath} className="mt-5 inline-block font-semibold text-blue-600 hover:underline">
+                <Link href={categoryPath} className="mt-5 inline-block font-semibold text-blue-600 hover:underline">
                   View all {postCategory.name} articles →
                 </Link>
               )}
@@ -249,9 +252,9 @@ const BlogPostDetail = ({ lang = DEFAULT_LANG }) => {
           )}
 
           <footer className="mt-10 border-t border-gray-200 pt-6">
-            <Link to={blogPath(lang)} className="text-blue-600 hover:underline">{chrome.backToAll}</Link>
+            <Link href={blogPath(lang)} className="text-blue-600 hover:underline">{chrome.backToAll}</Link>
             <span className="mx-3 text-gray-300">|</span>
-            <Link to={lang === DEFAULT_LANG ? '/tools' : hubPath(lang)} className="text-blue-600 hover:underline">{chrome.browseTools}</Link>
+            <Link href={lang === DEFAULT_LANG ? '/tools' : hubPath(lang)} className="text-blue-600 hover:underline">{chrome.browseTools}</Link>
           </footer>
         </div>
       </article>

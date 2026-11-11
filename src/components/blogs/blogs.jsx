@@ -1,6 +1,8 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { publicRequest, privateRequest } from '../../services/api';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 const BlogPosts = () => {
   const [posts, setPosts] = useState([]);
@@ -51,7 +53,7 @@ const BlogPosts = () => {
           {posts.map((post) => (
             <Link 
               key={post.id} 
-              to={`/blogs/article/${post.slug}`}  
+              href={`/blogs/article/${post.slug}`}  
               className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-xl"
             >
               {/* Featured Image */}

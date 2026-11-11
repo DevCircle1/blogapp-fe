@@ -1,6 +1,9 @@
+'use client';
+
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { Link, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Globe } from 'lucide-react';
 import { publicRequest } from '../../../services/api';
 import {
@@ -30,14 +33,15 @@ const ENGLISH = {
   },
 };
 
-export default function Footer() {
+// `lang` overrides the language derived from the URL, for pages (the 404) whose content is not in the URL's language.
+export default function Footer({ lang: forcedLang }) {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const location = useLocation();
+  const pathname = usePathname();
 
   // Inside a language section the footer follows that language, and its
   // popular-tool links point at that language's versions of the tools.
-  const lang = langFromPath(location.pathname);
+  const lang = forcedLang ?? langFromPath(pathname);
   const copy = CHROME[lang] || ENGLISH;
   const popular = lang === 'en'
     ? POPULAR_TOOLS
@@ -98,21 +102,21 @@ export default function Footer() {
           <h3 className="text-lg font-semibold text-gray-900">{copy.popularTools}</h3>
           <ul className="mt-4 space-y-2 text-sm">
             {popular.map(([to, label]) => (
-              <li key={to}><Link to={to} className="hover:text-gray-900 transition">{label}</Link></li>
+              <li key={to}><Link href={to} className="hover:text-gray-900 transition">{label}</Link></li>
             ))}
-            <li><Link to={hubPath(lang)} className="font-semibold text-blue-600 hover:underline">{copy.allTools}</Link></li>
+            <li><Link href={hubPath(lang)} className="font-semibold text-blue-600 hover:underline">{copy.allTools}</Link></li>
           </ul>
         </div>
 
         <div>
           <h3 className="text-lg font-semibold text-gray-900">{copy.footer.company}</h3>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><Link to="/about-us" className="hover:text-gray-900 transition">{copy.footer.about}</Link></li>
-            <li><Link to={blogPath(lang)} className="hover:text-gray-900 transition">{copy.footer.blog}</Link></li>
-            <li><Link to="/help-center" className="hover:text-gray-900 transition">{copy.footer.help}</Link></li>
-            <li><Link to="/contact-us" className="hover:text-gray-900 transition">{copy.footer.contact}</Link></li>
-            <li><Link to="/terms-and-conditions" className="hover:text-gray-900 transition">{copy.footer.terms}</Link></li>
-            <li><Link to="/privacy-policy" className="hover:text-gray-900 transition">{copy.footer.privacy}</Link></li>
+            <li><Link href="/about-us" className="hover:text-gray-900 transition">{copy.footer.about}</Link></li>
+            <li><Link href={blogPath(lang)} className="hover:text-gray-900 transition">{copy.footer.blog}</Link></li>
+            <li><Link href="/help-center" className="hover:text-gray-900 transition">{copy.footer.help}</Link></li>
+            <li><Link href="/contact-us" className="hover:text-gray-900 transition">{copy.footer.contact}</Link></li>
+            <li><Link href="/terms-and-conditions" className="hover:text-gray-900 transition">{copy.footer.terms}</Link></li>
+            <li><Link href="/privacy-policy" className="hover:text-gray-900 transition">{copy.footer.privacy}</Link></li>
           </ul>
         </div>
 
@@ -157,7 +161,7 @@ export default function Footer() {
           {ALL_LANGS.map((code) => (
             <Link
               key={code}
-              to={hubPath(code)}
+              href={hubPath(code)}
               hrefLang={LOCALES[code].hreflang}
               lang={LOCALES[code].htmlLang}
               className={code === lang ? 'font-semibold text-gray-900' : 'hover:text-gray-900 transition'}

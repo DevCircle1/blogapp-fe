@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import { StandaloneToolSeo, ToolContentSections } from './StandaloneToolSeo.jsx';
 import {
@@ -86,6 +88,33 @@ const IPAddressChecker = () => {
     ]
   };
 
+  // The heading and the explanatory sections do not depend on the lookup, so they
+  // render in every state — including the server render, which is what crawlers read.
+  const pageHeader = (
+    <header className="text-center py-12">
+      <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">IP Address Checker</h1>
+      <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        Discover your public IP address and network information instantly. Your digital identity online.
+      </p>
+    </header>
+  );
+  const contentSections = (
+    <ToolContentSections
+      light
+      heading="About this IP address checker"
+      intro={IP_INTRO}
+      extraParagraphs={IP_EXTRA_PARAGRAPHS}
+      steps={IP_STEPS}
+      faqs={IP_FAQS}
+      related={[
+        { to: '/screen-resolution', label: 'Screen Resolution Checker', description: 'Check your viewport size, screen resolution, and pixel ratio.' },
+        { to: '/tools/user-agent-parser', label: 'User Agent Parser', description: 'See what your browser reports about itself.' },
+        { to: '/tools/password-generator', label: 'Password Generator', description: 'Create strong random passwords in your browser.' },
+        { to: '/tools/number-base-converter', label: 'Number Base Converter', description: 'Convert between binary, hex, octal, and decimal.' },
+      ]}
+    />
+  );
+
   // ✅ Bot fallback
   if (isBot) {
     return (
@@ -111,17 +140,21 @@ const IPAddressChecker = () => {
   // ✅ Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
         {seo}
-        <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl w-full text-center">
-          <div className="animate-pulse flex flex-col items-center">
-            <div className="rounded-full bg-blue-100 p-4 mb-6">
-              <div className="w-12 h-12 bg-blue-200 rounded-full"></div>
+        <div className="max-w-4xl mx-auto">
+          {pageHeader}
+          <main className="bg-white rounded-2xl shadow-xl overflow-hidden mb-12 p-8 text-center" aria-busy="true" aria-label="Looking up your IP address">
+            <div className="animate-pulse flex flex-col items-center">
+              <div className="rounded-full bg-blue-100 p-4 mb-6">
+                <div className="w-12 h-12 bg-blue-200 rounded-full"></div>
+              </div>
+              <div className="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
             </div>
-            <div className="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-          </div>
+          </main>
         </div>
+        {contentSections}
       </div>
     );
   }
@@ -154,13 +187,7 @@ const IPAddressChecker = () => {
         {/* Structured Data */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-        {/* Header */}
-        <header className="text-center py-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">IP Address Checker</h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Discover your public IP address and network information instantly. Your digital identity online.
-          </p>
-        </header>
+        {pageHeader}
 
         {/* Main Content */}
         <main className="bg-white rounded-2xl shadow-xl overflow-hidden mb-12">
@@ -253,20 +280,7 @@ const IPAddressChecker = () => {
 
       </div>
 
-      <ToolContentSections
-        light
-        heading="About this IP address checker"
-        intro={IP_INTRO}
-        extraParagraphs={IP_EXTRA_PARAGRAPHS}
-        steps={IP_STEPS}
-        faqs={IP_FAQS}
-        related={[
-          { to: '/screen-resolution', label: 'Screen Resolution Checker', description: 'Check your viewport size, screen resolution, and pixel ratio.' },
-          { to: '/tools/user-agent-parser', label: 'User Agent Parser', description: 'See what your browser reports about itself.' },
-          { to: '/tools/password-generator', label: 'Password Generator', description: 'Create strong random passwords in your browser.' },
-          { to: '/tools/number-base-converter', label: 'Number Base Converter', description: 'Convert between binary, hex, octal, and decimal.' },
-        ]}
-      />
+      {contentSections}
     </div>
   );
 };

@@ -1,5 +1,7 @@
+'use client';
+
 import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ArrowRight, Globe, Search, Sparkles } from 'lucide-react';
 import Seo from '../../common/Seo.jsx';
 import AdSlot from '../../common/AdSlot.jsx';
@@ -108,7 +110,7 @@ export default function LocalizedToolsHub({ lang, category }) {
             {categoryLinks.map((link) => (
               <Link
                 key={link.id}
-                to={link.path}
+                href={link.path}
                 className="group rounded-3xl border border-white/10 bg-white/[0.05] p-6 transition hover:-translate-y-1 hover:border-indigo-400/50 hover:bg-white/[0.08]"
               >
                 <h2 className="text-xl font-bold group-hover:text-indigo-300">{link.name}</h2>
@@ -132,7 +134,7 @@ export default function LocalizedToolsHub({ lang, category }) {
               {list.map((item) => (
                 <Link
                   key={item.slug}
-                  to={item.path}
+                  href={item.path}
                   className="group relative rounded-3xl border border-white/10 bg-white/[0.05] p-6 transition hover:-translate-y-1 hover:border-indigo-400/50 hover:bg-white/[0.08]"
                 >
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500/30 to-cyan-400/10 text-lg font-black text-indigo-200">{item.icon}</div>
@@ -157,7 +159,7 @@ export default function LocalizedToolsHub({ lang, category }) {
 
         {categoryPage ? (
           <p className="mt-2">
-            <Link to={hubPath(lang)} className="font-semibold text-indigo-300 hover:text-white">{chrome.browseAll}</Link>
+            <Link href={hubPath(lang)} className="font-semibold text-indigo-300 hover:text-white">{chrome.browseAll}</Link>
           </p>
         ) : (
         <section className="mt-14 max-w-4xl">
@@ -182,7 +184,7 @@ export default function LocalizedToolsHub({ lang, category }) {
             <Globe size={14} aria-hidden="true" />
             <span>{chrome.alsoAvailable}</span>
             {ALL_LANGS.filter((other) => other !== lang).map((other) => (
-              <Link key={other} to={hubPath(other)} hrefLang={LOCALES[other].hreflang} lang={LOCALES[other].htmlLang} className="font-semibold text-indigo-300 hover:text-white">
+              <Link key={other} href={hubPath(other)} hrefLang={LOCALES[other].hreflang} lang={LOCALES[other].htmlLang} className="font-semibold text-indigo-300 hover:text-white">
                 {LOCALES[other].name}
               </Link>
             ))}

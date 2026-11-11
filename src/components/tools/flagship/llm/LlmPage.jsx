@@ -1,4 +1,6 @@
-import { useParams } from 'react-router-dom';
+'use client';
+
+import { useParams } from 'next/navigation';
 import FlagshipShell from '../FlagshipShell.jsx';
 import CounterClient from './CounterClient.jsx';
 import PriceTable from './PriceTable.jsx';

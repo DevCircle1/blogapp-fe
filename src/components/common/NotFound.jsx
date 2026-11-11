@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom';
-import Seo from './Seo.jsx';
+'use client';
+
+import Link from 'next/link';
 
 const SUGGESTIONS = [
   ['/tools', 'All free tools', 'Calculators, converters, text and developer utilities.'],
@@ -11,7 +12,9 @@ const SUGGESTIONS = [
 export default function NotFound() {
   return (
     <main className="min-h-[70vh] bg-slate-950 px-4 py-24 text-white">
-      <Seo title="Page Not Found" description="This page could not be found." path="/404" noindex />
+      {/* Next marks every not-found response noindex itself. No canonical: this page is served at arbitrary URLs. */}
+      <title>Page Not Found | Talk &amp; Tool</title>
+      <meta name="description" content="This page could not be found." />
       <div className="mx-auto max-w-2xl text-center">
         <p className="text-sm font-bold uppercase tracking-widest text-indigo-300">404 error</p>
         <h1 className="mt-4 text-4xl font-black">Page not found</h1>
@@ -20,7 +23,7 @@ export default function NotFound() {
         </p>
         <div className="mt-10 grid gap-3 text-left sm:grid-cols-2">
           {SUGGESTIONS.map(([to, label, description]) => (
-            <Link key={to} to={to} className="rounded-xl border border-white/10 bg-white/5 p-4 transition hover:border-indigo-400/60">
+            <Link key={to} href={to} className="rounded-xl border border-white/10 bg-white/5 p-4 transition hover:border-indigo-400/60">
               <strong className="text-white">{label}</strong>
               <span className="mt-1 block text-sm text-slate-500">{description}</span>
             </Link>

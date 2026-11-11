@@ -1,7 +1,10 @@
+'use client';
+
 import React, { useState } from "react";
 import { signup } from "../../../services/auth";
 import { toast } from "react-toastify";
-import { useNavigate, Link } from "react-router-dom";
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import logo from "../../../assets/logo.png";
 import Seo from '../../common/Seo.jsx';
@@ -15,7 +18,7 @@ export default function RegisterForm() {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const navigate = useNavigate();
+  const router = useRouter();
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -70,7 +73,7 @@ export default function RegisterForm() {
     }
     toast.success(response.message);
     setFormData({ email: "", password: "", confirm_password: "" });
-    navigate("/login");
+    router.push("/login");
     setLoading(false);
   };
   const getInputClassName = (field) => {
@@ -89,7 +92,7 @@ export default function RegisterForm() {
           href="#"
           className="flex items-center mb-6 text-3xl font-semibold text-gray-900 dark:text-white"
         >
-          <img className="w-24 h-24" src={logo} alt="logo" />
+          <img className="w-24 h-24" src={logo.src} alt="logo" />
           <span className="-ml-6">Talk and Tool</span>
         </a>
         <div className="w-full bg-white rounded-lg shadow dark:border sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
@@ -189,7 +192,7 @@ export default function RegisterForm() {
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 Already have an account?{" "}
                 <Link
-                  to="/login"
+                  href="/login"
                   className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                 >
                   Sign in here
@@ -197,7 +200,7 @@ export default function RegisterForm() {
               </p>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400 text-center mt-4">
                 <Link
-                  to="/"
+                  href="/"
                   className="font-medium text-blue-600 hover:underline dark:text-blue-400"
                 >
                   ← Back to Home Page

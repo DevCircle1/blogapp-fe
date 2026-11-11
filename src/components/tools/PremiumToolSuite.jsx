@@ -1,4 +1,7 @@
-import { Link, useParams } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import Seo from '../common/Seo.jsx';
 import ToolPageView from './ToolPageView.jsx';
 import ToolGuides from './ToolGuides.jsx';
@@ -14,7 +17,7 @@ function ToolNotFound() {
       <Seo title="Tool not found" description="This tool does not exist." path="/tools" noindex />
       <h1 className="text-4xl font-black">Tool not found</h1>
       <p className="mx-auto mt-4 max-w-lg text-slate-400">That address does not match any tool. Browse the full directory to find what you need.</p>
-      <Link to="/tools" className="mt-8 inline-block rounded-xl bg-indigo-500 px-5 py-3 font-semibold hover:bg-indigo-400">Browse all tools</Link>
+      <Link href="/tools" className="mt-8 inline-block rounded-xl bg-indigo-500 px-5 py-3 font-semibold hover:bg-indigo-400">Browse all tools</Link>
     </main>
   );
 }

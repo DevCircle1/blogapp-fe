@@ -1,6 +1,7 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill from '../common/QuillEditor.jsx';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../context/AuthContext';
@@ -109,7 +110,7 @@ const WriteBlog = ({ onPostCreated }) => {
     'color','background',
     'script',
     'blockquote','code-block',
-    'list','bullet','indent','align',
+    'list','indent','align',
     'link','image','video',
   ];
 

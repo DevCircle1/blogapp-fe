@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
 import FlagshipShell from '../FlagshipShell.jsx';
 import AnalyzerClient from './AnalyzerClient.jsx';
 import { ANALYZER_PATH, GUIDE_PATH, WHATSAPP_PAGES } from './pages.js';
@@ -24,7 +26,7 @@ export default function WhatsAppPage({ path }) {
             <p className="mt-2 text-sm leading-6 text-slate-400">Chat → ⋮ menu → More → Export chat → Without media → choose where to save. You get a .txt file.</p>
           </div>
         </div>
-        <p className="mt-6 text-center"><Link to={ANALYZER_PATH} className="inline-block rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-slate-950 hover:bg-emerald-400">Analyze your exported chat →</Link></p>
+        <p className="mt-6 text-center"><Link href={ANALYZER_PATH} className="inline-block rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-slate-950 hover:bg-emerald-400">Analyze your exported chat →</Link></p>
       </FlagshipShell>
     );
   }

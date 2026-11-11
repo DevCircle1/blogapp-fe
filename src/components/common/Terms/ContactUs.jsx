@@ -1,3 +1,5 @@
+'use client';
+
 // ContactUs.js
 import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';

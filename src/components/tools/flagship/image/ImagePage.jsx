@@ -1,3 +1,5 @@
+'use client';
+
 import FlagshipShell from '../FlagshipShell.jsx';
 import ImageClient from './ImageClient.jsx';
 import { IMAGE_PAGES } from './pages.js';

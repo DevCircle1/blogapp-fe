@@ -8,7 +8,7 @@
  * "calculadora de impostos" rather than "sales tax calculator".
  *
  * Like the English slugs, these are permanent once indexed. Renaming one
- * breaks a live URL — add a 301 in netlify.toml instead of editing in place.
+ * breaks a live URL — add a 301 in next.config.mjs instead of editing in place.
  * ASCII only, so URLs never need percent-encoding when shared.
  */
 export const TOOL_SLUGS = {

@@ -1,5 +1,5 @@
 /**
- * Writes dist/sitemap.xml at build time.
+ * Writes public/sitemap.xml before the build (the prebuild step), so Next serves it as a static file.
  *
  * Static routes and tool pages come from scripts/routes.mjs. Blog posts,
  * non-empty category pages and localized guide indexes come from the
@@ -105,9 +105,9 @@ const run = async () => {
     '',
   ].join('\n');
 
-  await mkdir('dist', { recursive: true });
-  await writeFile('dist/sitemap.xml', xml, 'utf8');
-  console.log(`[sitemap] Wrote dist/sitemap.xml with ${unique.length} URLs (${blog.routes.length} from the blog).`);
+  await mkdir('public', { recursive: true });
+  await writeFile('public/sitemap.xml', xml, 'utf8');
+  console.log(`[sitemap] Wrote public/sitemap.xml with ${unique.length} URLs (${blog.routes.length} from the blog).`);
 };
 
 run().catch((error) => {

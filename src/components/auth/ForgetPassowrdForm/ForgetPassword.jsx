@@ -1,8 +1,10 @@
+'use client';
+
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { authService } from "../../../services/auth";
-import { Link } from "react-router-dom";
+import Link from 'next/link';
 import logo from "../../../assets/logo.png";
 import Seo from '../../common/Seo.jsx';
 export default function ForgotPassword() {
@@ -57,10 +59,10 @@ export default function ForgotPassword() {
       <Seo title="Reset Your Password" description="Request a password reset link for your Talk & Tool account." path="/forget-password" noindex />
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <Link
-          to="/"
+          href="/"
           className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
         >
-          <img className="w-24 h-24" src={logo} alt="logo" />
+          <img className="w-24 h-24" src={logo.src} alt="logo" />
           <span className="-ml-6">Talk and Tool</span>
         </Link>
         <div className="w-full p-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-gray-800 dark:border-gray-700 sm:p-8">
@@ -111,7 +113,7 @@ export default function ForgotPassword() {
                 >
                   I accept the{" "}
                   <Link
-                    to="/terms-and-conditions"
+                    href="/terms-and-conditions"
                     className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                   >
                     Terms and Conditions
@@ -130,7 +132,7 @@ export default function ForgotPassword() {
             <p className="text-sm font-light text-gray-500 dark:text-gray-400 text-center">
               Remember your password?{" "}
               <Link
-                to="/login"
+                href="/login"
                 className="font-medium text-blue-600 hover:underline dark:text-blue-400"
               >
                 Back to login

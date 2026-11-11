@@ -1,3 +1,5 @@
+'use client';
+
 import { useMemo } from 'react';
 import { usePriceHistory } from '../../../../lib/llm/useModels.js';
 import { LLM_MODELS } from '../../../../data/llmModels.js';

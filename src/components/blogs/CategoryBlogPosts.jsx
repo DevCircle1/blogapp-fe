@@ -1,6 +1,9 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { publicRequest } from '../../services/api';
-import { Link, useParams, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import Seo from '../common/Seo.jsx';
 import { SITE_URL, SITE_NAME, breadcrumbSchema } from '../../seo/siteMeta.js';
 import { useSeed } from '../../context/seed.js';
@@ -14,8 +17,6 @@ const CategoryBlogPosts = () => {
   const [category, setCategory] = useState(seed?.category ?? null);
   const [isLoading, setIsLoading] = useState(!seed);
   const [error, setError] = useState(null);
-  const location = useLocation();
-  const categoryName = location.state?.categoryName;
 
   useEffect(() => {
     // Moving to another category: show its seed at once, or the loading state,
@@ -60,7 +61,7 @@ const CategoryBlogPosts = () => {
     );
   }
 
-  const displayName = category?.name || categoryName || 'Category';
+  const displayName = category?.name || 'Category';
   const path = `/blogs/category/${categorySlug}`;
 
   return (
@@ -101,7 +102,7 @@ const CategoryBlogPosts = () => {
           <div className="flex items-center justify-between">
             <div>
               <Link
-                to="/blogs"
+                href="/blogs"
                 className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-4 transition-colors duration-300"
               >
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -110,7 +111,7 @@ const CategoryBlogPosts = () => {
                 Back to Categories
               </Link>
               <h1 className="text-3xl font-bold text-gray-800">
-                {category?.name || categoryName || 'Category'}
+                {category?.name || 'Category'}
               </h1>
               <p className="text-gray-600 mt-2">
                 {posts.length} {posts.length === 1 ? 'article' : 'articles'} in this category
@@ -131,7 +132,7 @@ const CategoryBlogPosts = () => {
             <h3 className="text-2xl font-bold text-gray-700 mb-2">No articles yet</h3>
             <p className="text-gray-500 mb-6">There are no published articles in this category.</p>
             <Link
-              to="/blogs"
+              href="/blogs"
               className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-300"
             >
               Browse Other Categories
@@ -167,7 +168,7 @@ const CategoryBlogPosts = () => {
                 </div>
 
                 {/* Card Content */}
-                <Link to={`/blogs/article/${post.slug}`}>
+                <Link href={`/blogs/article/${post.slug}`}>
                   <div className="p-6 hover:bg-gray-50 transition-colors duration-300">
                     <h2 className="text-xl font-bold mb-3 line-clamp-2 text-gray-800 hover:text-blue-600 transition-colors duration-300">
                       {post.title}

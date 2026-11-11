@@ -1,18 +1,18 @@
 /**
- * Build guard over the generated pages. Fails the build (exit 1) if any page
- * would ship a loading state or a broken tool.
+ * Build guard over the pages Next prerendered (.next/server/app/**.html). Fails
+ * the build (exit 1) if any page would ship a loading state or a broken tool.
+ * Runs as the `postbuild` step.
  *
  * The failure this exists for is invisible: a page whose server render fell back
- * to a Suspense placeholder looks correct to a human, because the client render
- * fills it in a moment later. Only a check on the static HTML itself catches it.
+ * to client rendering looks correct to a human, because the browser fills it in a
+ * moment later. Only a check on the static HTML itself catches it.
  *
  * Every tool in the catalogue, in every language (English plus each localized
  * one), must have a page whose HTML contains the tool's own interactive root: a
  * <section data-tool-root="<slug>"> with at least one real form control inside.
- * Every page must additionally be free of loading fallbacks and of React's
- * client-render markers, must have a heading, must have exactly one <title>,
- * description and canonical (its own URL), and must be marked for hydration
- * unless it is a declared legacy route.
+ * Every page must additionally be free of client-render markers, must have a
+ * heading, and must have exactly one <title>, description and canonical (its own
+ * URL).
  *
  * The blog (scripts/blog-pages.mjs) must be in the static HTML, not fetched
  * after load: every post page carries its title, its complete article body and
@@ -23,7 +23,6 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { allRoutes, CONTENT, SITE_URL } from './routes.mjs';
-import { LEGACY_ROUTES } from './prerender-legacy.mjs';
 import {
   ALL_LANGS, BLOG_SEGMENTS, LOCALIZED_LANGS, blogPath, hubPath, toolPath, hasToolTranslation,
 } from '../src/i18n/locales.js';
@@ -32,22 +31,29 @@ import { premiumTools } from '../src/components/tools/toolCatalog.js';
 import { REMOVED_PATHS } from './removed-paths.mjs';
 import { readBlogData } from './blog-data.mjs';
 import { blogPages } from './blog-pages.mjs';
-import { SEED_ELEMENT_ID } from '../src/context/seed.js';
 
-const DIST = 'dist';
+// Next writes each prerendered page as <route>.html (the home page as index.html).
+const DIST = path.join('.next', 'server', 'app');
+const SITEMAP = path.join('public', 'sitemap.xml');
 const CONTROL = /<(textarea|input|select|button)\b/;
 
-// What a page must never contain: the app's loading placeholder, and the
-// markers React leaves when a boundary was abandoned to client rendering or
-// streamed in late (an inline completion script or a hidden segment).
+// What a page must never contain: Next's marker for a page that gave up on
+// server rendering, and the markers React leaves when a boundary was abandoned
+// to client rendering or streamed in late (an inline completion script or a
+// hidden segment).
 const FORBIDDEN = [
-  ['loading fallback', 'aria-label="Loading page"'],
+  ['client-side rendering bailout', 'BAILOUT_TO_CLIENT_SIDE_RENDERING'],
   ['client-render boundary marker', '<!--$!-->'],
   ['pending boundary marker', '<!--$?-->'],
   ['streamed segment', '<template id="B:'],
   ['streamed completion script', '$RC('],
   ['streamed error script', '$RX('],
 ];
+
+// Pages that intentionally render part of themselves in the browser only: the Quill
+// editor needs the DOM, so next/dynamic({ ssr: false }) leaves a client-render boundary
+// (with a placeholder) where the editor goes. The rest of the page is in the static HTML.
+const CLIENT_ONLY_BOUNDARY = new Set(['/text-to-html']);
 
 const fileFor = (routePath) => (routePath === '/' ? path.join(DIST, 'index.html') : path.join(DIST, `${routePath}.html`));
 
@@ -90,36 +96,30 @@ for (const routePath of toolRoutes.keys()) {
 }
 
 // A removed feature (scripts/removed-paths.mjs) must leave no trace: no
-// internal link to it on any page, nothing in the sitemap, and a 404 rule for
-// every one of its URLs.
+// internal link to it on any page and nothing in the sitemap. Having no route at
+// all, every one of its URLs answers the global 404.
 const linksToRemoved = (href) => {
   if (!href.startsWith('/') && !href.startsWith(SITE_URL)) return false;
   const target = href.slice(href.startsWith(SITE_URL) ? SITE_URL.length : 0).split(/[?#]/)[0].replace(/(.)\/$/, '$1');
   return REMOVED_PATHS.some((pattern) => (pattern.endsWith('/*') ? target.startsWith(pattern.slice(0, -1)) : target === pattern));
 };
 {
-  const sitemap = await readFile(path.join(DIST, 'sitemap.xml'), 'utf8').catch(() => '');
+  const sitemap = await readFile(SITEMAP, 'utf8').catch(() => '');
+  if (!sitemap) problem('/sitemap.xml', `is missing (${SITEMAP}); it is written by \`npm run sitemap\`, which the prebuild step runs`);
   for (const [, loc] of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
     if (linksToRemoved(loc)) problem('/sitemap.xml', `lists ${loc}, which belongs to a removed feature`);
-  }
-  const redirects = await readFile(path.join(DIST, '_redirects'), 'utf8').catch(() => '');
-  REMOVED_PATHS.forEach((pattern) => {
-    if (!redirects.includes(`${pattern}  /404.html  404!`)) problem('/_redirects', `has no 404 rule for ${pattern}`);
-  });
-  blog.notFound.forEach((pattern) => {
-    if (!redirects.includes(`${pattern}  /404.html  404\n`)) problem('/_redirects', `has no (non-forced) 404 rule for ${pattern}`);
-  });
-  for (const [, loc] of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
     if (!generated.has(sitePath(loc) || '/')) problem('/sitemap.xml', `lists ${loc}, which has no generated page`);
   }
-  const notFound = await readFile(path.join(DIST, '404.html'), 'utf8').catch(() => '');
-  if (!notFound.includes('noindex') || notFound.includes('rel="canonical"')) problem('/404.html', 'is missing, or is not noindex without a canonical');
+  // Removed features and unknown blog URLs have no route at all, so they are unmatched
+  // and answered with a real 404 by src/app/global-not-found.jsx (noindex, no canonical).
+  const notFound = await readFile(path.join(DIST, '_not-found.html'), 'utf8').catch(() => '');
+  if (!notFound.includes('noindex') || notFound.includes('rel="canonical"')) {
+    problem('/404', 'the global not-found page is missing, or is not noindex without a canonical');
+  }
 }
 
 let checkedTools = 0;
-let exempt = 0;
 let checkedBlog = 0;
-const exemptTools = [];
 for (const route of routes) {
   let html;
   try {
@@ -129,14 +129,13 @@ for (const route of routes) {
     continue;
   }
 
-  const rootStart = html.indexOf('<div id="root"');
-  const rootTag = rootStart === -1 ? '' : html.slice(rootStart, html.indexOf('>', rootStart) + 1);
-  if (rootStart === -1 || html.slice(rootStart + rootTag.length, rootStart + rootTag.length + 6) === '</div>') {
-    problem(route.path, '#root is missing or empty');
-    continue;
+  if (html.includes('\0')) problem(route.path, 'contains a NUL byte');
+  // A value that was meant to be a string and was not. The classic case after the move to
+  // Next: `import logo from './logo.png'` is an object there, so <img src={logo}> renders
+  // src="[object Object]" and the browser requests a URL that 404s on every page.
+  for (const [, attribute, value] of html.matchAll(/\s(src|href|srcSet|poster|action)="([^"]*\[object Object\][^"]*|undefined|null)"/g)) {
+    problem(route.path, `${attribute}="${value}" is not a real URL`);
   }
-
-  if (html.includes('\0')) problem(route.path, 'contains a NUL byte (see src/entry-server.jsx)');
   for (const [, href] of html.matchAll(/href="([^"]+)"/g)) {
     if (linksToRemoved(href)) problem(route.path, `links to ${href}, which belongs to a removed feature`);
     else if (isBlogUrl(href) && !generated.has(sitePath(href))) problem(route.path, `links to ${href}, which has no page (it answers 404)`);
@@ -165,28 +164,20 @@ for (const route of routes) {
     if (expected.body && !body.includes(expected.body)) problem(route.path, 'does not contain the complete article body');
     if (expected.article) {
       const title = expected.texts[0];
-      const posting = [...head.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>(.*?)<\/script>/g)]
+      // JSON-LD is rendered in the body (see src/components/common/Seo.jsx), not hoisted into <head>.
+      const posting = [...html.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>(.*?)<\/script>/g)]
         .map(([, json]) => { try { return JSON.parse(json); } catch { return null; } })
         .find((schema) => schema?.['@type'] === 'BlogPosting');
-      if (!posting) problem(route.path, 'has no BlogPosting JSON-LD in <head>');
+      if (!posting) problem(route.path, 'has no BlogPosting JSON-LD');
       else if (posting.headline !== title || !posting.datePublished || !posting.dateModified || !posting.author?.name) {
         problem(route.path, 'BlogPosting JSON-LD lacks headline, datePublished, dateModified or author');
       }
-      if (!head.includes(`<title data-rh="true">${asHtmlText(title)}`)) problem(route.path, 'the <title> is not the post title');
+      if (!head.includes(`<title>${asHtmlText(title)}`)) problem(route.path, 'the <title> is not the post title');
     }
-    if (!html.includes(`<script id="${SEED_ELEMENT_ID}" type="application/json">`)) problem(route.path, 'has no embedded seed, so it would not hydrate from the same data');
   }
 
-  const legacy = LEGACY_ROUTES.has(route.path);
-  if (legacy) {
-    exempt += 1;
-    if (rootTag.includes('data-ssr-rendered')) problem(route.path, 'legacy markup must not be marked for hydration');
-    if (toolRoutes.has(route.path)) exemptTools.push(route.path);
-    continue;
-  }
-
-  if (!rootTag.includes('data-ssr-rendered="true"')) problem(route.path, 'not marked data-ssr-rendered, so it would be replaced rather than hydrated');
   FORBIDDEN.forEach(([what, needle]) => {
+    if (CLIENT_ONLY_BOUNDARY.has(route.path) && needle === '<!--$!-->') return;
     if (html.includes(needle)) problem(route.path, `contains a ${what} (${needle})`);
   });
   if (!/<h1[\s>]/.test(html)) problem(route.path, 'has no <h1>');
@@ -241,7 +232,7 @@ for (const lang of LOCALIZED_LANGS) {
         if (found.has(toolPath(lang, tool.slug))) problem(hub.path, `lists ${toolPath(lang, tool.slug)}, which belongs to another category`);
       });
       if (!expected.size) problem(hub.path, 'has no tools');
-      if (html.includes('rel="alternate" hreflang')) problem(hub.path, 'has hreflang alternates, but the hub exists in one language only');
+      if (/rel="alternate" hreflang/i.test(html)) problem(hub.path, 'has hreflang alternates, but the hub exists in one language only');
       const trail = html.match(/"@type":"BreadcrumbList","itemListElement":(\[.*?\])\}/)?.[1];
       const names = trail ? JSON.parse(trail).map((item) => item.name) : [];
       if (names.length !== 2 || names[1] !== hub.name) problem(hub.path, `BreadcrumbList should be Home > ${hub.name} (two levels), found: ${names.join(' > ') || 'none'}`);
@@ -251,7 +242,6 @@ for (const lang of LOCALIZED_LANGS) {
   // Every tool page's visible breadcrumb and BreadcrumbList follow the shared trail.
   for (const tool of langTools) {
     const path = toolPath(lang, tool.slug);
-    if (LEGACY_ROUTES.has(path)) continue;
     const html = await read(path);
     if (!html) continue;
     breadcrumbCount += 1;
@@ -288,6 +278,5 @@ if (problems.length) {
   if (problems.length > 60) console.error(`  ... and ${problems.length - 60} more`);
   process.exit(1);
 }
-if (exemptTools.length) console.warn(`[verify] ${exemptTools.length} tool pages are EXEMPT from the interactive-root check as legacy routes (see scripts/prerender-legacy.mjs): ${[...new Set(exemptTools.map((p) => toolRoutes.get(p)))].join(', ')}`);
 console.log(`[verify] category hubs: ${hubCount} in ${hubLanguages.join(', ') || 'no language'}; ${breadcrumbCount} tool-page breadcrumbs checked.`);
-console.log(`[verify] ${routes.length} pages OK: ${checkedTools} tool pages contain their interactive root, ${checkedBlog} blog pages contain their posts (${blog.routes.length} blog-only pages), ${routes.length - exempt} hydrate, ${exempt} legacy.`);
+console.log(`[verify] ${routes.length} pages OK: ${checkedTools} tool pages contain their interactive root, ${checkedBlog} blog pages contain their posts (${blog.routes.length} blog-only pages).`);

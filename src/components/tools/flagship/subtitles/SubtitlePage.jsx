@@ -1,3 +1,5 @@
+'use client';
+
 import FlagshipShell from '../FlagshipShell.jsx';
 import SubtitleClient from './SubtitleClient.jsx';
 import { SUBTITLE_CONFIG, SUBTITLE_PAGES } from './pages.js';

@@ -1,5 +1,7 @@
+'use client';
+
 import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ArrowRight, Search, ShieldCheck, Sparkles, Zap } from 'lucide-react';
 import Seo from '../common/Seo.jsx';
 import AdSlot from '../common/AdSlot.jsx';
@@ -99,7 +101,7 @@ export default function ToolsPage() {
             {LOCALIZED_LANGS.map((lang, index) => (
               <span key={lang}>
                 {index ? ' · ' : ''}
-                <Link to={hubPath(lang)} hrefLang={LOCALES[lang].hreflang} lang={LOCALES[lang].htmlLang} className="font-semibold text-indigo-300 hover:text-white">{LOCALES[lang].name}</Link>
+                <Link href={hubPath(lang)} hrefLang={LOCALES[lang].hreflang} lang={LOCALES[lang].htmlLang} className="font-semibold text-indigo-300 hover:text-white">{LOCALES[lang].name}</Link>
               </span>
             ))}
           </p>
@@ -143,7 +145,7 @@ export default function ToolsPage() {
               {tools.map((tool) => (
                 <Link
                   key={tool.link}
-                  to={tool.link}
+                  href={tool.link}
                   className="group relative rounded-3xl border border-white/10 bg-white/[0.05] p-6 transition hover:-translate-y-1 hover:border-indigo-400/50 hover:bg-white/[0.08]"
                 >
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500/30 to-cyan-400/10 text-lg font-black text-indigo-200">{tool.icon}</div>

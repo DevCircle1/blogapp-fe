@@ -1,4 +1,7 @@
-import { Link, useParams } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import FlagshipShell from '../FlagshipShell.jsx';
 import PkTaxClient from './PkTaxClient.jsx';
 import SlabTable from './SlabTable.jsx';
@@ -23,7 +26,7 @@ export default function TaxPage({ view }) {
         {TAX_YEARS.map((item, index) => (
           <SlabTable key={item.slug} year={item} heading={`Income tax slabs Pakistan ${item.slug}`} headingLevel={index === 0 ? 'h2' : 'h3'} />
         ))}
-        <p className="mt-8 text-sm"><Link to={TAX_PATH} className="font-semibold text-indigo-300 hover:text-white">Calculate your own tax with these slabs →</Link></p>
+        <p className="mt-8 text-sm"><Link href={TAX_PATH} className="font-semibold text-indigo-300 hover:text-white">Calculate your own tax with these slabs →</Link></p>
       </FlagshipShell>
     );
   }
@@ -35,7 +38,7 @@ export default function TaxPage({ view }) {
     >
       {page.pastYear && (
         <p className="mb-5 rounded-xl border border-amber-400/25 bg-amber-400/10 p-3 text-sm text-amber-100">
-          You are viewing {year.label}. For today’s figures use the <Link to={TAX_PATH} className="font-semibold underline">{current.label} calculator</Link>.
+          You are viewing {year.label}. For today’s figures use the <Link href={TAX_PATH} className="font-semibold underline">{current.label} calculator</Link>.
         </p>
       )}
       <PkTaxClient yearSlug={year.slug} mode={view === 'net' ? 'gross-to-net' : 'salary'} />

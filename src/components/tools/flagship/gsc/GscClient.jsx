@@ -1,3 +1,5 @@
+'use client';
+
 import { useMemo, useState } from 'react';
 import {
   AlertTriangle, ArrowDown, ArrowUp, ChevronDown, ChevronRight, Download, Upload,

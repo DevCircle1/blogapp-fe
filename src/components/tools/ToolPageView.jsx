@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
 import { Globe, ShieldCheck, Sparkles } from 'lucide-react';
 import Seo from '../common/Seo.jsx';
 import AdSlot from '../common/AdSlot.jsx';
@@ -17,9 +19,9 @@ export default function ToolPageView({ tool, Tool, seo, labels, related, languag
       <div className="mx-auto max-w-6xl">
         <nav aria-label={labels.breadcrumb} className="mb-8 text-sm text-slate-400">
           <ol className="flex flex-wrap items-center gap-2">
-            <li><Link to="/" className="hover:text-white">{labels.home}</Link></li>
+            <li><Link href="/" className="hover:text-white">{labels.home}</Link></li>
             <li aria-hidden="true">/</li>
-            <li><Link to={labels.categoryPath || labels.toolsPath} className="hover:text-white">{labels.categoryName || labels.tools}</Link></li>
+            <li><Link href={labels.categoryPath || labels.toolsPath} className="hover:text-white">{labels.categoryName || labels.tools}</Link></li>
             <li aria-hidden="true">/</li>
             <li className="text-slate-300" aria-current="page">{tool.shortTitle}</li>
           </ol>
@@ -36,7 +38,7 @@ export default function ToolPageView({ tool, Tool, seo, labels, related, languag
               <Globe size={14} aria-hidden="true" />
               <span>{labels.alsoAvailable}</span>
               {languages.map((language) => (
-                <Link key={language.lang} to={language.path} hrefLang={language.hreflang} lang={language.htmlLang} className="font-semibold text-indigo-300 hover:text-white">
+                <Link key={language.lang} href={language.path} hrefLang={language.hreflang} lang={language.htmlLang} className="font-semibold text-indigo-300 hover:text-white">
                   {language.name}
                 </Link>
               ))}

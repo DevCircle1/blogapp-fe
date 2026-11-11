@@ -1,3 +1,5 @@
+'use client';
+
 import { useMemo, useState } from 'react';
 import {
   ErrorNote, Grid, Label, LabelledField, LabelledSelect, Panel, Result, Segmented, Stat,

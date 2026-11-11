@@ -1,11 +1,13 @@
+'use client';
+
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import authService from '../../../services/auth';
 import logo from '../../../assets/logo.png';
 import Seo from '../../common/Seo.jsx';
 export default function UpdatePassword() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [formData, setFormData] = useState({
     password: '',
     confirm_password: ''
@@ -28,7 +30,7 @@ export default function UpdatePassword() {
 
     if (result.success) {
       toast.success(result.message || 'Password reset successful');
-      navigate('/login');
+      router.push('/login');
     } else {
       toast.error(result.message || 'Failed to reset password');
     }
@@ -39,7 +41,7 @@ export default function UpdatePassword() {
       <Seo title="Set a New Password" description="Choose a new password for your Talk & Tool account." path="/update-password" noindex />
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-          <img className="w-24 h-24" src={logo} alt="logo" />
+          <img className="w-24 h-24" src={logo.src} alt="logo" />
           <span className="-ml-6">Talk and Tool</span>
         </a>
         <div className="w-full p-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-gray-800 dark:border-gray-700 sm:p-8">

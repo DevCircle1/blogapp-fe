@@ -1,4 +1,7 @@
-import { Link, useParams } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import Seo from '../../common/Seo.jsx';
 import ToolPageView from '../ToolPageView.jsx';
 import ToolGuides from '../ToolGuides.jsx';
@@ -20,7 +23,7 @@ function LocalizedNotFound({ lang, chrome }) {
       <Seo title={chrome.notFoundTitle} description={chrome.notFoundBody} path={hubPath(lang)} lang={lang} noindex />
       <h1 className="text-4xl font-black">{chrome.notFoundTitle}</h1>
       <p className="mx-auto mt-4 max-w-lg text-slate-400">{chrome.notFoundBody}</p>
-      <Link to={hubPath(lang)} className="mt-8 inline-block rounded-xl bg-indigo-500 px-5 py-3 font-semibold hover:bg-indigo-400">{chrome.browseAll}</Link>
+      <Link href={hubPath(lang)} className="mt-8 inline-block rounded-xl bg-indigo-500 px-5 py-3 font-semibold hover:bg-indigo-400">{chrome.browseAll}</Link>
     </main>
   );
 }

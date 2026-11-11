@@ -1,7 +1,16 @@
-import { Helmet } from 'react-helmet-async';
 import { SITE_NAME, DEFAULT_OG_IMAGE, absoluteUrl } from '../../seo/siteMeta.js';
 import { LOCALES } from '../../i18n/locales.js';
 
+/**
+ * The only place a page's head tags are declared. Every indexable route renders
+ * exactly one <Seo>, so title, description, canonical, Open Graph and robots
+ * directives cannot drift apart. Private pages pass `noindex`.
+ *
+ * <title>, <meta> and <link> are rendered as plain elements: React 19 hoists
+ * them into <head> — on the server render as well as in the browser — so this
+ * works in server and client components alike and needs no head-management
+ * library. JSON-LD stays in the body, where search engines read it equally well.
+ */
 export default function Seo({
   title,
   description,
@@ -22,7 +31,7 @@ export default function Seo({
   const ogLocale = LOCALES[lang]?.ogLocale;
 
   return (
-    <Helmet prioritizeSeoTags>
+    <>
       <title>{fullTitle}</title>
       {description && <meta name="description" content={description} />}
       <link rel="canonical" href={canonical} />
@@ -45,9 +54,14 @@ export default function Seo({
       {description && <meta name="twitter:description" content={description} />}
       <meta name="twitter:image" content={absoluteUrl(image)} />
       {schemas.filter(Boolean).map((schema, index) => (
-        <script key={index} type="application/ld+json">{JSON.stringify(schema)}</script>
+        // "<" is escaped so no string in the data can close the script element early.
+        <script
+          key={index}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, '\\u003c') }}
+        />
       ))}
       {children}
-    </Helmet>
+    </>
   );
 }

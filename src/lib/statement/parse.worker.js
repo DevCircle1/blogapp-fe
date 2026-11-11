@@ -1,7 +1,9 @@
 import * as pdfjs from 'pdfjs-dist';
-import workerSrc from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 import { extractPages } from './pdfText.js';
 import { parseStatement } from './parse.js';
+
+// Bundler-resolved URL of the pdf.js worker (replaces Vite's "?url" import).
+const workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString();
 
 pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
 

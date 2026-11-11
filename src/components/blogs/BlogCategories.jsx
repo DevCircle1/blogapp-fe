@@ -1,6 +1,8 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { publicRequest } from '../../services/api';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import Seo from '../common/Seo.jsx';
 import { SITE_NAME, breadcrumbSchema } from '../../seo/siteMeta.js';
 import { useSeed } from '../../context/seed.js';
@@ -73,7 +75,7 @@ const BlogCategories = () => {
             {categories.map((category) => (
               <Link
                 key={category.slug}   // ✅ use slug
-                to={`/blogs/category/${category.slug}`}   // ✅ slug instead of id
+                href={`/blogs/category/${category.slug}`}   // ✅ slug instead of id
                 state={{ categoryName: category.name }}
                 className="group"
               >

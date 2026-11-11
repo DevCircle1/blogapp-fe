@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext, startTransition, useContext, useEffect, useMemo, useState } from 'react';
 import { supabase } from '../services/supabase';
 

@@ -1,6 +1,7 @@
+'use client';
+
 import React, { useState, useRef, useEffect } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill from '../common/QuillEditor.jsx';
 import { StandaloneToolSeo, ToolContentSections } from "./StandaloneToolSeo.jsx";
 const TEXT_HTML_FAQS = [
   { q: 'What does a WYSIWYG editor actually produce?', a: 'HTML. Every formatting action in the toolbar maps to a tag: bold becomes <strong>, a bullet list becomes <ul> and <li>, a heading becomes <h2>. The editor hides the markup while you write and hands it back when you are done.' },
@@ -36,7 +37,7 @@ const TextToHtmlTool = () => {
   const formats = [
     'header',
     'bold', 'italic', 'underline', 'strike',
-    'list', 'bullet',
+    'list',
     'blockquote', 'code-block',
     'link', 'image',
     'align',

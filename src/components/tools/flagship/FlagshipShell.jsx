@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
 import { ShieldCheck, Sparkles } from 'lucide-react';
 import Seo from '../../common/Seo.jsx';
 import AdSlot from '../../common/AdSlot.jsx';
@@ -34,7 +36,7 @@ export default function FlagshipShell({ page, children, privacy, afterTool }) {
                 {index > 0 && <span aria-hidden="true">/</span>}
                 {index === trail.length - 1
                   ? <span className="text-slate-300" aria-current="page">{crumb.name}</span>
-                  : <Link to={crumb.path} className="hover:text-white">{crumb.name}</Link>}
+                  : <Link href={crumb.path} className="hover:text-white">{crumb.name}</Link>}
               </li>
             ))}
           </ol>
@@ -146,7 +148,7 @@ export default function FlagshipShell({ page, children, privacy, afterTool }) {
                 <ul className="mt-4 space-y-2">
                   {page.siblings.map((item) => (
                     <li key={item.to}>
-                      <Link to={item.to} className="block rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-indigo-200 transition hover:border-indigo-400/60 hover:text-white">
+                      <Link href={item.to} className="block rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-indigo-200 transition hover:border-indigo-400/60 hover:text-white">
                         {item.label}
                       </Link>
                     </li>
@@ -158,13 +160,13 @@ export default function FlagshipShell({ page, children, privacy, afterTool }) {
             <h2 className={`${page.siblings?.length ? 'mt-8 ' : ''}text-xl font-bold`}>Related tools</h2>
             <div className="mt-4 space-y-3">
               {page.related.map((item) => (
-                <Link key={item.to} to={item.to} className="block rounded-xl border border-white/10 bg-white/5 p-4 transition hover:border-indigo-400/60 hover:bg-white/10">
+                <Link key={item.to} href={item.to} className="block rounded-xl border border-white/10 bg-white/5 p-4 transition hover:border-indigo-400/60 hover:bg-white/10">
                   <strong className="text-white">{item.label}</strong>
                   <span className="mt-1 block text-sm leading-6 text-slate-500">{item.description}</span>
                 </Link>
               ))}
             </div>
-            <Link to="/tools" className="mt-5 inline-block text-sm font-semibold text-indigo-300 hover:text-white">Browse all tools →</Link>
+            <Link href="/tools" className="mt-5 inline-block text-sm font-semibold text-indigo-300 hover:text-white">Browse all tools →</Link>
             <AdSlot placement="toolFooter" className="mt-8" />
           </aside>
         </div>

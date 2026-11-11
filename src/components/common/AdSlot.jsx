@@ -1,19 +1,21 @@
+'use client';
+
 import { useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
 import { ADSENSE_CLIENT } from '../../seo/siteMeta.js';
 
 const SLOTS = {
-  toolInline: import.meta.env.VITE_ADSENSE_SLOT_TOOL_INLINE,
-  toolFooter: import.meta.env.VITE_ADSENSE_SLOT_TOOL_FOOTER,
-  articleInline: import.meta.env.VITE_ADSENSE_SLOT_ARTICLE_INLINE,
-  listing: import.meta.env.VITE_ADSENSE_SLOT_LISTING,
+  toolInline: process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOOL_INLINE,
+  toolFooter: process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOOL_FOOTER,
+  articleInline: process.env.NEXT_PUBLIC_ADSENSE_SLOT_ARTICLE_INLINE,
+  listing: process.env.NEXT_PUBLIC_ADSENSE_SLOT_LISTING,
 };
 
 export default function AdSlot({ placement, className = '', label = true }) {
   const slot = SLOTS[placement];
   const insRef = useRef(null);
   const pushed = useRef(false);
-  const { pathname } = useLocation();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!slot || pushed.current || !insRef.current) return;

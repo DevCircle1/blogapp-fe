@@ -1,9 +1,11 @@
+'use client';
+
 import { useMemo, useState } from 'react';
 import { ArrowDown, ArrowUp } from 'lucide-react';
 import { useModels } from '../../../../lib/llm/useModels.js';
 import { compactTokens, priceLabel } from '../../../../lib/llm/cost.js';
 import { MODEL_PAGE_SLUGS, providerOrder } from '../../../../data/llmModels.js';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { cx } from '../../impl/toolFormat.js';
 
 const COLUMNS = [
@@ -67,7 +69,7 @@ export default function PriceTable({ caption = true }) {
               <tr key={model.slug} className="border-t border-white/5 hover:bg-white/[0.03]">
                 <th scope="row" className="px-3 py-2 text-left font-semibold text-white">
                   {MODEL_PAGE_SLUGS.includes(model.slug)
-                    ? <Link to={`/tools/llm-token-counter/${model.slug}`} className="hover:text-indigo-300">{model.name}</Link>
+                    ? <Link href={`/tools/llm-token-counter/${model.slug}`} className="hover:text-indigo-300">{model.name}</Link>
                     : model.name}
                   <span className="ml-2 text-xs font-normal text-slate-500">{model.provider}</span>
                   {model.promo && <span className="ml-2 rounded bg-amber-400/15 px-1.5 py-0.5 text-[10px] font-semibold text-amber-200" title={model.promo}>promo</span>}

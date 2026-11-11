@@ -1,5 +1,7 @@
+'use client';
+
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { BookOpen } from 'lucide-react';
 import { publicRequest } from '../../services/api';
 import { articlePath } from '../../i18n/locales.js';
@@ -34,7 +36,7 @@ export default function ToolGuides({ lang, path }) {
       <ul className="mt-3 space-y-3">
         {guides.map((guide) => (
           <li key={guide.slug}>
-            <Link to={articlePath(lang, guide.slug)} className="text-sm font-semibold leading-6 text-indigo-300 hover:text-white">
+            <Link href={articlePath(lang, guide.slug)} className="text-sm font-semibold leading-6 text-indigo-300 hover:text-white">
               {guide.title}
             </Link>
           </li>

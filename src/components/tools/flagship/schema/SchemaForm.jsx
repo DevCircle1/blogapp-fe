@@ -1,3 +1,5 @@
+'use client';
+
 import { Plus, Trash2 } from 'lucide-react';
 import { cx } from '../../impl/toolFormat.js';
 

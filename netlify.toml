@@ -1,95 +1,24 @@
 [build]
   command = "npm run build"
-  publish = "dist"
 
 [build.environment]
-  # These Vite values are intentionally compiled into the public browser bundle.
+  # Next 16 needs Node 20.9 or newer.
+  NODE_VERSION = "22"
+  # These values are intentionally compiled into the public browser bundle.
   # Keep secret scanning enabled for every other environment variable.
-  SECRETS_SCAN_OMIT_KEYS = "VITE_SUPABASE_URL,VITE_SUPABASE_PUBLISHABLE_KEY,VITE_SUPABASE_BLOG_IMAGES_BUCKET"
+  # (The VITE_ names are still accepted as a fallback; see next.config.mjs.)
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,NEXT_PUBLIC_SUPABASE_BLOG_IMAGES_BUCKET,VITE_SUPABASE_URL,VITE_SUPABASE_PUBLISHABLE_KEY,VITE_SUPABASE_BLOG_IMAGES_BUCKET"
 
-# ---------------------------------------------------------------- redirects
-# Order matters: Netlify applies the first matching rule, and static files in
-# the publish directory are served before any of these are considered.
-
-# Canonical host. Without this, https://www.talkandtool.com and
-# https://talkandtool.com are two crawlable copies of every page.
+# Redirects (www -> apex, the retired profit-margin page, the current tax year) and
+# the security/cache headers live in next.config.mjs, so they behave the same on
+# any host. The canonical-host redirect is repeated here so Netlify answers it at
+# the edge without invoking the Next server.
 [[redirects]]
   from = "https://www.talkandtool.com/*"
   to = "https://talkandtool.com/:splat"
   status = 301
   force = true
 
-# The standalone profit margin page was replaced by the fuller margin and
-# markup tool. A 301 passes its accumulated ranking signals to the new URL
-# instead of leaving two competing pages.
-[[redirects]]
-  from = "/profit-margin-calculator"
-  to = "/tools/margin-markup-calculator"
-  status = 301
-  force = true
-
-# The current tax year has no page of its own: the canonical calculator IS the
-# current year. When a new tax year is added, move this redirect to the year that
-# stops being current (and give that year its own page) so the URL keeps resolving.
-[[redirects]]
-  from = "/tools/salary-tax-calculator-pakistan/2026-27"
-  to = "/tools/salary-tax-calculator-pakistan"
-  status = 301
-  force = true
-
-# Without this, /.well-known/* falls through to the catch-all SPA rewrite
-# below and gets a 200 (the app shell) instead of a real 404. Crawlers and
-# tooling probe /.well-known/ for standardised metadata (e.g. an AI-agent
-# resource manifest); a soft-200 there reads as "a manifest exists but is
-# malformed" instead of "there is no manifest", which is the wrong signal.
-[[redirects]]
-  from = "/.well-known/*"
-  to = "/app.html"
-  status = 404
-
-# SPA fallback. Points at app.html rather than index.html so the prerendered
-# homepage at index.html is not served for every unmatched path — that would
-# put the homepage's canonical tag on blog articles and 404s alike.
-[[redirects]]
-  from = "/*"
-  to = "/app.html"
-  status = 200
-
-# ------------------------------------------------------------------ headers
-[[headers]]
-  for = "/assets/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-  for = "/*.png"
-  [headers.values]
-    Cache-Control = "public, max-age=604800"
-
-# HTML must revalidate, otherwise a cached shell keeps serving stale meta tags
-# and stale content after a deploy.
-[[headers]]
-  for = "/*.html"
-  [headers.values]
-    Cache-Control = "public, max-age=0, must-revalidate"
-
-[[headers]]
-  for = "/sitemap.xml"
-  [headers.values]
-    Cache-Control = "public, max-age=3600"
-    Content-Type = "application/xml; charset=utf-8"
-
-[[headers]]
-  for = "/ads.txt"
-  [headers.values]
-    Cache-Control = "public, max-age=86400"
-    Content-Type = "text/plain; charset=utf-8"
-
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-    X-Frame-Options = "SAMEORIGIN"
-    Permissions-Policy = "geolocation=(), microphone=(), camera=(), interest-cohort=()"
-    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+# The Next.js runtime is installed automatically by Netlify for Next sites. There
+# is no publish directory and no SPA fallback: every URL is either a prerendered
+# page or a real 404 (src/app/global-not-found.jsx).

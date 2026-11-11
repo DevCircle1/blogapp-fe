@@ -1,3 +1,5 @@
+'use client';
+
 import FlagshipShell from '../FlagshipShell.jsx';
 import SchemaClient from './SchemaClient.jsx';
 import { SCHEMA_PAGES } from './pages.js';

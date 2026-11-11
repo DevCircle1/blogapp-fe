@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
 
 /**
  * Bottom-of-page related-tools block, shared by every tool page in every
@@ -14,13 +16,13 @@ export default function RelatedTools({ heading, items, browseAllLabel, browseAll
       <h2 className="text-xl font-bold">{heading}</h2>
       <div className="mt-4 space-y-3">
         {items.map((item) => (
-          <Link key={item.path} to={item.path} className="block rounded-xl border border-white/10 bg-white/5 p-4 transition hover:border-indigo-400/60 hover:bg-white/10">
+          <Link key={item.path} href={item.path} className="block rounded-xl border border-white/10 bg-white/5 p-4 transition hover:border-indigo-400/60 hover:bg-white/10">
             <strong className="text-white">{item.title}</strong>
             <span className="mt-1 block text-sm leading-6 text-slate-500">{item.description}</span>
           </Link>
         ))}
       </div>
-      <Link to={browseAllPath} className="mt-5 inline-block text-sm font-semibold text-indigo-300 hover:text-white">{browseAllLabel}</Link>
+      <Link href={browseAllPath} className="mt-5 inline-block text-sm font-semibold text-indigo-300 hover:text-white">{browseAllLabel}</Link>
     </>
   );
 }

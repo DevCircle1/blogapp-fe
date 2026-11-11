@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
 import Seo from '../common/Seo.jsx';
 import AdSlot from '../common/AdSlot.jsx';
 import { SITE_URL, SITE_NAME, breadcrumbSchema, faqSchema } from '../../seo/siteMeta.js';
@@ -56,9 +58,9 @@ export function ToolContentSections({ heading, intro, extraParagraphs = [], step
     <section className={`mx-auto mt-14 max-w-4xl px-4 pb-12 ${light ? '' : 'text-white'}`}>
       <nav aria-label="Breadcrumb" className={`mb-6 text-sm ${base}`}>
         <ol className="flex flex-wrap items-center gap-2">
-          <li><Link to="/" className="hover:underline">Home</Link></li>
+          <li><Link href="/" className="hover:underline">Home</Link></li>
           <li aria-hidden="true">/</li>
-          <li><Link to="/tools" className="hover:underline">Free online tools</Link></li>
+          <li><Link href="/tools" className="hover:underline">Free online tools</Link></li>
           <li aria-hidden="true">/</li>
           <li className={strong} aria-current="page">{heading}</li>
         </ol>
@@ -100,7 +102,7 @@ export function ToolContentSections({ heading, intro, extraParagraphs = [], step
             {related.map((item) => (
               <Link
                 key={item.to}
-                to={item.to}
+                href={item.to}
                 className={`rounded-xl border p-4 transition ${border} ${light ? 'bg-white hover:border-blue-400' : 'bg-white/5 hover:border-indigo-400/60'}`}
               >
                 <strong className={strong}>{item.label}</strong>
@@ -112,7 +114,7 @@ export function ToolContentSections({ heading, intro, extraParagraphs = [], step
       )}
 
       <p className={`mt-8 text-sm ${base}`}>
-        <Link to="/tools" className="font-semibold text-indigo-500 hover:underline">Browse all free tools →</Link>
+        <Link href="/tools" className="font-semibold text-indigo-500 hover:underline">Browse all free tools →</Link>
       </p>
     </section>
   );

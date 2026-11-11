@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AlertTriangle, Check, Copy, FileText } from 'lucide-react';
 import { useModels } from '../../../../lib/llm/useModels.js';
