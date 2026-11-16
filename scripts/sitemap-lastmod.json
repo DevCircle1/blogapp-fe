@@ -24,8 +24,8 @@
     "lastmod": "2026-10-03"
   },
   "/de": {
-    "hash": "6f9506a54830cb5b",
-    "lastmod": "2026-10-07"
+    "hash": "e2e6c7ab35da030e",
+    "lastmod": "2026-11-16"
   },
   "/de/alphabetisch-sortieren": {
     "hash": "5b9d40f959846923",
@@ -100,8 +100,8 @@
     "lastmod": "2026-10-03"
   },
   "/de/einheiten-umrechnen": {
-    "hash": "9a87904df9b29628",
-    "lastmod": "2026-10-03"
+    "hash": "f7f1517630ac0b31",
+    "lastmod": "2026-11-16"
   },
   "/de/email-adressen-pruefen": {
     "hash": "91c8302b83413547",
@@ -128,8 +128,8 @@
     "lastmod": "2026-10-17"
   },
   "/de/gross-kleinschreibung-umwandeln": {
-    "hash": "564550755b60c5c4",
-    "lastmod": "2026-10-03"
+    "hash": "fd39a78acf452616",
+    "lastmod": "2026-11-16"
   },
   "/de/hex-in-rgb-umrechnen": {
     "hash": "91c67988fab7461e",
@@ -228,8 +228,8 @@
     "lastmod": "2026-10-03"
   },
   "/de/passwortstaerke-pruefen": {
-    "hash": "457945ac96518aa5",
-    "lastmod": "2026-10-03"
+    "hash": "d3a8d9d1e06800a2",
+    "lastmod": "2026-11-16"
   },
   "/de/prozentrechner": {
     "hash": "af01f24878efced3",
@@ -2232,8 +2232,8 @@
     "lastmod": "2026-10-03"
   },
   "/tools": {
-    "hash": "49891e16f10b896c",
-    "lastmod": "2026-10-17"
+    "hash": "8bdeee6bad5a78bd",
+    "lastmod": "2026-11-16"
   },
   "/tools/age-calculator": {
     "hash": "c855f26bf17c3403",
@@ -2459,6 +2459,10 @@
     "hash": "8e9acaa871bac123",
     "lastmod": "2026-10-03"
   },
+  "/tools/hreflang-tag-generator": {
+    "hash": "a0e3fccfe9528bc2",
+    "lastmod": "2026-11-16"
+  },
   "/tools/html-encoder": {
     "hash": "cbd672cec852eedf",
     "lastmod": "2026-10-03"
@@ -2600,8 +2604,8 @@
     "lastmod": "2026-10-03"
   },
   "/tools/meta-tag-generator": {
-    "hash": "feffb3f8c30c9abc",
-    "lastmod": "2026-10-03"
+    "hash": "0a0e2443fdbd00d3",
+    "lastmod": "2026-11-16"
   },
   "/tools/morse-code-translator": {
     "hash": "1b511b3e622f1a0a",
@@ -2663,6 +2667,10 @@
     "hash": "c0fcfd64eae1a9ad",
     "lastmod": "2026-10-03"
   },
+  "/tools/readability-score-checker": {
+    "hash": "a1c064b32aef8687",
+    "lastmod": "2026-11-16"
+  },
   "/tools/recipe-schema-generator": {
     "hash": "857b101b17927eac",
     "lastmod": "2026-10-03"
@@ -2692,8 +2700,8 @@
     "lastmod": "2026-10-17"
   },
   "/tools/robots-txt-generator": {
-    "hash": "6206f6feb04735c3",
-    "lastmod": "2026-10-03"
+    "hash": "a34ec60fe95dcd35",
+    "lastmod": "2026-11-16"
   },
   "/tools/roi-calculator": {
     "hash": "160a0a8a55f27b1a",
@@ -2748,8 +2756,8 @@
     "lastmod": "2026-10-03"
   },
   "/tools/seo-title-meta-checker": {
-    "hash": "f79ddb921650d26e",
-    "lastmod": "2026-10-03"
+    "hash": "e3c7f1aa6412eabc",
+    "lastmod": "2026-11-16"
   },
   "/tools/simple-interest-calculator": {
     "hash": "33c0b497c6a7bf1f",
@@ -2856,8 +2864,8 @@
     "lastmod": "2026-10-03"
   },
   "/tools/word-counter": {
-    "hash": "dc2c9b7d3d30e5f4",
-    "lastmod": "2026-10-03"
+    "hash": "a52be37194d30905",
+    "lastmod": "2026-11-16"
   },
   "/tools/word-frequency-counter": {
     "hash": "221a8d8145ebde06",
