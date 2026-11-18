@@ -71,6 +71,11 @@ export default {
 <h2>Für SEO-Texte: Wortanzahl ist nicht alles</h2>
 <p>Wer für Google schreibt, zählt oft Wörter, weil es Vorgaben wie „mindestens 1.000 Wörter“ gibt. Google bewertet aber keine Wortanzahl, sondern ob die Seite die Suchanfrage gut beantwortet. Sinnvoller als die Länge ist ein Blick darauf, welche Begriffe wie oft vorkommen. Das zeigt der <a href="/de/keyword-dichte-pruefen">Keyword-Dichte-Check</a>, und der Ratgeber <a href="/de/ratgeber/keyworddichte-optimaler-wert">Keyworddichte: Welcher Wert ist optimal?</a> erklärt, wie Sie das Ergebnis lesen.</p>
 
+<h2>Weiterführende Ratgeber</h2>
+<ul>
+<li><a href="/de/ratgeber/alphabetisch-sortieren-liste-word-excel">Alphabetisch sortieren: Liste in Word, Excel und online</a></li>
+</ul>
+
 <h2>Häufige Fragen</h2>
 <h3>Wie viele Wörter hat eine Seite?</h3>
 <p>Bei 12 pt Schrift, 1,5-zeiligem Abstand und normalen Rändern sind es etwa 300–350 Wörter pro Seite. Einzeilig sind es etwa 500.</p>

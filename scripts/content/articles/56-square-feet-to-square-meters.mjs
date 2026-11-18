@@ -84,6 +84,12 @@ export default {
 <h2>Quick mental math</h2>
 <p>For a fast estimate without a calculator, divide square feet by 10 and subtract a tenth of the result. For 1,000 sq ft: 1,000 ÷ 10 = 100, minus 10 = 90, close to the true 92.9. In the other direction, multiply square meters by 10 and add about 8%: 100 m² becomes 1,000 + 80 = 1,080, close to 1,076. These shortcuts are fine for sense-checking a number and not for ordering materials, where you should use the exact factor.</p>
 
+<h2>Related guides</h2>
+<ul>
+<li><a href="/blogs/article/area-of-a-rectangle-formula">Area of a rectangle: formula, examples and unit conversions</a></li>
+<li><a href="/blogs/article/common-unit-conversions-cheat-sheet">Common unit conversions: length, weight, volume, temperature</a></li>
+</ul>
+
 <h2>Frequently asked questions</h2>
 <h3>How many square meters is 1,000 square feet?</h3>
 <p>About 92.9 m².</p>

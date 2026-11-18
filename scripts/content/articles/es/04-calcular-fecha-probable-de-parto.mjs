@@ -67,6 +67,11 @@ export default {
 <p>Es una estimación del punto medio, no una fecha límite. Solo una minoría de los bebés, a menudo se cita un 4–5 %, nace exactamente ese día. La mayoría nace en las dos semanas anteriores o posteriores. Se considera embarazo a término a partir de la semana 37, y prolongado a partir de la 42.</p>
 <p>La <strong>ecografía del primer trimestre</strong> mide la longitud cráneo-caudal del embrión y es muy precisa para datar el embarazo. Si la fecha de la ecografía difiere claramente de la calculada por la última regla, lo habitual es corregir la fecha según la ecografía. Las ecografías posteriores ya no la suelen cambiar.</p>
 
+<h2>Guías relacionadas</h2>
+<ul>
+<li><a href="/es/guias/como-sumar-dias-a-una-fecha">Cómo sumar días a una fecha</a></li>
+</ul>
+
 <h2>Preguntas frecuentes</h2>
 <h3>¿La fecha de parto se calcula desde la concepción o desde la regla?</h3>
 <p>Desde el primer día de la última regla. Por eso el embarazo dura 40 semanas «de calendario», aunque el bebé se desarrolla durante unas 38.</p>

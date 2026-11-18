@@ -76,6 +76,11 @@ export default {
 </ul>
 <p>If you are building savings at the same time, keep a small emergency buffer so that an unexpected bill does not go back on the card. See how savings compound in the <a href="/tools/savings-goal-calculator">savings goal calculator</a> and how interest builds up in the <a href="/tools/compound-interest-calculator">compound interest calculator</a>; credit card interest is the same effect working against you.</p>
 
+<h2>Related guides</h2>
+<ul>
+<li><a href="/blogs/article/how-credit-card-interest-is-calculated">How credit card interest is calculated</a></li>
+</ul>
+
 <h2>Frequently asked questions</h2>
 <h3>How long does it take to pay off a $5,000 credit card?</h3>
 <p>At 22.9% APR it takes 35 months at $200 a month, 21 months at $300 and 12 months at $500. At $100 a month it takes about 14 years.</p>

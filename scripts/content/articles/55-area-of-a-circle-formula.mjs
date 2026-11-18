@@ -77,6 +77,12 @@ export default {
 <li>Maths and physics homework, where showing the squared unit often earns a mark.</li>
 </ul>
 
+<h2>Related guides</h2>
+<ul>
+<li><a href="/blogs/article/area-of-a-rectangle-formula">Area of a rectangle and a square</a></li>
+<li><a href="/blogs/article/how-to-find-the-area-of-an-irregular-shape">Irregular shapes with curved parts</a></li>
+</ul>
+
 <h2>Frequently asked questions</h2>
 <h3>What is the area of a circle with a radius of 5?</h3>
 <p>π × 25 = 78.54 square units.</p>

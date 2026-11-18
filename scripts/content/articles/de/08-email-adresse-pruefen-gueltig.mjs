@@ -79,6 +79,11 @@ export default {
 <li>Wenn es wichtig ist, schicken Sie eine Test-Mail oder einen Bestätigungslink.</li>
 </ol>
 
+<h2>Weiterführende Ratgeber</h2>
+<ul>
+<li><a href="/de/ratgeber/passwort-pruefen-sicherheit">Passwort prüfen: Wie sicher ist Ihr Passwort?</a></li>
+</ul>
+
 <h2>Häufige Fragen</h2>
 <h3>Kann eine gültige Adresse trotzdem nicht funktionieren?</h3>
 <p>Ja. Eine Adresse kann formal korrekt sein und dennoch nirgends hinführen, etwa wenn das Postfach gelöscht wurde, voll ist oder nie existiert hat.</p>

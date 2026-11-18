@@ -88,6 +88,11 @@ export default {
 <h2>Context windows are tokens too</h2>
 <p>A model's context window is the maximum number of tokens for input and output combined in one request. Many current models accept around a million tokens, and some smaller ones 128,000–400,000. Hitting the limit truncates or rejects the request, so count long documents before sending them.</p>
 
+<h2>Related guides</h2>
+<ul>
+<li><a href="/blogs/article/how-to-estimate-llm-api-cost-per-month">How to estimate your LLM API cost per month</a></li>
+</ul>
+
 <h2>Frequently asked questions</h2>
 <h3>How many tokens is 1,000 words?</h3>
 <p>For English with modern OpenAI tokenizers, roughly 1,100–1,400 tokens depending on vocabulary and formatting. Code and non-English text can take far more.</p>

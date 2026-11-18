@@ -90,6 +90,12 @@ export default {
 <li><strong>Editing many things at once on many pages.</strong> Change one batch of pages at a time so you can tell what worked.</li>
 </ul>
 
+<h2>Related guides</h2>
+<ul>
+<li><a href="/blogs/article/how-to-check-seo-title-and-meta-description">How to check your SEO title and meta description</a></li>
+<li><a href="/blogs/article/new-site-impressions-dropped-search-console">Why impressions drop on a new site in Search Console</a></li>
+</ul>
+
 <h2>Frequently asked questions</h2>
 <h3>What positions count as striking distance?</h3>
 <p>Most SEOs use positions 11–20, the second page of results. Some extend it to positions 4–20 because moving from 8 to 3 is also a large CTR gain.</p>

@@ -77,6 +77,13 @@ export default {
 </ul>
 <p>If you are simplifying the dimensions of a scaled plan, our guide to <a href="/blogs/article/how-to-simplify-a-ratio">simplifying a ratio</a> may help.</p>
 
+<h2>Related guides</h2>
+<ul>
+<li><a href="/blogs/article/area-of-a-rectangle-formula">Area of a rectangle: formula, examples and unit conversions</a></li>
+<li><a href="/blogs/article/area-of-a-circle-formula">Area of a circle: formula, examples and the diameter shortcut</a></li>
+<li><a href="/blogs/article/how-to-find-the-area-of-an-irregular-shape">How to find the area of an irregular shape or L-shaped room</a></li>
+</ul>
+
 <h2>Frequently asked questions</h2>
 <h3>What is the area of a circle with a diameter of 10?</h3>
 <p>Radius 5, so π × 25 = 78.54 square units.</p>

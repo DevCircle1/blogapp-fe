@@ -64,6 +64,11 @@ export default {
 <li><strong>Dasselbe Passwort mit Zählern:</strong> „Shop1“, „Shop2“ für verschiedene Dienste.</li>
 </ul>
 
+<h2>Weiterführende Ratgeber</h2>
+<ul>
+<li><a href="/de/ratgeber/email-adresse-pruefen-gueltig">E-Mail-Adresse prüfen: Wann ist sie gültig?</a></li>
+</ul>
+
 <h2>Häufige Fragen</h2>
 <h3>Wie lang sollte ein Passwort sein?</h3>
 <p>Für Konten, die Sie sich merken müssen, sind 14 bis 16 Zeichen oder eine Passphrase aus mindestens vier zufälligen Wörtern ein guter Wert. Im Passwortmanager darf es länger sein.</p>

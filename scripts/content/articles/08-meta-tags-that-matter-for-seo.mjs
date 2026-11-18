@@ -92,6 +92,13 @@ export default {
 <h2>Generate the full set in one go</h2>
 <p>The <a href="/tools/meta-tag-generator">meta tag generator</a> produces the title, description, robots, canonical, Open Graph and Twitter tags together from one form, so the social and search versions never drift apart. Then check the result with the <a href="/tools/seo-title-meta-checker">title and description checker</a> to confirm nothing will be truncated.</p>
 
+<h2>Related guides</h2>
+<ul>
+<li><a href="/blogs/article/how-to-check-seo-title-and-meta-description">How to check your SEO title and meta description</a></li>
+<li><a href="/blogs/article/open-graph-tags-complete-list">Open Graph tags: the complete list</a></li>
+<li><a href="/blogs/article/product-schema-markup-example">Product schema markup example</a></li>
+</ul>
+
 <h2>Frequently asked questions</h2>
 <h3>Do meta tags still matter for SEO?</h3>
 <p>A few do. The title and robots directives directly affect ranking and indexing, and the description affects clicks. Most other meta tags do not affect Google Search at all.</p>

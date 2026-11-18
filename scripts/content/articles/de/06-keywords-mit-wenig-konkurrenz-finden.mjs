@@ -74,6 +74,11 @@ export default {
 </ol>
 <p>Den schnellsten Einstieg bietet der <a href="/de/keywords-wenig-konkurrenz">Keyword-Finder für wenig Konkurrenz</a>: Begriff eingeben, Longtail-Ideen erhalten, dann mit dem SERP-Check aussortieren.</p>
 
+<h2>Weiterführende Ratgeber</h2>
+<ul>
+<li><a href="/de/ratgeber/keyworddichte-optimaler-wert">Keyworddichte: Welcher Wert ist optimal?</a></li>
+</ul>
+
 <h2>Häufige Fragen</h2>
 <h3>Wie viel Suchvolumen sollte ein Keyword mit wenig Konkurrenz haben?</h3>
 <p>Für eine neue Website lohnen sich auch Keywords mit 10 bis 50 Suchen im Monat. Eine Seite rankt meist für Dutzende verwandte Varianten, sodass sich kleine Volumen addieren.</p>

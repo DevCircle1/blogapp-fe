@@ -80,6 +80,11 @@ export default {
 <li><strong>Schaltjahre übersehen.</strong> Der 29. Februar existiert 2028, nicht 2027.</li>
 </ul>
 
+<h2>Weiterführende Ratgeber</h2>
+<ul>
+<li><a href="/de/ratgeber/ssw-berechnen-geburtstermin">SSW berechnen: Geburtstermin und Schwangerschaftswoche</a></li>
+</ul>
+
 <h2>Häufige Fragen</h2>
 <h3>Was ist 30 Tage nach dem 11.11.2026?</h3>
 <p>Der 11.12.2026.</p>

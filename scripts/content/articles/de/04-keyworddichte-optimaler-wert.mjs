@@ -78,6 +78,11 @@ export default {
 </ol>
 <p>Die Gesamtlänge und Zeichenzahl sehen Sie im <a href="/de/woerter-zaehlen">Wortzähler</a>. Wie Sie Wörter direkt in Word oder Google Docs zählen, steht in <a href="/de/ratgeber/woerter-zaehlen-word-google-docs-pdf">Wörter zählen in Word, Google Docs und PDF</a>.</p>
 
+<h2>Weiterführende Ratgeber</h2>
+<ul>
+<li><a href="/de/ratgeber/keywords-mit-wenig-konkurrenz-finden">Keywords mit wenig Konkurrenz finden</a></li>
+</ul>
+
 <h2>Häufige Fragen</h2>
 <h3>Ist 1 % Keyworddichte gut?</h3>
 <p>Das ist ein normaler, natürlicher Wert für eine fokussierte Seite, aber kein Ziel. Seiten ranken auch deutlich darüber oder darunter.</p>

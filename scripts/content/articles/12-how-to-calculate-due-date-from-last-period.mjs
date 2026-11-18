@@ -75,6 +75,12 @@ export default {
 <h2>When an ultrasound changes your due date</h2>
 <p>A first-trimester ultrasound measures the baby's crown-rump length, which is a very accurate way to estimate gestational age early on. If the ultrasound date and the LMP date differ by more than a set margin, typically around a week in the first trimester (less in the earliest weeks), clinicians usually go with the ultrasound. Later scans are less precise for dating, because babies grow at different rates, so an early scan date normally stays fixed for the rest of the pregnancy.</p>
 
+<h2>Related guides</h2>
+<ul>
+<li><a href="/blogs/article/how-to-calculate-ovulation-date">How to calculate your ovulation date</a></li>
+<li><a href="/blogs/article/days-between-two-dates">How to calculate the days between two dates</a></li>
+</ul>
+
 <h2>Frequently asked questions</h2>
 <h3>Is my due date calculated from conception or my last period?</h3>
 <p>From the first day of your last period. Conception typically happens about two weeks later, which is why a pregnancy is 40 weeks by date but about 38 weeks of actual development.</p>

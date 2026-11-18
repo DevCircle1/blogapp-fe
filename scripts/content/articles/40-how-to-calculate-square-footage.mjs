@@ -80,6 +80,13 @@ export default {
 <h2>Square footage for real estate</h2>
 <p>Listings use different rules. Gross living area counts finished, heated, above-ground space, generally measured from the exterior walls. Basements, garages and unfinished attics are usually excluded or listed separately. If you need an official figure, rely on an appraisal or the local standard; for your own planning, measure and calculate as above.</p>
 
+<h2>Related guides</h2>
+<ul>
+<li><a href="/blogs/article/how-to-find-the-area-of-an-irregular-shape">How to find the area of an irregular shape or L-shaped room</a></li>
+<li><a href="/blogs/article/area-of-a-rectangle-formula">Area of a rectangle: formula and examples</a></li>
+<li><a href="/blogs/article/square-feet-to-square-meters">Square feet to square meters</a></li>
+</ul>
+
 <h2>Frequently asked questions</h2>
 <h3>How many square feet is a 10 by 10 room?</h3>
 <p>100 square feet.</p>

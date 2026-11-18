@@ -86,6 +86,12 @@ export default {
 </ol>
 <p>The <a href="/tools/schema-markup-generator">schema markup generator</a> builds JSON-LD for each of these types with a live preview and shows each type's current Google status, so you do not spend effort on markup that no longer changes anything.</p>
 
+<h2>Related guides</h2>
+<ul>
+<li><a href="/blogs/article/product-schema-markup-example">Product schema markup example</a></li>
+<li><a href="/blogs/article/open-graph-tags-complete-list">Open Graph tags: the complete list</a></li>
+</ul>
+
 <h2>Frequently asked questions</h2>
 <h3>Does schema markup improve rankings?</h3>
 <p>Google says structured data is not a general ranking factor. It helps Google understand the page and makes it eligible for rich results, which can raise click-through rate.</p>

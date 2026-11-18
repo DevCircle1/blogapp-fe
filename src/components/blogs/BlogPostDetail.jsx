@@ -231,7 +231,7 @@ const BlogPostDetail = ({ lang = DEFAULT_LANG }) => {
               <h2 id="related-articles-heading" className="text-2xl font-bold text-gray-800">
                 {postCategory?.name ? `More ${postCategory.name} guides` : chrome.moreGuides}
               </h2>
-              <div className="mt-4 grid gap-4 sm:grid-cols-3">
+              <div className="mt-4 grid gap-4 sm:grid-cols-2">
                 {relatedPosts.map((item) => (
                   <Link
                     key={item.slug}

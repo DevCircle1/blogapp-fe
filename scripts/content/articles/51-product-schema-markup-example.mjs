@@ -97,6 +97,12 @@ export default {
 <h2>Testing and monitoring</h2>
 <p>Test with Google's Rich Results Test, which shows which features your markup qualifies for, and the Schema Markup Validator for syntax. After you deploy, watch the enhancement reports in Search Console for errors and warnings. For the bigger picture of which types still earn rich results, see <a href="/blogs/article/schema-markup-rich-results-2026">schema markup and rich results in 2026</a>, and for the other tags in your head see the <a href="/blogs/article/meta-tags-that-matter-for-seo">meta tags that matter</a>.</p>
 
+<h2>Related guides</h2>
+<ul>
+<li><a href="/blogs/article/open-graph-tags-complete-list">Open Graph tags: the complete list</a></li>
+<li><a href="/blogs/article/how-to-check-seo-title-and-meta-description">How to check your SEO title and meta description</a></li>
+</ul>
+
 <h2>Frequently asked questions</h2>
 <h3>Do I need Product schema on every product page?</h3>
 <p>It is worth having on any page where you want a price, rating or stock status to be eligible for display. Generate it from the same data as the page so it stays correct.</p>

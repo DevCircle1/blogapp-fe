@@ -73,6 +73,12 @@ export default {
 <h2>Measuring the change</h2>
 <p>After updating a snippet, wait until Google shows the new version (check with a search), then compare 28 days after with 28 days before. Compare at a similar average position, because a ranking shift will move CTR on its own. Filter to the page and, ideally, to its top query so seasonality in other queries does not muddy the result.</p>
 
+<h2>Related guides</h2>
+<ul>
+<li><a href="/blogs/article/how-to-check-seo-title-and-meta-description">How to check your SEO title and meta description</a></li>
+<li><a href="/blogs/article/new-site-impressions-dropped-search-console">Why impressions drop on a new site in Search Console</a></li>
+</ul>
+
 <h2>Frequently asked questions</h2>
 <h3>What is a good average CTR for a whole website?</h3>
 <p>There is no meaningful benchmark, because it depends on your rankings mix. Sites that rank mostly in the top three can average 10%+. Newer sites with many low-position impressions can sit under 1% and still be healthy.</p>

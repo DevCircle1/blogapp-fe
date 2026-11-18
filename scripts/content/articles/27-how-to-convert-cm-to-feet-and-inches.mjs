@@ -78,6 +78,12 @@ export default {
 </ul>
 <p>Measure in the morning if you can. People are slightly taller after lying down and lose a little height through the day.</p>
 
+<h2>Related guides</h2>
+<ul>
+<li><a href="/blogs/article/common-unit-conversions-cheat-sheet">Common unit conversions: length, weight, volume, temperature</a></li>
+<li><a href="/blogs/article/square-feet-to-square-meters">Square feet to square meters</a></li>
+</ul>
+
 <h2>Frequently asked questions</h2>
 <h3>How many cm is 5 feet 7 inches?</h3>
 <p>5′ 7″ is 67 inches, and 67 × 2.54 = 170.18 cm.</p>

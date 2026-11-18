@@ -72,6 +72,11 @@ export default {
 </ul>
 <p>Si solo necesitas sumar días naturales a una fecha, por ejemplo un plazo de 30 días naturales, usa <a href="/es/sumar-dias-a-una-fecha">sumar días a una fecha</a>.</p>
 
+<h2>Guías relacionadas</h2>
+<ul>
+<li><a href="/es/guias/como-sumar-dias-a-una-fecha">Cómo sumar días a una fecha</a></li>
+</ul>
+
 <h2>Preguntas frecuentes</h2>
 <h3>¿El sábado es día hábil?</h3>
 <p>Para trámites administrativos en España, no. En el ámbito laboral y comercial depende del convenio o del contrato.</p>

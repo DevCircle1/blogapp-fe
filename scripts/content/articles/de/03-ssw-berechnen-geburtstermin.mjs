@@ -71,6 +71,11 @@ export default {
 </ul>
 <p>Einzelne Daten, etwa „ET minus sechs Wochen“, rechnen Sie mit <a href="/de/datum-plus-tage">Datum plus Tage</a> aus.</p>
 
+<h2>Weiterführende Ratgeber</h2>
+<ul>
+<li><a href="/de/ratgeber/datum-plus-tage-berechnen">Datum plus Tage berechnen: Fristen, Werktage und Beispiele</a></li>
+</ul>
+
 <h2>Häufige Fragen</h2>
 <h3>Wird die Schwangerschaft ab der Befruchtung oder ab der Periode gezählt?</h3>
 <p>Ab dem ersten Tag der letzten Periode. Deshalb dauert eine Schwangerschaft rechnerisch 40 Wochen, obwohl sich das Kind nur etwa 38 Wochen entwickelt.</p>

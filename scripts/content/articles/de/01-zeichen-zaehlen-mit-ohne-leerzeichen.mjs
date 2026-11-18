@@ -84,6 +84,11 @@ export default {
 </ul>
 <p>Das sind Näherungswerte. Fachtexte mit langen Komposita wie „Mehrwertsteuererhöhung“ haben weniger Wörter pro Zeichen. Für eine verbindliche Zahl immer den tatsächlichen Text zählen.</p>
 
+<h2>Weiterführende Ratgeber</h2>
+<ul>
+<li><a href="/de/ratgeber/alphabetisch-sortieren-liste-word-excel">Alphabetisch sortieren: Liste in Word, Excel und online</a></li>
+</ul>
+
 <h2>Häufige Fragen</h2>
 <h3>Zählen Satzzeichen als Zeichen?</h3>
 <p>Ja. Punkte, Kommas, Anführungszeichen und Klammern zählen in beiden Varianten als Zeichen.</p>

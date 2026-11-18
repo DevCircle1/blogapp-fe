@@ -81,6 +81,12 @@ export default {
 </ul>
 <p>Los plazos legales y administrativos tienen sus propias reglas de cómputo. Para un plazo importante, consulte la norma aplicable o pregunte a un profesional.</p>
 
+<h2>Guías relacionadas</h2>
+<ul>
+<li><a href="/es/guias/calcular-dias-habiles-entre-fechas">Calcular días hábiles entre fechas</a></li>
+<li><a href="/es/guias/calcular-fecha-probable-de-parto">Calcular la fecha probable de parto</a></li>
+</ul>
+
 <h2>Preguntas frecuentes</h2>
 <h3>¿Qué fecha es 30 días después del 11/11/2026?</h3>
 <p>El 11/12/2026.</p>

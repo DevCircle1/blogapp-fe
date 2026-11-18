@@ -75,6 +75,11 @@ export default {
 <h2>Flesch Reading Ease vs the Flesch-Kincaid grade level</h2>
 <p>The two come from the same two inputs but run in opposite directions. Reading Ease goes up as text gets easier. The Flesch-Kincaid grade level, developed for the US Navy in the 1970s, goes up as text gets harder and approximates the US school grade needed to understand it. The 100-word example above scores a grade of about 9.9. If you have to report one number to a colleague, the grade level is usually easier to explain, since "grade 8" needs no chart.</p>
 
+<h2>Related guides</h2>
+<ul>
+<li><a href="/blogs/article/how-to-improve-readability-score">How to improve your readability score</a></li>
+</ul>
+
 <h2>Frequently asked questions</h2>
 <h3>Can a Flesch score be above 100 or below 0?</h3>
 <p>Yes. The scale is not capped. One short sentence of one-syllable words can score above 100, and a sentence stuffed with long words can score below zero.</p>

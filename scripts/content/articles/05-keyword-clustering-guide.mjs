@@ -82,6 +82,12 @@ export default {
 <li><strong>Treating it as one-off.</strong> Search Console surfaces new queries every month. Re-cluster quarterly and slot new queries into existing pages where they fit.</li>
 </ul>
 
+<h2>Related guides</h2>
+<ul>
+<li><a href="/blogs/article/how-to-find-low-competition-keywords">How to find low competition keywords</a></li>
+<li><a href="/blogs/article/what-is-a-good-keyword-density">What is a good keyword density?</a></li>
+</ul>
+
 <h2>Frequently asked questions</h2>
 <h3>How many keywords should be in one cluster?</h3>
 <p>There is no fixed number. Some clusters have two keywords, others fifty. The deciding factor is whether Google returns the same results, not the count.</p>

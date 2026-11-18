@@ -81,6 +81,11 @@ export default {
 <li>No repeated keywords, no pipe-separated keyword lists.</li>
 </ul>
 
+<h2>Related guides</h2>
+<ul>
+<li><a href="/blogs/article/how-to-check-seo-title-and-meta-description">How to check your SEO title and meta description</a></li>
+</ul>
+
 <h2>Frequently asked questions</h2>
 <h3>What is the maximum SEO title length?</h3>
 <p>There is no hard maximum. Google indexes long titles. It just does not display all of them. The display limit on desktop is about 580–600 pixels, which works out to roughly 50–60 characters for typical English text.</p>

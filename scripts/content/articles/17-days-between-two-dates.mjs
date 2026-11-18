@@ -84,6 +84,11 @@ export default {
 <h2>A note for developers</h2>
 <p>Calculating date differences in code goes wrong most often around time zones and daylight saving. A "day" that crosses a clock change is 23 or 25 hours long, so dividing milliseconds by 86,400,000 can give 254.96 instead of 255. Compare calendar dates in UTC, or use a date library's day-difference function. More in <a href="/blogs/article/how-to-store-dates-and-times-without-timezone-bugs">how to store dates and times without time zone bugs</a>.</p>
 
+<h2>Related guides</h2>
+<ul>
+<li><a href="/blogs/article/how-to-calculate-due-date-from-last-period">How to calculate a due date from your last period</a></li>
+</ul>
+
 <h2>Frequently asked questions</h2>
 <h3>How many days are there between two dates, including both?</h3>
 <p>Subtract the dates and add one. From 1 to 10 June is 9 days by subtraction, or 10 days counting both.</p>

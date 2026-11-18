@@ -91,6 +91,12 @@ export default {
 <h2>How it relates to your other meta tags</h2>
 <p>Open Graph controls the social preview, while the title tag and meta description control the search result. They can be the same text or different. Keep the search title within its display limit (see <a href="/blogs/article/seo-title-length-pixel-limit">SEO title length</a>), and check the <a href="/blogs/article/meta-tags-that-matter-for-seo">meta tags that matter for SEO</a> for the rest. Social shares do not directly affect rankings, but a clear preview earns more clicks on the link, which is what you want from a share. If you run a multilingual site, <a href="/blogs/article/hreflang-tags-guide">hreflang tags</a> handle the language targeting for search.</p>
 
+<h2>Related guides</h2>
+<ul>
+<li><a href="/blogs/article/product-schema-markup-example">Product schema markup example</a></li>
+<li><a href="/blogs/article/how-to-check-seo-title-and-meta-description">How to check your SEO title and meta description</a></li>
+</ul>
+
 <h2>Frequently asked questions</h2>
 <h3>Is og:description needed if I have a meta description?</h3>
 <p>Platforms fall back to the meta description if there is no og:description, but setting it lets you write copy that suits a feed, not a search result.</p>

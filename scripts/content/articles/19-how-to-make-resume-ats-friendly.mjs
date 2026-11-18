@@ -70,6 +70,11 @@ export default {
 </ul>
 <p>All of these run in your browser, so your resume is not uploaded anywhere.</p>
 
+<h2>Related guides</h2>
+<ul>
+<li><a href="/blogs/article/resume-keyword-scanner-match-job-description">Resume keyword scanner: match your resume to a job description</a></li>
+</ul>
+
 <h2>Frequently asked questions</h2>
 <h3>Is PDF or Word better for ATS?</h3>
 <p>Most modern systems handle both well. A text-based PDF preserves your layout. DOCX is the safest choice for older systems. Follow the employer's stated preference if there is one.</p>

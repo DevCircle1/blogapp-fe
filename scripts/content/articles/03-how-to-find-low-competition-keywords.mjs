@@ -84,6 +84,11 @@ export default {
 <li><strong>Going too broad too early.</strong> A new site earns authority from many small wins, then moves up to harder terms.</li>
 </ul>
 
+<h2>Related guides</h2>
+<ul>
+<li><a href="/blogs/article/what-is-a-good-keyword-density">What is a good keyword density?</a></li>
+</ul>
+
 <h2>Frequently asked questions</h2>
 <h3>What is a good keyword difficulty for a new website?</h3>
 <p>Most tools suggest under 10–20 on a 100-point scale, but treat that as a first filter only. A low score with a strong, dedicated page in position one is still hard; a higher score with forums ranking can be easy.</p>

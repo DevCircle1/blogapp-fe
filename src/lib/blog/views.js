@@ -166,9 +166,56 @@ export const translationAlternates = (post, allPosts) => {
   ];
 };
 
+/* ------------------------------------------------------- related posts */
+
+const bodyOf = (item) => item?.content || item?.html || '';
+const tagsOf = (item) => {
+  const match = bodyOf(item).match(/data-topic-tags=["']([^"']+)["']/i);
+  return match ? match[1].split(',').map((tag) => tag.trim().toLowerCase()).filter(Boolean) : [];
+};
+const wordsOf = (text) => new Set((text || '').toLowerCase().match(/[\p{L}\p{N}]{4,}/gu) || []);
+const hrefsOf = (item) => [...bodyOf(item).matchAll(/href=["']([^"']+)["']/gi)].map((match) => match[1].split('#')[0]);
+
+/**
+ * The posts worth reading next, best first. A post is scored on what it has in
+ * common with the current one (shared topic tags, shared title words, the same
+ * category, a body link to the same tool page) plus a bonus when few other
+ * posts link to it, so newer guides that nothing else points at still get
+ * internal links instead of the same first three posts of a category being
+ * shown everywhere. Ties fall back to newest first. Posts the current article
+ * already links to in its body are skipped, since the reader has that link.
+ */
+export const rankRelated = (post, candidates, allPosts, categoryPosts = []) => {
+  const lang = postLang(post);
+  const inbound = new Map();
+  allPosts.forEach((item) => {
+    new Set(hrefsOf(item)).forEach((href) => inbound.set(href, (inbound.get(href) || 0) + 1));
+  });
+  const ownTags = new Set(tagsOf(post));
+  const ownWords = wordsOf(post.title);
+  const ownLinks = new Set(hrefsOf(post));
+  const sameCategory = new Set(categoryPosts.map((item) => item.slug));
+
+  return candidates
+    .filter((item) => item.slug !== post.slug && !ownLinks.has(articlePath(lang, item.slug)))
+    .map((item) => {
+      const sharedTags = tagsOf(item).filter((tag) => ownTags.has(tag)).length;
+      const sharedWords = [...wordsOf(item.title)].filter((word) => ownWords.has(word)).length;
+      const sharedLinks = hrefsOf(item).filter((href) => href.startsWith('/') && ownLinks.has(href)).length;
+      const incoming = inbound.get(articlePath(lang, item.slug)) || 0;
+      const relevance = sharedTags * 3 + sharedWords * 2 + Math.min(sharedLinks, 3) * 2
+        + (sameCategory.has(item.slug) ? 2 : 0);
+      // Only a post that is already relevant gets the boost for being under-linked.
+      const score = relevance > 0 ? relevance + Math.max(0, 3 - incoming) : 0;
+      return { item, score };
+    })
+    .sort((a, b) => b.score - a.score || new Date(b.item.created_at || 0) - new Date(a.item.created_at || 0))
+    .map(({ item }) => item);
+};
+
 /**
  * A post page: the post, its category (English posts only sit in one), up to
- * three related posts, and its translations.
+ * four related posts, and its translations.
  */
 export const postView = ({ post, lang, categories, allPosts }) => {
   const matchingCategory = lang === DEFAULT_LANG ? categories.find((item) => (
@@ -183,7 +230,7 @@ export const postView = ({ post, lang, categories, allPosts }) => {
   return {
     post,
     postCategory: matchingCategory ? { slug: matchingCategory.slug, name: matchingCategory.name } : null,
-    relatedPosts: (categoryPosts.length ? categoryPosts : fallbackPosts).slice(0, 3)
+    relatedPosts: rankRelated(post, fallbackPosts, allPosts, categoryPosts).slice(0, 4)
       .map((item) => ({ slug: item.slug, title: item.title })),
     alternates: translationAlternates(post, allPosts),
   };
