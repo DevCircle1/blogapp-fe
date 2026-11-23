@@ -79,6 +79,8 @@ export default {
 <p>Science and engineering use it constantly: astronomical distances, atomic sizes, concentrations and electrical quantities. Calculators and spreadsheets display it as "e-notation" when a number is too long for the screen, such as 4.5E+6. We explain that format and how programming languages treat it in <a href="/blogs/article/e-notation-explained">e-notation explained</a>.</p>
 <p>The <a href="/tools/scientific-notation-converter">scientific notation converter</a> converts in both directions and also gives engineering notation (exponents in multiples of three). For related conversions between number bases, try the <a href="/tools/number-base-converter">number base converter</a>, and for unit prefixes such as kilo and micro, the <a href="/tools/unit-converter">unit converter</a>. If you are working with percentages and ratios of very small quantities, the <a href="/tools/percentage-calculator">percentage calculator</a> and <a href="/blogs/article/how-to-simplify-a-ratio">how to simplify a ratio</a> may help too.</p>
 
+<p>If you need a number spelled out instead, see <a href="/blogs/article/how-to-write-numbers-in-words-on-a-cheque">how to write numbers in words</a> or use the <a href="/tools/number-to-words-converter">number to words converter</a>.</p>
+
 <h2>Frequently asked questions</h2>
 <h3>How do I write 0.00045 in scientific notation?</h3>
 <p>4.5 × 10⁻⁴. The decimal moves four places to the right.</p>

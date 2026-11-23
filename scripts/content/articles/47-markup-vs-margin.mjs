@@ -86,6 +86,8 @@ export default {
 <li>Discounts reduce margin faster than they look: see <a href="/blogs/article/how-to-calculate-percentage-increase-decrease">how to calculate a percentage change</a> for the arithmetic of a price cut.</li>
 </ul>
 
+<p>If your selling price includes VAT, work out margin on the net figure: <a href="/blogs/article/how-to-add-and-remove-vat-from-a-price">how to add and remove VAT</a> shows how, and the <a href="/tools/vat-calculator">VAT calculator</a> does the split instantly.</p>
+
 <h2>Frequently asked questions</h2>
 <h3>Is markup or margin higher?</h3>
 <p>Markup is higher for the same profit, because it divides by the smaller number (cost) instead of the larger one (price).</p>

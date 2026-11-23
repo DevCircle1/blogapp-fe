@@ -78,6 +78,8 @@ export default {
 <h2>Tools to save time</h2>
 <p>The <a href="/tools/timesheet-hours-calculator">timesheet hours calculator</a> subtracts breaks, handles night shifts, totals the week and shows the decimal figure and gross pay. For a single span such as a project or a flight, use the <a href="/tools/time-duration-calculator">time duration calculator</a>; to understand your pay from a yearly salary, convert with the <a href="/tools/salary-to-hourly-calculator">salary to hourly calculator</a>. To count working days between two dates, read <a href="/blogs/article/days-between-two-dates">how to calculate the days between two dates</a> or use the <a href="/tools/working-days-calculator">business days calculator</a>.</p>
 
+<p>Pay periods are often described by week number, and <a href="/blogs/article/how-many-weeks-in-a-year-iso-week-numbers">ISO week numbers</a> explains why some years have 53 of them. The <a href="/tools/week-number-calculator">week number calculator</a> gives the dates of any week.</p>
+
 <h2>Frequently asked questions</h2>
 <h3>How do I calculate hours worked with a lunch break?</h3>
 <p>Subtract the start from the end and then take away the unpaid lunch. 08:30 to 17:00 with a 45-minute lunch is 8 h 30 min − 45 min = 7 h 45 min, or 7.75 hours.</p>

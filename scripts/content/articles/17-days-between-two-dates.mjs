@@ -89,6 +89,8 @@ export default {
 <li><a href="/blogs/article/how-to-calculate-due-date-from-last-period">How to calculate a due date from your last period</a></li>
 </ul>
 
+<p>To plan by week instead of by day, see <a href="/blogs/article/how-many-weeks-in-a-year-iso-week-numbers">how many weeks are in a year and how ISO week numbers work</a>, or look up any date with the <a href="/tools/week-number-calculator">week number calculator</a>. For events across countries, <a href="/blogs/article/how-to-convert-time-zones-and-daylight-saving">how to convert time zones</a> covers the clock side.</p>
+
 <h2>Frequently asked questions</h2>
 <h3>How many days are there between two dates, including both?</h3>
 <p>Subtract the dates and add one. From 1 to 10 June is 9 days by subtraction, or 10 days counting both.</p>

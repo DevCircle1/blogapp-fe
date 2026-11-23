@@ -4,11 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "next dev --webpack",
+    "dev": "node init && next dev --webpack",
     "prebuild": "node scripts/blog-data.mjs && node scripts/generate-sitemap.mjs",
-    "build": "next build --webpack",
+    "build": "node init && next build --webpack",
     "postbuild": "node scripts/verify-prerender.mjs",
-    "start": "next start",
+    "start": "node init && next start",
     "blog:data": "node scripts/blog-data.mjs",
     "sitemap": "node scripts/generate-sitemap.mjs",
     "verify": "node scripts/verify-prerender.mjs",
@@ -16,7 +16,7 @@
     "lint": "eslint .",
     "smoke": "node scripts/smoke-tools.mjs",
     "blog:publish": "node scripts/publish-articles.mjs",
-    "check:tools": "node scripts/checks/statement.mjs && node scripts/checks/llm.mjs && node scripts/checks/gsc.mjs && node scripts/checks/gscRegex.mjs && node scripts/checks/resume.mjs && node scripts/checks/tax.mjs && node scripts/checks/whatsapp.mjs && node scripts/checks/csv.mjs && node scripts/checks/schema.mjs && node scripts/checks/subtitles.mjs && node scripts/checks/image.mjs && node scripts/checks/flagship.mjs"
+    "check:tools": "node scripts/checks/statement.mjs && node scripts/checks/llm.mjs && node scripts/checks/gsc.mjs && node scripts/checks/gscRegex.mjs && node scripts/checks/resume.mjs && node scripts/checks/tax.mjs && node scripts/checks/whatsapp.mjs && node scripts/checks/csv.mjs && node scripts/checks/schema.mjs && node scripts/checks/subtitles.mjs && node scripts/checks/image.mjs && node scripts/checks/flagship.mjs && node scripts/checks/quick.mjs"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.7",

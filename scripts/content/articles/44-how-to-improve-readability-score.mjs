@@ -77,6 +77,8 @@ export default {
 <h2>When not to push the score higher</h2>
 <p>A technical or legal page can have good reasons to use precise, longer terms. If a medical article says "hypertension", do not replace it with "high blood pressure" only to lift a number; explain the term the first time and use it. Judge success by whether your target reader gets to the answer faster. If they do, the score is doing its job. Pair the edits with checks on your other on-page elements, such as the <a href="/blogs/article/meta-tags-that-matter-for-seo">meta tags that matter</a>.</p>
 
+<p>Clear writing also benefits from fast, accurate typing. <a href="/blogs/article/how-to-improve-typing-speed">How to improve your typing speed</a> has a 30-day plan, and the <a href="/tools/typing-speed-test">typing speed test</a> gives you a baseline.</p>
+
 <h2>Frequently asked questions</h2>
 <h3>What is the fastest way to raise my score?</h3>
 <p>Split the longest sentences and replace the longest words. Those two edits account for most of the gain in nearly every text.</p>

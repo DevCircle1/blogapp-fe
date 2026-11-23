@@ -95,6 +95,8 @@ export default {
 </ul>
 <p>If you want a broader picture than the scale, the <a href="/tools/body-fat-calculator">body fat calculator</a> tracks composition, and we explain the limits of weight-based measures in <a href="/blogs/article/is-bmi-accurate-what-it-measures">is BMI accurate?</a>. For maintenance calories on their own, use the <a href="/tools/calorie-calculator">calorie calculator</a>.</p>
 
+<p>Sleep affects appetite and recovery as much as diet does. <a href="/blogs/article/how-much-sleep-do-you-need">How much sleep you need</a> explains sleep cycles, and the <a href="/tools/sleep-calculator">sleep calculator</a> suggests a bedtime.</p>
+
 <h2>Frequently asked questions</h2>
 <h3>What is the best macro ratio for weight loss?</h3>
 <p>There is no single best ratio. Total calories drive weight loss; protein drives how much of it is fat rather than muscle. Set protein high (1.6–2.2 g/kg), keep fat moderate, and fill the rest with carbs you enjoy.</p>

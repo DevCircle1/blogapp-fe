@@ -7,7 +7,6 @@ pnpm-debug.log*
 lerna-debug.log*
 node_modules
 *.local
-.vscode/*
 !.vscode/extensions.json
 .idea
 .DS_Store
@@ -16,7 +15,6 @@ node_modules
 *.njsproj
 *.sln
 *.sw?
-.env
 
 # Next.js
 .next
@@ -30,3 +28,4 @@ public/sitemap.xml
 # Build output of the previous Vite setup
 dist
 dist-ssr
+config.bat

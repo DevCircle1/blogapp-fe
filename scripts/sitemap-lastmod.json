@@ -1,7 +1,7 @@
 {
   "/": {
-    "hash": "874c46d2257f474a",
-    "lastmod": "2026-10-03"
+    "hash": "258eaa1893f045d9",
+    "lastmod": "2026-11-23"
   },
   "/about-us": {
     "hash": "96d8caa12d33deb3",
@@ -216,8 +216,8 @@
     "lastmod": "2026-10-03"
   },
   "/de/mehrwertsteuerrechner": {
-    "hash": "c4583c6db644fb92",
-    "lastmod": "2026-10-03"
+    "hash": "32c9a546bd458996",
+    "lastmod": "2026-11-23"
   },
   "/de/meta-tags-generator": {
     "hash": "6f7529c32a7ed0b9",
@@ -252,8 +252,8 @@
     "lastmod": "2026-10-03"
   },
   "/de/roemische-zahlen-umrechnen": {
-    "hash": "14d73d2fe80307a4",
-    "lastmod": "2026-10-03"
+    "hash": "d671e07ad00037b1",
+    "lastmod": "2026-11-23"
   },
   "/de/roi-rechner": {
     "hash": "5f856681bfb078e0",
@@ -320,8 +320,8 @@
     "lastmod": "2026-10-03"
   },
   "/de/unix-timestamp-umrechnen": {
-    "hash": "ee927ca3e08d5c72",
-    "lastmod": "2026-10-03"
+    "hash": "5303b3c47ed4c3ae",
+    "lastmod": "2026-11-23"
   },
   "/de/url-kodieren-dekodieren": {
     "hash": "ad5fde3600df6e01",
@@ -360,8 +360,8 @@
     "lastmod": "2026-10-03"
   },
   "/de/zufallszahlen-generator": {
-    "hash": "545830bc28672410",
-    "lastmod": "2026-10-03"
+    "hash": "dec8fbdcb91d1dff",
+    "lastmod": "2026-11-23"
   },
   "/es": {
     "hash": "1d3ced18d0b4f35f",
@@ -456,8 +456,8 @@
     "lastmod": "2026-10-03"
   },
   "/es/calculadora-iva": {
-    "hash": "21a10b2ee2c81e4d",
-    "lastmod": "2026-10-03"
+    "hash": "5501b98d99b122d5",
+    "lastmod": "2026-11-23"
   },
   "/es/calculadora-margen-de-beneficio": {
     "hash": "75e9955e00fb8d64",
@@ -536,12 +536,12 @@
     "lastmod": "2026-10-03"
   },
   "/es/convertidor-numeros-romanos": {
-    "hash": "0c9acdab9eae8e88",
-    "lastmod": "2026-10-03"
+    "hash": "852c79506726bb78",
+    "lastmod": "2026-11-23"
   },
   "/es/convertidor-timestamp-unix": {
-    "hash": "1e56ce1f1f0282f9",
-    "lastmod": "2026-10-03"
+    "hash": "9a76f373cecc8ba8",
+    "lastmod": "2026-11-23"
   },
   "/es/convertir-csv-a-json": {
     "hash": "de53efbba062a86c",
@@ -616,8 +616,8 @@
     "lastmod": "2026-10-03"
   },
   "/es/generador-numeros-aleatorios": {
-    "hash": "add7615285628d04",
-    "lastmod": "2026-10-03"
+    "hash": "7d45e083c235c173",
+    "lastmod": "2026-11-23"
   },
   "/es/generador-palabras-clave-long-tail": {
     "hash": "2526099eccd2b22c",
@@ -780,8 +780,8 @@
     "lastmod": "2026-10-17"
   },
   "/fr/calcul-tva": {
-    "hash": "6da2fd6193e4ea05",
-    "lastmod": "2026-10-03"
+    "hash": "71e8503f68b8ea43",
+    "lastmod": "2026-11-23"
   },
   "/fr/calculatrice-fractions": {
     "hash": "0259f56aded1cd02",
@@ -836,12 +836,12 @@
     "lastmod": "2026-10-03"
   },
   "/fr/convertisseur-chiffres-romains": {
-    "hash": "485261dad9131239",
-    "lastmod": "2026-10-03"
+    "hash": "9e6791b3cc05568a",
+    "lastmod": "2026-11-23"
   },
   "/fr/convertisseur-timestamp-unix": {
-    "hash": "8faa2c7f67358826",
-    "lastmod": "2026-10-03"
+    "hash": "2350cb77cb97d899",
+    "lastmod": "2026-11-23"
   },
   "/fr/convertisseur-unites": {
     "hash": "7c6705c337571545",
@@ -904,8 +904,8 @@
     "lastmod": "2026-10-03"
   },
   "/fr/generateur-nombre-aleatoire": {
-    "hash": "f9630b3feb150ce3",
-    "lastmod": "2026-10-03"
+    "hash": "6be372da65688e5b",
+    "lastmod": "2026-11-23"
   },
   "/fr/generateur-ombre-css": {
     "hash": "05312261084e1f34",
@@ -1036,8 +1036,8 @@
     "lastmod": "2026-10-03"
   },
   "/it/calcolatrice-iva": {
-    "hash": "e622878a16edc57b",
-    "lastmod": "2026-10-03"
+    "hash": "f5d91cbf2d6e0153",
+    "lastmod": "2026-11-23"
   },
   "/it/calcolatrice-macro": {
     "hash": "84c5fc4da040e611",
@@ -1164,12 +1164,12 @@
     "lastmod": "2026-10-03"
   },
   "/it/convertitore-numeri-romani": {
-    "hash": "ba5910c6ff95c16b",
-    "lastmod": "2026-10-03"
+    "hash": "83e509bfd4ad45f8",
+    "lastmod": "2026-11-23"
   },
   "/it/convertitore-timestamp-unix": {
-    "hash": "470bcba0dea73a06",
-    "lastmod": "2026-10-03"
+    "hash": "a754327123b4f07d",
+    "lastmod": "2026-11-23"
   },
   "/it/decodifica-jwt": {
     "hash": "3b2a5a96e7d931cc",
@@ -1212,8 +1212,8 @@
     "lastmod": "2026-10-03"
   },
   "/it/generatore-numeri-casuali": {
-    "hash": "2463be7498d08cf6",
-    "lastmod": "2026-10-03"
+    "hash": "7eed259fc3c3235a",
+    "lastmod": "2026-11-23"
   },
   "/it/generatore-ombre-css": {
     "hash": "8f63731dae7a9af6",
@@ -1320,8 +1320,8 @@
     "lastmod": "2026-10-03"
   },
   "/nl/btw-calculator": {
-    "hash": "11ce1fddca5a35c8",
-    "lastmod": "2026-10-03"
+    "hash": "1a18a51ba92d65b5",
+    "lastmod": "2026-11-23"
   },
   "/nl/caloriebehoefte-berekenen": {
     "hash": "b1cdfaf2d9d69494",
@@ -1500,8 +1500,8 @@
     "lastmod": "2026-10-03"
   },
   "/nl/romeinse-cijfers-omzetten": {
-    "hash": "f314d41a67a0469b",
-    "lastmod": "2026-10-03"
+    "hash": "92683cb189d728f7",
+    "lastmod": "2026-11-23"
   },
   "/nl/seo-briefing-generator": {
     "hash": "4d003c6ef5b3cff7",
@@ -1536,8 +1536,8 @@
     "lastmod": "2026-10-03"
   },
   "/nl/unix-timestamp-omzetten": {
-    "hash": "7fc79631354f4e00",
-    "lastmod": "2026-10-03"
+    "hash": "49ad8663490816fe",
+    "lastmod": "2026-11-23"
   },
   "/nl/url-coderen-decoderen": {
     "hash": "24dab80ebbdd3635",
@@ -1572,8 +1572,8 @@
     "lastmod": "2026-10-03"
   },
   "/nl/willekeurig-getal-genereren": {
-    "hash": "4c4cda177780a222",
-    "lastmod": "2026-10-03"
+    "hash": "3c7a3f133ce484f7",
+    "lastmod": "2026-11-23"
   },
   "/nl/winstmarge-berekenen": {
     "hash": "f73a4e010502e410",
@@ -1644,8 +1644,8 @@
     "lastmod": "2026-10-03"
   },
   "/pl/generator-liczb-losowych": {
-    "hash": "9ff55278afe34e79",
-    "lastmod": "2026-10-03"
+    "hash": "05c2a370a6fb3d3b",
+    "lastmod": "2026-11-23"
   },
   "/pl/generator-lorem-ipsum": {
     "hash": "3a04faea3c90bf7b",
@@ -1776,8 +1776,8 @@
     "lastmod": "2026-10-03"
   },
   "/pl/kalkulator-vat": {
-    "hash": "718e16f9f810c625",
-    "lastmod": "2026-10-03"
+    "hash": "adb1c799cd7ae3b4",
+    "lastmod": "2026-11-23"
   },
   "/pl/kalkulator-wagi-idealnej": {
     "hash": "f950648c644d72e2",
@@ -1832,16 +1832,16 @@
     "lastmod": "2026-10-03"
   },
   "/pl/konwerter-cyfr-rzymskich": {
-    "hash": "59410c7c087c1561",
-    "lastmod": "2026-10-03"
+    "hash": "3dbb977b71eb1823",
+    "lastmod": "2026-11-23"
   },
   "/pl/konwerter-jednostek": {
     "hash": "576566728e7c5cab",
     "lastmod": "2026-10-03"
   },
   "/pl/konwerter-znacznika-czasu-unix": {
-    "hash": "c4eda962de6e0267",
-    "lastmod": "2026-10-03"
+    "hash": "1514949fb988201f",
+    "lastmod": "2026-11-23"
   },
   "/pl/licznik-slow": {
     "hash": "2191a172957cfa86",
@@ -1952,8 +1952,8 @@
     "lastmod": "2026-10-03"
   },
   "/pt/calculadora-de-impostos": {
-    "hash": "d047d2f44b5fbc0a",
-    "lastmod": "2026-10-03"
+    "hash": "bc98e27ffbcd335b",
+    "lastmod": "2026-11-23"
   },
   "/pt/calculadora-de-inflacao": {
     "hash": "ef4368576ba20bb1",
@@ -2072,12 +2072,12 @@
     "lastmod": "2026-10-03"
   },
   "/pt/conversor-numeros-romanos": {
-    "hash": "0be35b85087846bf",
-    "lastmod": "2026-10-03"
+    "hash": "ecd5f5db6d858002",
+    "lastmod": "2026-11-23"
   },
   "/pt/conversor-timestamp-unix": {
-    "hash": "777f3f4df71525e5",
-    "lastmod": "2026-10-03"
+    "hash": "429ac7e258c174af",
+    "lastmod": "2026-11-23"
   },
   "/pt/converter-csv-para-json": {
     "hash": "64fee00f8e617ddb",
@@ -2116,8 +2116,8 @@
     "lastmod": "2026-10-03"
   },
   "/pt/gerador-de-numeros-aleatorios": {
-    "hash": "ba3943c660cbb695",
-    "lastmod": "2026-10-03"
+    "hash": "06a94c28010d3778",
+    "lastmod": "2026-11-23"
   },
   "/pt/gerador-de-senhas": {
     "hash": "62287e6e8787816b",
@@ -2232,8 +2232,8 @@
     "lastmod": "2026-10-03"
   },
   "/tools": {
-    "hash": "8bdeee6bad5a78bd",
-    "lastmod": "2026-11-16"
+    "hash": "28e258efa44b42d8",
+    "lastmod": "2026-11-23"
   },
   "/tools/age-calculator": {
     "hash": "c855f26bf17c3403",
@@ -2304,8 +2304,8 @@
     "lastmod": "2026-10-17"
   },
   "/tools/bmi-calculator": {
-    "hash": "285348dcabdf4cc0",
-    "lastmod": "2026-10-17"
+    "hash": "58964a7abf231bc7",
+    "lastmod": "2026-11-23"
   },
   "/tools/body-fat-calculator": {
     "hash": "29c4ed91ddd3b8e0",
@@ -2324,12 +2324,12 @@
     "lastmod": "2026-10-03"
   },
   "/tools/calorie-calculator": {
-    "hash": "8a97159cde70d909",
-    "lastmod": "2026-10-17"
+    "hash": "2bf0e1e8acbd66a7",
+    "lastmod": "2026-11-23"
   },
   "/tools/case-converter": {
-    "hash": "2b560df78d3779a9",
-    "lastmod": "2026-10-17"
+    "hash": "a3410144870d0151",
+    "lastmod": "2026-11-23"
   },
   "/tools/color-converter": {
     "hash": "763c2ecfc88563ca",
@@ -2344,8 +2344,12 @@
     "lastmod": "2026-10-03"
   },
   "/tools/countdown-timer": {
-    "hash": "913860f244a8e2e9",
-    "lastmod": "2026-10-03"
+    "hash": "361bbdc25135f3db",
+    "lastmod": "2026-11-23"
+  },
+  "/tools/cps-test": {
+    "hash": "ace39608f34cdd10",
+    "lastmod": "2026-11-23"
   },
   "/tools/cr2-to-jpg": {
     "hash": "cad8adf4e3fce8fa",
@@ -2380,16 +2384,16 @@
     "lastmod": "2026-10-03"
   },
   "/tools/date-add-subtract": {
-    "hash": "0eb412379528dd83",
-    "lastmod": "2026-10-03"
+    "hash": "f46ea4e3601b4f3e",
+    "lastmod": "2026-11-23"
   },
   "/tools/date-difference-calculator": {
-    "hash": "1364bdb74e42c2ed",
-    "lastmod": "2026-10-03"
+    "hash": "0822fdbf44593ad8",
+    "lastmod": "2026-11-23"
   },
   "/tools/discount-calculator": {
-    "hash": "35dbf6d4b6a872a4",
-    "lastmod": "2026-10-03"
+    "hash": "c49725a86d819164",
+    "lastmod": "2026-11-23"
   },
   "/tools/dng-to-jpg": {
     "hash": "bfffee92b3983d30",
@@ -2407,6 +2411,10 @@
     "hash": "882bddfd3d5992ec",
     "lastmod": "2026-10-03"
   },
+  "/tools/fancy-text-generator": {
+    "hash": "daaf4fc8a39438b2",
+    "lastmod": "2026-11-23"
+  },
   "/tools/faq-schema-generator": {
     "hash": "8bbdd1b96c601503",
     "lastmod": "2026-10-03"
@@ -2416,8 +2424,12 @@
     "lastmod": "2026-10-03"
   },
   "/tools/fraction-calculator": {
-    "hash": "78964cb919319338",
-    "lastmod": "2026-10-17"
+    "hash": "6a6fc50d3a5c72b7",
+    "lastmod": "2026-11-23"
+  },
+  "/tools/gcf-lcm-calculator": {
+    "hash": "ddd5f04576515a71",
+    "lastmod": "2026-11-23"
   },
   "/tools/gpa-calculator": {
     "hash": "cb5bd0a9fd2a129b",
@@ -2592,8 +2604,8 @@
     "lastmod": "2026-10-03"
   },
   "/tools/margin-markup-calculator": {
-    "hash": "c017c47a38056952",
-    "lastmod": "2026-10-03"
+    "hash": "c599d46078fe010d",
+    "lastmod": "2026-11-23"
   },
   "/tools/markdown-to-html": {
     "hash": "c51ea56c82c7fb16",
@@ -2608,8 +2620,8 @@
     "lastmod": "2026-11-16"
   },
   "/tools/morse-code-translator": {
-    "hash": "1b511b3e622f1a0a",
-    "lastmod": "2026-10-17"
+    "hash": "f426f46c6adc56bd",
+    "lastmod": "2026-11-23"
   },
   "/tools/mortgage-calculator": {
     "hash": "6b272ecfcce429c9",
@@ -2620,8 +2632,12 @@
     "lastmod": "2026-10-03"
   },
   "/tools/number-base-converter": {
-    "hash": "9c00fb4e4b389830",
-    "lastmod": "2026-10-17"
+    "hash": "f33f2a23735a5ec1",
+    "lastmod": "2026-11-23"
+  },
+  "/tools/number-to-words-converter": {
+    "hash": "f9fb8961ec65daf9",
+    "lastmod": "2026-11-23"
   },
   "/tools/organization-schema-generator": {
     "hash": "98c5902bde211067",
@@ -2656,20 +2672,24 @@
     "lastmod": "2026-10-03"
   },
   "/tools/random-number-generator": {
-    "hash": "152e436ad16795cf",
-    "lastmod": "2026-10-03"
+    "hash": "6f948c731499c743",
+    "lastmod": "2026-11-23"
   },
   "/tools/ratio-calculator": {
-    "hash": "65304bd5015c2584",
-    "lastmod": "2026-10-17"
+    "hash": "3fea7a92cc981b10",
+    "lastmod": "2026-11-23"
   },
   "/tools/raw-to-jpg": {
     "hash": "c0fcfd64eae1a9ad",
     "lastmod": "2026-10-03"
   },
+  "/tools/reaction-time-test": {
+    "hash": "e2da9fc3ce9038a7",
+    "lastmod": "2026-11-23"
+  },
   "/tools/readability-score-checker": {
-    "hash": "a1c064b32aef8687",
-    "lastmod": "2026-11-16"
+    "hash": "23f76ce4ecf0345c",
+    "lastmod": "2026-11-23"
   },
   "/tools/recipe-schema-generator": {
     "hash": "857b101b17927eac",
@@ -2696,8 +2716,8 @@
     "lastmod": "2026-10-03"
   },
   "/tools/reverse-text": {
-    "hash": "2d30a3d7b83cad28",
-    "lastmod": "2026-10-17"
+    "hash": "3c66e63a0bb9a6da",
+    "lastmod": "2026-11-23"
   },
   "/tools/robots-txt-generator": {
     "hash": "a34ec60fe95dcd35",
@@ -2708,8 +2728,8 @@
     "lastmod": "2026-10-03"
   },
   "/tools/roman-numeral-converter": {
-    "hash": "6687a55717f03488",
-    "lastmod": "2026-10-03"
+    "hash": "0d3bed8bdedb825c",
+    "lastmod": "2026-11-23"
   },
   "/tools/salary-tax-calculator-pakistan": {
     "hash": "7d975e8d9ded99fc",
@@ -2728,8 +2748,8 @@
     "lastmod": "2026-10-17"
   },
   "/tools/sales-tax-calculator": {
-    "hash": "29348e600b701dc0",
-    "lastmod": "2026-10-03"
+    "hash": "454f2f4c61fc55d7",
+    "lastmod": "2026-11-23"
   },
   "/tools/savings-goal-calculator": {
     "hash": "6f786551417a0d44",
@@ -2740,8 +2760,8 @@
     "lastmod": "2026-10-03"
   },
   "/tools/scientific-notation-converter": {
-    "hash": "07e5671374ad3866",
-    "lastmod": "2026-10-17"
+    "hash": "60a658df380bae13",
+    "lastmod": "2026-11-23"
   },
   "/tools/search-console-regex-generator": {
     "hash": "0dca562b462b4b0c",
@@ -2762,6 +2782,10 @@
   "/tools/simple-interest-calculator": {
     "hash": "33c0b497c6a7bf1f",
     "lastmod": "2026-10-03"
+  },
+  "/tools/sleep-calculator": {
+    "hash": "bde5d1c38f654606",
+    "lastmod": "2026-11-23"
   },
   "/tools/slug-generator": {
     "hash": "60940c5343ea1af8",
@@ -2808,20 +2832,28 @@
     "lastmod": "2026-10-17"
   },
   "/tools/time-duration-calculator": {
-    "hash": "9f902cf72dc1c003",
-    "lastmod": "2026-10-17"
+    "hash": "0c79c3d8d49441eb",
+    "lastmod": "2026-11-23"
+  },
+  "/tools/time-zone-converter": {
+    "hash": "b1111a068aa146c7",
+    "lastmod": "2026-11-23"
   },
   "/tools/timesheet-hours-calculator": {
     "hash": "8f32d0de0a977424",
     "lastmod": "2026-10-17"
   },
   "/tools/timestamp-converter": {
-    "hash": "a82dceab39bbf40a",
-    "lastmod": "2026-10-03"
+    "hash": "6c9436bd74f1dd11",
+    "lastmod": "2026-11-23"
   },
   "/tools/tip-calculator": {
     "hash": "8785014e36e51f62",
     "lastmod": "2026-10-03"
+  },
+  "/tools/typing-speed-test": {
+    "hash": "60b4a87754357483",
+    "lastmod": "2026-11-23"
   },
   "/tools/unit-converter": {
     "hash": "025087d900f503c9",
@@ -2839,6 +2871,10 @@
     "hash": "bb3fa625d312c242",
     "lastmod": "2026-10-03"
   },
+  "/tools/vat-calculator": {
+    "hash": "3a7646b35e2a554b",
+    "lastmod": "2026-11-23"
+  },
   "/tools/video-schema-generator": {
     "hash": "3866e9acfe6cd3cd",
     "lastmod": "2026-10-03"
@@ -2848,8 +2884,12 @@
     "lastmod": "2026-10-03"
   },
   "/tools/water-intake-calculator": {
-    "hash": "ea44e3c9dd5ca0cc",
-    "lastmod": "2026-10-17"
+    "hash": "161a9c4711f52f49",
+    "lastmod": "2026-11-23"
+  },
+  "/tools/week-number-calculator": {
+    "hash": "822e809a267c159e",
+    "lastmod": "2026-11-23"
   },
   "/tools/whatsapp-chat-analyzer": {
     "hash": "a5ac7ec4af5d2340",
@@ -2864,16 +2904,16 @@
     "lastmod": "2026-10-03"
   },
   "/tools/word-counter": {
-    "hash": "a52be37194d30905",
-    "lastmod": "2026-11-16"
+    "hash": "0ef1804f9f295e83",
+    "lastmod": "2026-11-23"
   },
   "/tools/word-frequency-counter": {
     "hash": "221a8d8145ebde06",
     "lastmod": "2026-10-03"
   },
   "/tools/working-days-calculator": {
-    "hash": "e59cd939ed92ea82",
-    "lastmod": "2026-10-17"
+    "hash": "ebc97b9b2e2ecb15",
+    "lastmod": "2026-11-23"
   },
   "/word-game": {
     "hash": "e59df69eaf4d5183",

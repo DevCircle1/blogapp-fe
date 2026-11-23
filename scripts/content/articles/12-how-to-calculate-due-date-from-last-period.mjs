@@ -81,6 +81,8 @@ export default {
 <li><a href="/blogs/article/days-between-two-dates">How to calculate the days between two dates</a></li>
 </ul>
 
+<p>Rest matters in every trimester. <a href="/blogs/article/how-much-sleep-do-you-need">How much sleep you need</a> covers needs by age and how sleep cycles work.</p>
+
 <h2>Frequently asked questions</h2>
 <h3>Is my due date calculated from conception or my last period?</h3>
 <p>From the first day of your last period. Conception typically happens about two weeks later, which is why a pregnancy is 40 weeks by date but about 38 weeks of actual development.</p>

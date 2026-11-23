@@ -8,6 +8,7 @@ import * as health from './impl/healthTools.jsx';
 import * as seo from './impl/seoTools.jsx';
 import * as extra from './extra/ExtraTools.jsx';
 import * as seoText from './extra/SeoTextTools.jsx';
+import * as quick from './extra/QuickTools.jsx';
 
 /**
  * Interactive component for every catalogue slug. One implementation serves
@@ -112,4 +113,15 @@ export const TOOL_COMPONENTS = {
   'area-calculator': extra.AreaCalculator,
   'readability-score-checker': seoText.ReadabilityChecker,
   'hreflang-tag-generator': seoText.HreflangGenerator,
+  // High-demand everyday tools
+  'vat-calculator': quick.VatCalculator,
+  'time-zone-converter': quick.TimeZoneConverter,
+  'typing-speed-test': quick.TypingSpeedTest,
+  'cps-test': quick.ClickSpeedTest,
+  'reaction-time-test': quick.ReactionTimeTest,
+  'number-to-words-converter': quick.NumberToWords,
+  'gcf-lcm-calculator': quick.GcfLcmCalculator,
+  'week-number-calculator': quick.WeekNumberCalculator,
+  'sleep-calculator': quick.SleepCalculator,
+  'fancy-text-generator': quick.FancyTextGenerator,
 };

@@ -81,6 +81,8 @@ export default {
 <h2>How this relates to other encodings</h2>
 <p>UTF-8 is a text encoding; Base64 is a way to represent arbitrary bytes using 64 safe characters, covered by the <a href="/tools/base64-tool">Base64 tool</a>. For a hands-on introduction to turning characters into bits, see <a href="/blogs/article/how-to-convert-text-to-binary">how to convert text to binary</a>. Token counts for language models also depend on how text is broken into bytes and pieces; our guide to <a href="/blogs/article/how-to-count-tokens-llm">counting tokens for an LLM</a> explains that side.</p>
 
+<p>Unicode also contains styled alphabets that look like fonts. <a href="/blogs/article/how-to-use-fancy-fonts-on-instagram-tiktok">How to get fancy fonts on Instagram and TikTok</a> explains how they work, and the <a href="/tools/fancy-text-generator">fancy text generator</a> creates them.</p>
+
 <h2>Frequently asked questions</h2>
 <h3>Is UTF-8 the same as Unicode?</h3>
 <p>No. Unicode is the character set (the numbering). UTF-8 is one way to store it in bytes. Others include UTF-16 and UTF-32.</p>

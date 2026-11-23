@@ -65,6 +65,8 @@ export default {
 <p>Programmers rarely write binary by hand because it is long. Hexadecimal packs four bits into one digit, so a byte is two hex digits: H is 48. Decimal and octal are also used in older systems and file permissions. For converting plain numbers between bases rather than text, use the <a href="/tools/number-base-converter">number base converter</a>. If you meet text that looks encoded but is neither, it may be Base64, which you can decode with the <a href="/tools/base64-tool">Base64 tool</a>, or a hash, which is one-way and cannot be reversed.</p>
 <p>The <a href="/tools/text-to-binary-converter">text to binary converter</a> does all four bases in both directions, with UTF-8 support, and nothing is uploaded. Another character-based code worth knowing is Morse; see the <a href="/blogs/article/morse-code-alphabet-chart">Morse code alphabet chart</a>, or try the <a href="/tools/morse-code-translator">Morse code translator</a>. For background on how encoding changes data size, read <a href="/blogs/article/ascii-vs-utf-8-explained">ASCII vs UTF-8 explained</a>.</p>
 
+<p>Not every character is plain text. <a href="/blogs/article/how-to-use-fancy-fonts-on-instagram-tiktok">Fancy fonts</a> are separate Unicode characters, which you can generate with the <a href="/tools/fancy-text-generator">fancy text generator</a>.</p>
+
 <h2>Frequently asked questions</h2>
 <h3>What is "Hello" in binary?</h3>
 <p>01001000 01100101 01101100 01101100 01101111.</p>

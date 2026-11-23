@@ -77,6 +77,8 @@ export default {
 </ul>
 <p>These are typical ranges, not promises. Consistency counts more than talent.</p>
 
+<p>If you like playing with text, <a href="/blogs/article/how-to-use-fancy-fonts-on-instagram-tiktok">fancy Unicode fonts</a> are another fun transformation, and the <a href="/tools/fancy-text-generator">fancy text generator</a> makes them in one click.</p>
+
 <h2>Frequently asked questions</h2>
 <h3>How long does it take to learn Morse code?</h3>
 <p>With 10–15 minutes of daily practice, most people can copy the full alphabet slowly within one to two weeks. Reaching fluent speeds like 15–20 words per minute usually takes a few months.</p>

@@ -78,6 +78,8 @@ export default {
 </ul>
 <p>The <a href="/tools/percentage-calculator">percentage calculator</a> handles percentage change, percent of a number and reverse percentages directly.</p>
 
+<p>One place this goes wrong is tax: taking 20% off a VAT-inclusive price does not remove the VAT. See <a href="/blogs/article/how-to-add-and-remove-vat-from-a-price">how to add or remove VAT from a price</a> and the <a href="/tools/vat-calculator">VAT calculator</a>.</p>
+
 <h2>Frequently asked questions</h2>
 <h3>What if the old value is zero?</h3>
 <p>The percentage change is undefined, since you cannot divide by zero. Report the absolute change instead, or say the value "went from zero to" the new number.</p>

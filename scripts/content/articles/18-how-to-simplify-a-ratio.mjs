@@ -68,6 +68,8 @@ export default {
 
 <p>For any of these, the <a href="/tools/ratio-calculator">ratio calculator</a> simplifies, scales and solves for a missing value in one place. Ratios and percentages together cover most everyday maths. Our <a href="/blogs/article/everyday-calculator-guide-percentages-ratios-conversions">everyday calculator guide</a> walks through the rest.</p>
 
+<p>Simplifying a ratio means dividing by the greatest common factor. <a href="/blogs/article/how-to-find-gcf-and-lcm">How to find the GCF and LCM</a> shows three ways to find it, and the <a href="/tools/gcf-lcm-calculator">GCF and LCM calculator</a> does it for up to ten numbers.</p>
+
 <h2>Frequently asked questions</h2>
 <h3>How do you know a ratio is fully simplified?</h3>
 <p>When all parts are whole numbers and their only common divisor is 1. For example, 2 : 3 and 51 : 22 are fully simplified, while 6 : 9 is not.</p>

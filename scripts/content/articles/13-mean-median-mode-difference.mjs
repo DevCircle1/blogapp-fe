@@ -83,6 +83,8 @@ export default {
 <p>For a handful of numbers, the steps above take seconds. For longer lists, paste them into the <a href="/tools/average-calculator">average calculator</a>, which returns the mean, median, mode, range and standard deviation at once, from numbers pasted in any format. In a spreadsheet, the functions are <code>=AVERAGE()</code>, <code>=MEDIAN()</code> and <code>=MODE.SNGL()</code> (or <code>=MODE.MULT()</code> for several modes).</p>
 <p>If you are comparing how much two averages have changed, the <a href="/tools/percentage-calculator">percentage calculator</a> and our guide to <a href="/blogs/article/how-to-calculate-percentage-increase-decrease">percentage increase and decrease</a> cover the next step.</p>
 
+<p>Averages are useful beyond homework. For example, your <a href="/blogs/article/average-reaction-time-by-age">reaction time</a> is best judged by the mean of five attempts on the <a href="/tools/reaction-time-test">reaction time test</a>, not your single best.</p>
+
 <h2>Frequently asked questions</h2>
 <h3>Is the average the same as the mean?</h3>
 <p>In everyday use, "average" usually means the mean. Strictly, mean, median and mode are all types of average.</p>

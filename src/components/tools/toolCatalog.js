@@ -6,6 +6,7 @@ import { textTools } from './data/text.js';
 import { developerTools } from './data/developer.js';
 import { seoTools } from './data/seo.js';
 import { extraTools } from './data/extra.js';
+import { quickTools } from './data/quick.js';
 import { RELATED_TOOLS } from './data/relatedTools.js';
 import { SITE_URL } from '../../seo/siteMeta.js';
 
@@ -25,6 +26,7 @@ export const premiumTools = [
   ...healthTools,
   ...seoTools,
   ...extraTools,
+  ...quickTools,
 ];
 
 export const toolCategories = [...new Set(premiumTools.map((tool) => tool.category))].sort();
